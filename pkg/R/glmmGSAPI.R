@@ -1,0 +1,262 @@
+# R low-level interface with GlmmAPI functions
+
+# Error buffer
+error_buffer.size = as.integer(1024);
+error.buffer = sprintf("%1024s", "");
+
+# Get error occurred in last API call
+glmmGSAPI.GetLastError = function()
+{
+
+	# Get error message
+	size = nchar(error.buffer[1]);
+	out = .C("GlmmGSRAPI_GetLastError", error.buffer[1], size, PACKAGE = "GlmmGS");
+	
+	# Trim trailing spaces
+	msg = sub(" +$", "", out[[1]]);
+	
+	# Check error
+	if (msg != "")
+		stop(msg);
+}
+
+# Begin glmmGSAPI
+glmmGSAPI.Begin = function()
+{
+	.C("GlmmGSRAPI_Begin", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# End glmmGSAPI
+glmmGSAPI.End = function()
+{
+	.C("GlmmGSRAPI_End", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# End glmmGSAPI
+glmmGSAPI.ForceEnd = function()
+{
+	.C("GlmmGSRAPI_ForceEnd", PACKAGE = "GlmmGS");
+}
+
+# Begin response
+glmmGSAPI.BeginResponse = function(family)
+{
+	if (is.character(family) == FALSE)
+		stop("Invalid type");
+	if (length(family) != 1)
+		stop("Invalid size");
+	size = as.integer(nchar(family[1]));
+	.C("GlmmGSRAPI_BeginResponse", family[1], size, PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# End response
+glmmGSAPI.EndResponse = function()
+{
+	.C("GlmmGSRAPI_EndResponse", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Begin fixed-effects
+glmmGSAPI.BeginFixedEffects = function()
+{
+	.C("GlmmGSRAPI_BeginFixedEffects", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# End fixed-effects
+glmmGSAPI.EndFixedEffects = function()
+{
+	.C("GlmmGSRAPI_EndFixedEffects", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Begin random-effects
+glmmGSAPI.BeginRandomEffects = function()
+{
+	.C("GlmmGSRAPI_BeginRandomEffects", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# End random-effects
+glmmGSAPI.EndRandomEffects = function()
+{
+	.C("GlmmGSRAPI_EndRandomEffects", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Begin global block
+glmmGSAPI.BeginGlobalBlock = function()
+{
+	.C("GlmmGSRAPI_BeginGlobalBlock", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# End global block
+glmmGSAPI.EndGlobalBlock = function()
+{
+	.C("GlmmGSRAPI_EndGlobalBlock", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Begin stratified block
+glmmGSAPI.BeginStratifiedBlock = function(levels)
+{
+	size = as.integer(length(levels));
+	if (is.integer(levels))
+	{
+		.C("GlmmGSRAPI_BeginStratifiedBlock", levels, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else
+	{
+		stop("Invalid factor type");
+	}
+}
+
+# End stratified block
+glmmGSAPI.EndStratifiedBlock = function()
+{
+	.C("GlmmGSRAPI_EndStratifiedBlock", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Add response vector
+glmmGSAPI.AddResponse = function(values)
+{
+	size = as.integer(length(values));
+	if (is.integer(values))
+	{
+		.C("GlmmGSRAPI_AddResponseInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else
+	{
+		stop("Invalid type");
+	}
+}
+
+# Add vector of counts (for binomial response)
+glmmGSAPI.AddCounts = function(values)
+{
+	size = as.integer(length(values));
+	if (is.integer(values))
+	{
+		.C("GlmmGSRAPI_AddCountsInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else
+	{
+		stop("Invalid type");
+	}
+}
+
+# Add intercept
+glmmGSAPI.AddIntercept = function()
+{
+	.C("GlmmGSRAPI_AddIntercept", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Add a covariate
+glmmGSAPI.AddCovariate = function(values)
+{
+	if (is.vector(values))
+	{
+		size = as.integer(length(values));
+		if (is.integer(values))
+		{
+			.C("GlmmGSRAPI_AddCovariateInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+			glmmGSAPI.GetLastError();
+		}
+		else if (is.double(values))
+		{
+			.C("GlmmGSRAPI_AddCovariateDbl", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+			glmmGSAPI.GetLastError();
+		}
+		else
+		{
+			stop("Invalid type");
+		}
+	}
+	else if (is.matrix(values))
+	{
+		dimensions = dim(values);
+		if (is.integer(values))
+		{
+			.C("GlmmGSRAPI_AddCovariatesInt", values, dimensions, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+			glmmGSAPI.GetLastError();
+		}
+		else if (is.double(values))
+		{
+			.C("GlmmGSRAPI_AddCovariatesDbl", values, dimensions, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+			glmmGSAPI.GetLastError();
+		}
+		else
+		{
+			stop("Invalid type");
+		}
+	}
+	else
+	{
+		stop("Invalid type");
+	}
+}
+
+# Associate identity covariance model
+glmmGSAPI.AddIdentityCovarianceModel = function()
+{
+	.C("GlmmGSRAPI_AddIdentityCovarianceModel", PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Associate precision model
+glmmGSAPI.AddPrecisionModel = function(R)
+{
+	dim = dim(R);
+	.C("GlmmGSRAPI_AddPrecisionModel", R, dim[1], dim[2], DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Fit current model
+glmmGSAPI.Fit = function(relative.tolerance, absolute.tolerance, maxiter)
+{
+	.C("GlmmGSRAPI_Fit", as.double(relative.tolerance), as.double(absolute.tolerance), as.integer(maxiter), PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+}
+
+# Get estimated fixed-effects coefficients
+glmmGSAPI.GetFixedEffectsCoefficients = function()
+{
+	size = integer(1);
+	.C("GlmmGSRAPI_GetFixedEffectsSize", size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+	est = double(size);
+	err = double(size);
+	if (size > 0)
+	{
+		.C("GlmmGSRAPI_GetFixedEffectsEstimates", est, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+		glmmGSAPI.GetLastError();
+		.C("GlmmGSRAPI_GetFixedEffectsErrors", err, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	return(list(estimates = est, errors = err));
+}
+
+# Get estimated covariance components
+glmmGSAPI.GetVarianceComponents = function()
+{
+	size = integer(1);
+	.C("GlmmGSRAPI_GetVarianceComponentsSize", size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+	glmmGSAPI.GetLastError();
+	est = double(size);
+	if (size > 0)
+	{
+		.C("GlmmGSRAPI_GetVarianceComponentsEstimates", est, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "GlmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	return(list(estimates = est));
+}
+
