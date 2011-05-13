@@ -1,9 +1,9 @@
 .First.lib = function(lib, pkg)
 {
-	library.dynam("GlmmGS", pkg, lib);
+	library.dynam("glmmGS", pkg, lib);
 }
 
 .Last.lib = function(libpath)
 {
-	library.dynam.unload("GlmmGS", libpath);
+	library.dynam.unload("glmmGS", libpath);
 }

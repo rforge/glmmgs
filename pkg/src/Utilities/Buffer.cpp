@@ -1,5 +1,6 @@
 #include "Buffer.h"
 #include "Exceptions/Exceptions.h"
+#include <string.h>
 #include <memory.h>
 
 namespace Utilities
