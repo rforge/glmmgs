@@ -1,6 +1,6 @@
-\name{GlmmGS-package}
-\alias{GlmmGS-package}
-\alias{GlmmGS}
+\name{glmmGS-package}
+\alias{glmmGS-package}
+\alias{glmmGS}
 \docType{package}
 \title{
 What the package does (short line)
@@ -12,9 +12,9 @@ More about what it does (maybe more than one line)
 }
 \details{
 \tabular{ll}{
-Package: \tab GlmmGS\cr
+Package: \tab glmmGS\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
+Version: \tab 0.0\cr
 Date: \tab 2011-03-21\cr
 License: \tab What license is it under?\cr
 LazyLoad: \tab yes\cr

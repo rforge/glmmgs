@@ -1,9 +1,5 @@
-.First.lib = function(lib, pkg)
+.onUnload = function(libpath)
 {
-	library.dynam("glmmGS", pkg, lib);
-}
-
-.Last.lib = function(libpath)
-{
+	#cat("Unloading library", libpath, "...\n");
 	library.dynam.unload("glmmGS", libpath);
 }

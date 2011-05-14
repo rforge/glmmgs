@@ -111,4 +111,3 @@ glmmGSParser.GetNextBlock = function(predictor, pos)
 
 	return(block);
 }
-
