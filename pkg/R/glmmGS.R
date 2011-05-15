@@ -19,6 +19,27 @@ glmmGS.PrecisionModel = function(R)
 	return(x);
 }
 
+# Construct covariance models
+glmmGS.CovarianceModel = function(type, ...)
+{
+	V = NULL;
+	ls = list(...);
+	cat(names(ls));
+	if (type == "identity")
+	{
+		V = glmmGS.IdentityCovarianceModel();
+	}
+	else if (type == "precision")
+	{
+		V = glmmGS.PrecisionModel(ls[["R"]]);
+	}
+	else
+	{
+		stop("Unsupported covariance model");
+	}
+	return(V);
+}
+
 # Fit
 glmmGS.Fit = function(control)
 {
@@ -68,7 +89,7 @@ glmmGS.AddCovarianceModel = function(block, covariance.models, env)
 }
 
 # Add variables to block
-glmmGS.AddVariables = function(block, data, env)
+glmmGS.AddPredictors = function(block, data, env)
 {
 	token = glmmGSParser.GetToken(block, "(\\|)|(~)", 1);
 	block = token$text;
@@ -113,14 +134,14 @@ glmmGS.AddBlock = function(block, data, covariance.models, env)
 		{
 			# Global block
 			glmmGSAPI.BeginGlobalBlock();
-			glmmGS.AddVariables(block$text, data, env);
+			glmmGS.AddPredictors(block$text, data, env);
 			glmmGSAPI.EndGlobalBlock();			
 		}
 		else if (attr(block, "type") == "stratified")
 		{
 			# Stratified block
 			glmmGSAPI.BeginStratifiedBlock(glmmGS.GetFactor(block$text, data, env));
-			glmmGS.AddVariables(block$text, data, env);
+			glmmGS.AddPredictors(block$text, data, env);
 			glmmGSAPI.EndStratifiedBlock();			
 		}
 		else
@@ -137,7 +158,7 @@ glmmGS.AddBlock = function(block, data, covariance.models, env)
 		{
 			# Global block
 			glmmGSAPI.BeginGlobalBlock();
-			glmmGS.AddVariables(block$text, data, env);
+			glmmGS.AddPredictors(block$text, data, env);
 			glmmGS.AddCovarianceModel(block$text, covariance.models, env);
 			glmmGSAPI.EndGlobalBlock();			
 		}
@@ -145,7 +166,7 @@ glmmGS.AddBlock = function(block, data, covariance.models, env)
 		{
 			# Stratified block
 			glmmGSAPI.BeginStratifiedBlock(glmmGS.GetFactor(block$text, data, env));
-			glmmGS.AddVariables(block$text, data, env);
+			glmmGS.AddPredictors(block$text, data, env);
 			glmmGS.AddCovarianceModel(block$text, covariance.models, env);
 			glmmGSAPI.EndStratifiedBlock();			
 		}
@@ -161,50 +182,6 @@ glmmGS.AddBlock = function(block, data, covariance.models, env)
 	}
 }
 
-# Get binomial response data
-glmmGS.GetBinomialResponse = function(response, data, env)
-{
-	# Define variables
-	y = NULL;
-	counts = NULL;
-	
-	# Get variable names
-	pos = 1;
-	pos = glmmGSParser.SkipWhites(response, pos);
-	pos = glmmGSParser.Match(response, "\\(", pos);
-	
-	pos = glmmGSParser.SkipWhites(response, pos);
-	token = glmmGSParser.GetToken(response, "\\|", pos);
-	pos = token$pos + 1;
-	y = glmmGS.GetVariable(glmmGSParser.Trim(token$text), data, env);
-	
-	pos = glmmGSParser.SkipWhites(response, pos);
-	token = glmmGSParser.GetToken(response, "\\)", pos);
-	pos = token$pos + 1;
-	counts = glmmGS.GetVariable(glmmGSParser.Trim(token$text), data, env);
-	
-	pos = glmmGSParser.SkipWhites(response, pos);
-	token = glmmGSParser.GetToken(response, ".", pos);
-	if (token$pos != -1)
-		stop("Invalid response formula");
-	
-	return(list(y = y, counts = counts));
-}
-
-# Get response (other than binomial) data
-glmmGS.GetResponse = function(response, data, env)
-{
-	# Define variables
-	y = NULL;
-	
-	# Get variable name
-	y = glmmGS.GetVariable(glmmGSParser.Trim(response), data, env);
-	
-	# TODO: check that no other symbols are defined after variable name
-
-	return(list(y = y));
-}
-
 # Add response to model
 glmmGS.AddResponse = function(response, family, data, env)
 {
@@ -212,14 +189,38 @@ glmmGS.AddResponse = function(response, family, data, env)
 	glmmGSAPI.BeginResponse(family);
 	if (family == "binomial")
 	{
-		bino = glmmGS.GetBinomialResponse(response, data, env);
-		glmmGSAPI.AddResponse(bino$y);
-		glmmGSAPI.AddCounts(bino$counts);
+		# Get response and counts
+		pos = 1;
+		pos = glmmGSParser.SkipWhites(response, pos);
+		pos = glmmGSParser.Match(response, "\\(", pos);
+		
+		pos = glmmGSParser.SkipWhites(response, pos);
+		token = glmmGSParser.GetToken(response, "\\|", pos);
+		pos = token$pos + 1;
+		y = glmmGS.GetVariable(glmmGSParser.Trim(token$text), data, env);
+		
+		pos = glmmGSParser.SkipWhites(response, pos);
+		token = glmmGSParser.GetToken(response, "\\)", pos);
+		pos = token$pos + 1;
+		counts = glmmGS.GetVariable(glmmGSParser.Trim(token$text), data, env);
+		
+		pos = glmmGSParser.SkipWhites(response, pos);
+		token = glmmGSParser.GetToken(response, ".", pos);
+		if (token$pos != -1)
+			stop("Invalid response formula");
+		
+		# Add response and counts
+		glmmGSAPI.AddResponse(y);
+		glmmGSAPI.AddCounts(counts);
 	}
 	else if (family == "poisson")
 	{
-		pois = glmmGS.GetResponse(response, data, env);
-		glmmGSAPI.AddResponse(pois$y);
+		# Get response
+		varname = glmmGSParser.Trim(response);
+		y = glmmGS.GetVariable(varname, data, env);
+		
+		# Add response
+		glmmGSAPI.AddResponse(y);
 	}
 	else
 	{
@@ -231,6 +232,9 @@ glmmGS.AddResponse = function(response, family, data, env)
 # Main function
 glmmGS = function(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control())
 {
+	# Gets environment of calling function
+	env = parent.frame();
+	
 	# Convert formula and family into text
 	formula = as.character(formula);
 	family = family()$family;
@@ -238,7 +242,6 @@ glmmGS = function(formula, family, data = NULL, covariance.models = NULL, contro
 	# Split response and predictor string
 	response = formula[2];
 	predictor = formula[3];
-	env = parent.frame();
 
 	# Initialize state-machine
 	glmmGSAPI.ForceEnd();
@@ -266,7 +269,7 @@ glmmGS = function(formula, family, data = NULL, covariance.models = NULL, contro
 	
 	# Fit model
 	results = glmmGS.Fit(control);
-
+	
 	# Terminate state-machine
 	glmmGSAPI.End();
 	
