@@ -2,6 +2,7 @@
 
 #include "Exceptions/Exception.h"
 #include "Exceptions/Assertions.h"
+#include "IO/BasicPrint.h"
 
 namespace Utilities
 {
@@ -32,6 +33,9 @@ namespace Utilities
 	WeakVector<TYPE>::WeakVector(TYPE * ptr, int size)
 		: ptr(NULL), size(0)
 	{
+		IO::Print("ptr = %x\n", ptr);
+		IO::Print("size = %d\n", size);
+
 		if (ptr != NULL && size > 0)
 		{
 			this->ptr = ptr;

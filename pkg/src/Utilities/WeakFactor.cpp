@@ -1,12 +1,16 @@
 #include "Exceptions/Exception.h"
 #include "Vector.h"
 #include "WeakFactor.h"
+#include "IO/BasicPrint.h"
 
 namespace Utilities
 {
 	WeakFactor::WeakFactor(const int * levels, int size)
 		: levels(NULL), size(0), nlevels(0)
 	{
+		// Debug
+		IO::Print("ptr = %x\n", levels);
+		IO::Print("size = %d\n", size);
 		if (size > 0)
 		{
 			// Evaluate min and max levels

@@ -2,6 +2,7 @@
 
 #include "Exceptions/Assertions.h"
 #include "WeakVector.h"
+#include "IO/BasicPrint.h"
 
 namespace Utilities
 {
@@ -35,6 +36,10 @@ namespace Utilities
 	WeakMatrix<TYPE>::WeakMatrix(TYPE * ptr, int nrows, int ncols)
 		: ptr(NULL), nrows(0), ncols(0)
 	{
+		IO::Print("ptr = %x\n", ptr);
+		IO::Print("nrows = %d\n", nrows);
+		IO::Print("ncols = %d\n", ncols);
+
 		if (ptr != NULL && nrows > 0 && ncols > 0)
 		{
 			this->ptr = ptr;
