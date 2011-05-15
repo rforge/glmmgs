@@ -1,5 +1,4 @@
 useDynLib(glmmGS, .registration = TRUE)
 export("glmmGS",
-       "glmmGS.IdentityCovarianceModel",
-       "glmmGS.PrecisionModel",
+       "glmmGS.CovarianceModel",
        "glmmGS.Control")
