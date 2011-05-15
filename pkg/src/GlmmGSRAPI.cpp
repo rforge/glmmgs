@@ -5,6 +5,14 @@
 
 using namespace GlmmGSAPI;
 
+void GlmmGSRAPI_SetOutputFile(const char ** buffer)
+{
+	const char * filename = *buffer;
+	if (Utilities::IO::stream != stdout)
+		fclose(Utilities::IO::stream);
+	Utilities::IO::stream = fopen(filename, "wt");
+}
+
 void GlmmGSRAPI_GetLastError(char ** buffer, const int * size)
 {
 	if (*buffer != NULL && *size > 0)
