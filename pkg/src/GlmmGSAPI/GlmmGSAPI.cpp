@@ -39,10 +39,6 @@ namespace GlmmGSAPI
 
 	void GlmmGSAPI::Begin()
 	{
-		// Debug
-		//const char * filename = "C:/Documents and Settings/moraram/My Documents/Work/PO1/workspace/GlmmGSTest/R/output.txt";
-		//Utilities::IO::stream = fopen(filename, "wt");
-
 		if (this->sections.IsEmpty() == false)
 			throw Exception("Invalid call: Begin");
 		this->sections.Push(Pointer<Section>(new(bl) Section(*this)));
@@ -59,12 +55,6 @@ namespace GlmmGSAPI
 		this->response.Reset();
 		this->fixed_effects.Free();
 		this->random_effects.Free();
-
-		if (Utilities::IO::stream != stdout)
-		{
-			fclose(Utilities::IO::stream);
-			Utilities::IO::stream = stdout;
-		}
 	}
 
 	void GlmmGSAPI::ForceEnd()

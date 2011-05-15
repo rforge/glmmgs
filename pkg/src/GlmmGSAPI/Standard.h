@@ -1,8 +1,9 @@
 #pragma once
 
-// BL
+// Utilities
 #include "../Utilities/Utilities.h"
 #include "../Utilities/Exceptions/Exceptions.h"
+#include "../Utilities/IO/IO.h"
 
 // Types
 #include "../GlmmGS/Controls.h"
@@ -48,4 +49,5 @@ namespace GlmmGSAPI
 {
 	using namespace Utilities;
 	using namespace Utilities::Exceptions;
+	using namespace Utilities::IO;
 }
