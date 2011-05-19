@@ -1,3 +1,4 @@
+#include "../Utilities.h"
 #include "../Math/Math.h"
 #include "MatrixFunctions.h"
 
