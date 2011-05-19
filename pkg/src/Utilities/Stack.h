@@ -1,5 +1,6 @@
 #pragma once
 
+#include "New.h"
 #include "Exceptions/Exceptions.h"
 
 namespace Utilities
