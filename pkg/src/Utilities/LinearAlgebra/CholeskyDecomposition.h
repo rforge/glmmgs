@@ -14,17 +14,12 @@ namespace Utilities
 			TriangularMatrix<double> lower;
 		
 		public:
-			// Tag
-			static const class DecomposeInverse {} decompose_inverse;
-
 			// Construction
 			CholeskyDecomposition();
 			explicit CholeskyDecomposition(const TriangularMatrix<double> & A);
-			explicit CholeskyDecomposition(const TriangularMatrix<double> & A, DecomposeInverse);
 
 			// Methods
 			void Decompose(const TriangularMatrix<double> & A);
-			void Decompose(const TriangularMatrix<double> & A, DecomposeInverse);
 			Vector<double> Solve(const Vector<double> & b) const;
 			TriangularMatrix<double> Inverse() const;
 			double Determinant() const;

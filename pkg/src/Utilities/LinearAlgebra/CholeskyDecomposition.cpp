@@ -1,13 +1,12 @@
-#include "CholeskyDecomposition.h"
+#include "../Utilities.h"
 #include "../Exceptions/NumericException.h"
 #include "../Math/Math.h"
+#include "CholeskyDecomposition.h"
 
 namespace Utilities 
 {
 	namespace LinearAlgebra
 	{
-		const CholeskyDecomposition::DecomposeInverse CholeskyDecomposition::decompose_inverse = CholeskyDecomposition::DecomposeInverse();
-
 		CholeskyDecomposition::CholeskyDecomposition()
 		{
 		}
@@ -17,84 +16,34 @@ namespace Utilities
 			this->Decompose(A);
 		}
 		
-		CholeskyDecomposition::CholeskyDecomposition(const TriangularMatrix<double> & A, DecomposeInverse)
-		{
-			this->Decompose(A, CholeskyDecomposition::decompose_inverse);
-		}
-		
 		void CholeskyDecomposition::Decompose(const TriangularMatrix<double> & A)
 		{
-			this->lower = A;
-			const int n = this->lower.NumberOfRows();
+			const int n = A.NumberOfRows();
+			this->lower.Size(n);
 			
 			// Computes lower triangular Matrix such that L * Transpose(L) = A
 			for (int i = 0; i < n; ++i)
 			{
 				// j == i
+				double diag = 0.0;
 				{
-					double sum = this->lower(i, i);
-					for (int k = i - 1; k >= 0; --k) 
+					double sum = A(i, i);
+					for (int k = 0; k < i; ++k)
 						sum -= Math::Square(this->lower(i, k));
 					if (sum <= 0.0)
 						throw Exceptions::NumericException("Non positive matrix in Cholesky decomposition");
-					this->lower(i, i) = sqrt(sum);
+					diag = sqrt(sum);
+					this->lower(i, i) = diag;
 				}
 
 				// j > i
 				for (int j = i + 1; j < n; ++j)
 				{
-					double sum = this->lower(j, i);
-					for (int k = i - 1; k >= 0; --k) 
+					double sum = A(j, i);
+					for (int k = 0; k < i; ++k)
 						sum -= this->lower(i, k) * this->lower(j, k);
-					this->lower(j, i) = sum / this->lower(i, i);
+					this->lower(j, i) = sum / diag;
 				}
-			}
-		}
-
-		void CholeskyDecomposition::Decompose(const TriangularMatrix<double> & A, DecomposeInverse)
-		{
-			// Compute lower triangular Matrix such that L * L^T = A^{-1}
-			
-			this->lower = A;
-			int n = this->lower.NumberOfRows();
-			
-			// Compute upper triangular Matrix such that U * U^T = A
-			for (int i = n - 1; i >= 0; --i)
-			{
-				// j > i
-				for (int j = n - 1; j > i; --j)
-				{
-					double sum = this->lower(j, i);
-					for (int k = j + 1; k < n; ++k) 
-						sum -= this->lower(k, i) * this->lower(k, j);
-					this->lower(j, i) = sum / this->lower(j, j);
-				}
-
-				// j == i
-				{
-					double sum = this->lower(i, i);
-					for (int k = i + 1; k < n; ++k) 
-						sum -= Math::Square(this->lower(k, i));
-					if (sum <= 0.0)
-						throw Exceptions::NumericException("Non positive matrix in Cholesky decomposition");
-					this->lower(i, i) = sqrt(sum);
-				}
-			}
-
-			// Compute L = (U^T)^{-1}
-			for (int i = n - 1; i >= 0; --i)
-			{
-				// j > i
-				for (int j = n - 1; j > i; --j)
-				{
-					double sum = 0.0;
-					for (int k = i + 1; k <= j; ++k)
-						sum += this->lower(k, i) * this->lower(j, k);
-					this->lower(j, i) = -sum / this->lower(i, i);
-				}
-
-				// j == i
-				this->lower(i, i) = 1.0 / this->lower(i, i);
 			}
 		}
 		
