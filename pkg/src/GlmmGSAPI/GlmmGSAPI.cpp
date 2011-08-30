@@ -53,6 +53,7 @@ namespace GlmmGSAPI
 		// Reset
 		this->last_error.Empty();
 		this->response.Reset();
+		this->offset.Reset();
 		this->fixed_effects.Free();
 		this->random_effects.Free();
 	}
@@ -63,6 +64,7 @@ namespace GlmmGSAPI
 		this->sections.Free();
 		this->last_error.Empty();
 		this->response.Reset();
+		this->offset.Reset();
 		this->fixed_effects.Free();
 		this->random_effects.Free();
 	}
@@ -137,6 +139,16 @@ namespace GlmmGSAPI
 		this->sections.Top()->AddCounts(values);
 	}
 	
+	void GlmmGSAPI::AddOffset(WeakVector<const int> values)
+	{
+		this->sections.Top()->AddOffset(values);
+	}
+
+	void GlmmGSAPI::AddOffset(WeakVector<const double> values)
+	{
+		this->sections.Top()->AddOffset(values);
+	}
+
 	void GlmmGSAPI::AddIntercept()
 	{
 		this->sections.Top()->AddIntercept();
@@ -166,8 +178,13 @@ namespace GlmmGSAPI
 	// Fit
 	void GlmmGSAPI::Fit(GlmmGS::Controls controls)
 	{
+		// Set offset to ZeroOffset if no offset was specified
+		if (this->offset.IsNull())
+			this->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset());
+
+		// Fit the model
 		GlmmGS::GlmmGS glmmGS(controls);
-		glmmGS.Fit(this->response, this->fixed_effects, this->random_effects);
+		glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects);
 		this->beta = glmmGS.FixedEffectsCoefficients();
 		this->theta = glmmGS.VarianceComponents();
 	}

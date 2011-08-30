@@ -83,6 +83,21 @@ glmmGSParser.GetToken = function(string, sep, start)
 	return(list(text = text, pos = pos));
 }
 
+# glmmGSParser.GetOffset
+glmmGSParser.GetOffset = function(predictor, pos)
+{
+	pos = glmmGSParser.SkipWhites(predictor, pos);
+	token = glmmGSParser.GetToken(predictor, "\\(", pos);
+	if (token$text != "offset")
+		return(NULL)
+	
+	# token$text == offset
+	pos = token$pos + 1;
+	token = glmmGSParser.GetToken(predictor, "\\)", pos);
+	offset = list(text = token$text, pos = token$pos + 1);
+	return(offset);
+}
+
 # glmmGSParser.GetNextBlock
 glmmGSParser.GetNextBlock = function(predictor, pos)
 {
@@ -110,4 +125,21 @@ glmmGSParser.GetNextBlock = function(predictor, pos)
 	}
 
 	return(block);
+}
+
+glmmGSParser.ParseSeparator = function(predictor, pos)
+{
+	pos = glmmGSParser.SkipWhites(predictor, pos);
+	token = glmmGSParser.GetToken(predictor, "\\(", pos);
+	pos = token$pos;
+	text = glmmGSParser.Trim(token$text);
+	if (nchar(text) == 0)
+	{
+		pos = -1;
+	}
+	else if (text != "+")
+	{
+		stop("Wrong format");
+	}
+	return(pos);
 }

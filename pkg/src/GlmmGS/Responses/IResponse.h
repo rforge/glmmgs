@@ -9,9 +9,10 @@ namespace GlmmGS
 		// IResponse
 		class IResponse
 		{
-		public:
+		protected:
 			// Construction
 			IResponse();
+		public:
 			virtual ~IResponse();
 
 			// Properties

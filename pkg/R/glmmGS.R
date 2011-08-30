@@ -123,6 +123,17 @@ glmmGS.GetFactor = function(block, data, env)
 	return(glmmGS.GetVariable(varname, data, env));
 }
 
+# Add offset to model
+glmmGS.AddOffset = function(offset, data, env)
+{
+	# Get response
+	varname = glmmGSParser.Trim(offset$text);
+	offset = glmmGS.GetVariable(varname, data, env);
+	
+	# Add offset
+	glmmGSAPI.AddOffset(offset)
+}
+	
 # Add predictor block to model
 glmmGS.AddBlock = function(block, data, covariance.models, env)
 {
@@ -250,21 +261,28 @@ glmmGS = function(formula, family, data = NULL, covariance.models = NULL, contro
 	# Add response
 	glmmGS.AddResponse(response, family, data, env);
 	
-	# Add predictor blocks
+	# Initialize position counter
 	pos = 1;
-	repeat
+	
+	# Add offset
+	offset = glmmGSParser.GetOffset(predictor, pos);
+	if (is.null(offset) == FALSE)
 	{
+		pos = offset$pos;
+		glmmGS.AddOffset(offset, data, env);
+		pos = glmmGSParser.ParseSeparator(predictor, pos);
+	}
+	
+	# Add predictor blocks
+	while (pos != -1)
+	{
+		# Add block
 		block = glmmGSParser.GetNextBlock(predictor, pos);
 		pos = block$pos;
 		glmmGS.AddBlock(block, data, covariance.models, env);
-		pos = glmmGSParser.SkipWhites(predictor, pos);
-		token = glmmGSParser.GetToken(predictor, "\\(", pos);
-		pos = token$pos;
-		text = glmmGSParser.Trim(token$text);
-		if (nchar(text) == 0)
-			break;
-		if (text != "+")
-			stop("Wrong format");
+
+		# Parse separator and set position to next block 
+		pos = glmmGSParser.ParseSeparator(predictor, pos);
 	}
 	
 	# Fit model

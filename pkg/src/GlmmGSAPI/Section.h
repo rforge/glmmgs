@@ -35,6 +35,8 @@ namespace GlmmGSAPI
 		virtual void EndStratifiedBlock();
 		virtual void AddResponse(WeakVector<const int> values);
 		virtual void AddCounts(WeakVector<const int> values);
+		virtual void AddOffset(WeakVector<const int> values);
+		virtual void AddOffset(WeakVector<const double> values);
 		virtual void AddIntercept();
 		virtual void AddCovariate(WeakVector<const int> values);
 		virtual void AddCovariate(WeakVector<const double> values);

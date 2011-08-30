@@ -193,6 +193,29 @@ void GlmmGSRAPI_AddCountsInt(const int * values, const int * size)
 	}
 }
 
+template <class TYPE>
+void GlmmGSRAPI_AddOffsetImpl(const TYPE * values, const int * size)
+{
+	try
+	{
+		the_api.AddOffset(WeakVector<const TYPE>(values, *size));
+	}
+	catch (Exception & e)
+	{
+		the_api.SetLastError(e);
+	}
+}
+
+void GlmmGSRAPI_AddOffsetInt(const int * values, const int * size)
+{
+	GlmmGSRAPI_AddOffsetImpl(values, size);
+}
+
+void GlmmGSRAPI_AddOffsetDbl(const double * values, const int * size)
+{
+	GlmmGSRAPI_AddOffsetImpl(values, size);
+}
+
 void GlmmGSRAPI_AddIntercept()
 {
 	try

@@ -16,6 +16,7 @@ namespace GlmmGSAPI
 
 	public:
 		Pointer<GlmmGS::Responses::IResponse> response;
+		Pointer<GlmmGS::Offsets::IOffset> offset;
 		Vector<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
 		Vector<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
 		bool fixed_intercept;
@@ -47,6 +48,8 @@ namespace GlmmGSAPI
 		// Variables
 		void AddResponse(WeakVector<const int> values);
 		void AddCounts(WeakVector<const int> values);
+		void AddOffset(WeakVector<const int> values);
+		void AddOffset(WeakVector<const double> values);
 		void AddIntercept();
 		void AddCovariate(WeakVector<const int> values);
 		void AddCovariate(WeakVector<const double> values);

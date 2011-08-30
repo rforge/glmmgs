@@ -31,6 +31,7 @@ namespace GlmmGS
 			virtual Vector<double> ScalarProduct(const Vector<double> & weights, WeakVector<const int> values, WeakFactor factor) const = 0;
 			virtual Vector<double> ScalarProduct(const Vector<double> & weights, WeakVector<const double> values, WeakFactor factor) const = 0;
 
+		protected:
 			// Construction
 			IVariable();
 		public:

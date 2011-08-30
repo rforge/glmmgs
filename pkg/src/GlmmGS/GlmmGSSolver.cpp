@@ -15,10 +15,13 @@ namespace GlmmGS
 	{
 	}
 
-	void GlmmGSSolver::Fit(const Pointer<Responses::IResponse> y, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z)
+	void GlmmGSSolver::Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z)
 	{
 		// Set response
 		this->response = y;
+
+		// Set offset
+		this->offset = offset;
 
 		// Set working fixed-effects
 		this->fixed_effects.Size(x.Size());
@@ -79,7 +82,7 @@ namespace GlmmGS
 	void GlmmGSSolver::EvaluateWorkingWeightsAndValues()
 	{
 		// Evaluate predictor
-		this->eta = 0.0;
+		this->offset->InitializePredictor(this->eta);
 		for (int block = 0; block < this->fixed_effects.Size(); ++block)
 			this->fixed_effects(block)->UpdatePredictor(this->eta);
 		for (int block = 0; block < this->random_effects.Size(); ++block)

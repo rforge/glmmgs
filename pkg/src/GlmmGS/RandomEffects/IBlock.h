@@ -10,9 +10,10 @@ namespace GlmmGS
 		// IBlock
 		class IBlock
 		{
-		public:
-			// Construction
+		// Construction
+		protected:
 			IBlock();
+		public:
 			virtual ~IBlock();
 
 			// Methods

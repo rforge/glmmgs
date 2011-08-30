@@ -14,6 +14,11 @@
 #include "../GlmmGS/Responses/BinomialResponse.h"
 #include "../GlmmGS/Responses/PoissonResponse.h"
 
+// Offsets
+#include "../GlmmGS/Offsets/IOffset.h"
+#include "../GlmmGS/Offsets/ZeroOffset.h"
+#include "../GlmmGS/Offsets/WeakVectorOffset.h"
+
 // Fixed effects
 #include "../GlmmGS/FixedEffects/IBlock.h"
 #include "../GlmmGS/FixedEffects/Global/Block.h"

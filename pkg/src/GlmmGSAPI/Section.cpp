@@ -91,6 +91,22 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: AddCounts");
 	}
 
+	void Section::AddOffset(WeakVector<const int> values)
+	{
+		if (this->api.offset.IsNull() == false)
+			throw Exception("Multiple offsets");
+		typedef GlmmGS::Offsets::WeakVectorOffset<const int>  T;
+		this->api.offset.Reset(new(bl) T(values));
+	}
+
+	void Section::AddOffset(WeakVector<const double> values)
+	{
+		if (this->api.offset.IsNull() == false)
+			throw Exception("Multiple offsets");
+		typedef GlmmGS::Offsets::WeakVectorOffset<const double>  T;
+		this->api.offset.Reset(new(bl) T(values));
+	}
+
 	void Section::AddIntercept()
 	{
 		throw Exception("Invalid call: AddIntercept");

@@ -159,6 +159,26 @@ glmmGSAPI.AddCounts = function(values)
 	}
 }
 
+# Add offset
+glmmGSAPI.AddOffset = function(values)
+{
+	size = as.integer(length(values));
+	if (is.integer(values))
+	{
+		.C("GlmmGSRAPI_AddOffsetInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else if (is.double(values))
+	{
+		.C("GlmmGSRAPI_AddOffsetDbl", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else
+	{
+		stop("Invalid type");
+	}
+}
+
 # Add intercept
 glmmGSAPI.AddIntercept = function()
 {

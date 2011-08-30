@@ -10,9 +10,10 @@ namespace GlmmGS
 		// IFixedEffectsBlock
 		class IBlock
 		{
-		public:
+		protected:
 			// Construction
 			IBlock();
+		public:
 			virtual ~IBlock();
 
 			// Properties

@@ -35,10 +35,10 @@ namespace GlmmGS
 	}
 
 	// Methods
-	void GlmmGS::Fit(const Pointer<Responses::IResponse> y, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z)
+	void GlmmGS::Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z)
 	{
 		GlmmGSSolver solver(this->controls);
-		solver.Fit(y, x, z);
+		solver.Fit(y, offset, x, z);
 
 		Vector<Vector<Estimate> > beta = solver.FixedEffectsCoefficients();
 		Vector<Vector<Estimate> > theta = solver.VarianceComponents();

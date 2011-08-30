@@ -2,6 +2,7 @@
 
 #include "Standard.h"
 #include "Responses/IResponse.h"
+#include "Offsets/IOffset.h"
 #include "FixedEffects/IBlock.h"
 #include "RandomEffects/IBlock.h"
 #include "Controls.h"
@@ -27,7 +28,7 @@ namespace GlmmGS
 		const Vector<Estimate> & VarianceComponents() const;
 
 		// Methods
-		void Fit(const Pointer<Responses::IResponse> y, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z);
+		void Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z);
 	};
 
 	inline
