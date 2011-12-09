@@ -38,7 +38,7 @@ namespace GlmmGS
 		template <class TYPE>
 		void WeakVectorOffset<TYPE>::InitializePredictor(Vector<double> & eta) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(eta.Size() == this->values.Size());
+			_ASSERT_ARGUMENT(eta.Size() == this->values.Size());
 			for (int i = 0; i < this->values.Size(); ++i)
 				eta(i) = this->values(i);
 		};

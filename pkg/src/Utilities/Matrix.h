@@ -68,28 +68,28 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & Matrix<TYPE>::operator ()(int i, int j)
 	{
-		GLMMGS_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
+		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
 		return this->ptr[i * this->ncols + j];
 	}
 
 	template <class TYPE> inline
 	const TYPE & Matrix<TYPE>::operator ()(int i, int j) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
+		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
 		return this->ptr[i * this->ncols + j];
 	}
 	
 	template <class TYPE> inline
 	TYPE & Matrix<TYPE>::Element(int i, int j)
 	{
-		GLMMGS_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
+		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
 		return this->ptr[i * this->ncols + j];
 	}
 
 	template <class TYPE> inline
 	const TYPE & Matrix<TYPE>::Element(int i, int j) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
+		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols)
 		return this->ptr[i * this->ncols + j];
 	}
 

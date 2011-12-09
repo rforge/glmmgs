@@ -39,7 +39,7 @@ namespace Utilities
 	inline
 	int WeakFactor::Level(int obs) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= obs && obs < this->size);
+		_ASSERT_ARGUMENT(0 <= obs && obs < this->size);
 		return this->levels[obs];
 	}
 }

@@ -27,7 +27,7 @@ namespace Utilities
 	template <class TYPE>
 	bool Comparer::AreEqual(const Vector<TYPE> & x, const Vector<TYPE> & y) const
 	{
-		GLMMGS_VALIDATE_ARGUMENT(x.Size() == y.Size());
+		_VALIDATE_ARGUMENT(x.Size() == y.Size());
 		const int n = x.Size();
 		for (int i = 0; i < n; ++i)
 			if (!Comparer::AreEqual(x(i), y(i)))
@@ -38,7 +38,7 @@ namespace Utilities
 	template <class TYPE>
 	bool Comparer::IsZero(const Vector<TYPE> & eps, const Vector<TYPE> & x) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(eps.Size() == x.Size())
+		_ASSERT_ARGUMENT(eps.Size() == x.Size())
 		const int n = x.Size();
 		for (int i = 0; i < n; ++i)
 			if (Comparer::IsZero(eps(i), x(i)) == false)

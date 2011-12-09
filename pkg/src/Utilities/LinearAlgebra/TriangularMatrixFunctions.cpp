@@ -18,7 +18,7 @@ namespace Utilities
 		
 		TriangularMatrix<double> & operator +=(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
 			for (int i = 0; i < m; ++i)
 				for (int j = 0; j <= i; ++j)
@@ -28,7 +28,7 @@ namespace Utilities
 		
 		TriangularMatrix<double> & operator -=(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
 			for (int i = 0; i < m; ++i)
 				for (int j = 0; j <= i; ++j)
@@ -38,7 +38,7 @@ namespace Utilities
 		
 		TriangularMatrix<double> operator +(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
 			TriangularMatrix<double> Y(m);
 			for (int i = 0; i < m; ++i)
@@ -50,7 +50,7 @@ namespace Utilities
 		
 		TriangularMatrix<double> operator -(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
 			TriangularMatrix<double> Y(m);
 			for (int i = 0; i < m; ++i)

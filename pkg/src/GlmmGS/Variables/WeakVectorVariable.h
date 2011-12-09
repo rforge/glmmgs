@@ -53,7 +53,7 @@ namespace GlmmGS
 		template <class TYPE>
 		void WeakVectorVariable<TYPE>::UpdatePredictor(Vector<double> & eta, double beta) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(eta.Size() == this->values.Size());
+			_ASSERT_ARGUMENT(eta.Size() == this->values.Size());
 			for (int i = 0; i < this->values.Size(); ++i)
 				eta(i) += this->values(i) * beta;
 		}
@@ -61,7 +61,7 @@ namespace GlmmGS
 		template <class TYPE>
 		double WeakVectorVariable<TYPE>::ScalarProduct(const Vector<double> & values) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(values.Size() == this->values.Size());
+			_ASSERT_ARGUMENT(values.Size() == this->values.Size());
 			double sum = 0.0;
 			for (int i = 0; i < this->values.Size(); ++i)
 				sum += this->values(i) * values(i);
@@ -90,7 +90,7 @@ namespace GlmmGS
 		template <class TYPE> template <class OTHER>
 		double WeakVectorVariable<TYPE>::ScalarProductImpl(const Vector<double> & weights, WeakVector<const OTHER> values) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(weights.Size() == this->values.Size() && values.Size() == this->values.Size());
+			_ASSERT_ARGUMENT(weights.Size() == this->values.Size() && values.Size() == this->values.Size());
 			double sum = 0.0;
 			for (int i = 0; i < this->values.Size(); ++i)
 				sum += this->values(i) * weights(i) * values(i);
@@ -101,7 +101,7 @@ namespace GlmmGS
 		template <class TYPE>
 		void WeakVectorVariable<TYPE>::UpdatePredictor(Vector<double> & eta, const Vector<double> & beta, WeakFactor factor) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(eta.Size() == this->values.Size() && factor.Size() == this->values.Size() && beta.Size() == factor.NumberOfLevels());
+			_ASSERT_ARGUMENT(eta.Size() == this->values.Size() && factor.Size() == this->values.Size() && beta.Size() == factor.NumberOfLevels());
 			for (int i = 0; i < this->values.Size(); ++i)
 			{
 				const int level = factor.Level(i);
@@ -112,7 +112,7 @@ namespace GlmmGS
 		template <class TYPE>
 		Vector<double> WeakVectorVariable<TYPE>::ScalarProduct(const Vector<double> & values, WeakFactor factor) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(values.Size() == this->values.Size() && factor.Size() == this->values.Size());
+			_ASSERT_ARGUMENT(values.Size() == this->values.Size() && factor.Size() == this->values.Size());
 			const int nlevels = factor.NumberOfLevels();
 			Vector<double> sum(nlevels);
 			for (int i = 0; i < this->values.Size(); ++i)
@@ -145,7 +145,7 @@ namespace GlmmGS
 		template <class TYPE> template <class OTHER>
 		Vector<double> WeakVectorVariable<TYPE>::ScalarProductImpl(const Vector<double> & weights, WeakVector<const OTHER> values, WeakFactor factor) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(weights.Size() == this->values.Size() && values.Size() == this->values.Size() && factor.Size() == this->values.Size());
+			_ASSERT_ARGUMENT(weights.Size() == this->values.Size() && values.Size() == this->values.Size() && factor.Size() == this->values.Size());
 			const int nlevels = factor.NumberOfLevels();
 			Vector<double> sum(nlevels);
 			for (int i = 0; i < this->values.Size(); ++i)

@@ -69,14 +69,14 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & Stack<TYPE>::Top()
 	{
-		GLMMGS_VALIDATE_OPERATION(this->head != NULL);
+		_VALIDATE_OPERATION(this->head != NULL);
 		return this->head->data;
 	}
 
 	template <class TYPE> inline
 	const TYPE & Stack<TYPE>::Top() const
 	{
-		GLMMGS_VALIDATE_OPERATION(this->head != NULL);
+		_VALIDATE_OPERATION(this->head != NULL);
 		return this->head->data;
 	}
 

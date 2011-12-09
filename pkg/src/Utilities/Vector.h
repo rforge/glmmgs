@@ -66,28 +66,28 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & Vector<TYPE>::operator ()(int index)
 	{
-		GLMMGS_ASSERT_ARGUMENT(index >= 0 && index < this->size)
+		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
 		return this->ptr[index];
 	}
 
 	template <class TYPE> inline
 	TYPE & Vector<TYPE>::Element(int index)
 	{
-		GLMMGS_ASSERT_ARGUMENT(index >= 0 && index < this->size)
+		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
 		return this->ptr[index];
 	}
 
 	template <class TYPE> inline
 	const TYPE & Vector<TYPE>::operator ()(int index) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(index >= 0 && index < this->size)
+		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
 		return this->ptr[index];
 	}
 
 	template <class TYPE> inline
 	const TYPE & Vector<TYPE>::Element(int index) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(index >= 0 && index < this->size)
+		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
 		return this->ptr[index];
 	}
 	

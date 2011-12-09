@@ -22,7 +22,7 @@ namespace GlmmGS
 
 		void PoissonResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
+			_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
 				this->response.Size() == values.Size() &&
 				this->response.Size() == eta.Size());
 

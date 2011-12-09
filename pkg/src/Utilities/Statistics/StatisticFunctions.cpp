@@ -6,7 +6,7 @@ namespace Utilities
 	{
 		double Mean(const Vector<double> & x)
 		{
-			GLMMGS_VALIDATE_ARGUMENT(x.Size() > 0);
+			_VALIDATE_ARGUMENT(x.Size() > 0);
 			const int n = x.Size();
 			double sum = 0.0;
 			for (int i = 0; i < n; ++i)

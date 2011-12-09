@@ -17,7 +17,7 @@ namespace GlmmGS
 					// Weighted square norm of vector
 					double Square(WeakMatrix<const double> m, const Vector<double> & x)
 					{
-						GLMMGS_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
+						_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 						const int size = x.Size();
 						double sum = 0.0;
 						for (int i = 0; i < size; ++i)
@@ -58,7 +58,7 @@ namespace GlmmGS
 					// Off-diagonal block product
 					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset_row, int offset_col, WeakMatrix<const double> m)
 					{
-						GLMMGS_ASSERT_ARGUMENT(offset_col < offset_row);
+						_ASSERT_ARGUMENT(offset_col < offset_row);
 						const int size = m.NumberOfRows();
 						double sum = 0.0;
 						for (int i = 0; i < size; ++i)

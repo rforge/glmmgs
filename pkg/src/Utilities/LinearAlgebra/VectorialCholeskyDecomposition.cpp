@@ -56,7 +56,7 @@ namespace Utilities
 		
 		Vector<Vector<double> > VectorialCholeskyDecomposition::Solve(const Vector<Vector<double> > & b) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(b.Size() == this->lower.NumberOfRows())
+			_ASSERT_ARGUMENT(b.Size() == this->lower.NumberOfRows())
 			const int n = this->lower.NumberOfRows();
 			Vector<Vector<double> > x(n);
 			

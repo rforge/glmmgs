@@ -49,7 +49,7 @@ namespace Utilities
 		
 		Vector<double> CholeskyDecomposition::Solve(const Vector<double> & b) const
 		{
-			GLMMGS_ASSERT_ARGUMENT(b.Size() == this->lower.NumberOfRows())
+			_ASSERT_ARGUMENT(b.Size() == this->lower.NumberOfRows())
 			const int n = this->lower.NumberOfRows();
 			Vector<double> x(n);
 			

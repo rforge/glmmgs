@@ -67,14 +67,14 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & WeakMatrix<TYPE>::operator ()(int i, int j)
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= i && i < this->nrows && 0 <= j && j < this->ncols);
+		_ASSERT_ARGUMENT(0 <= i && i < this->nrows && 0 <= j && j < this->ncols);
 		return this->ptr[this->ncols * i + j];
 	}
 
 	template <class TYPE> inline
 	const TYPE & WeakMatrix<TYPE>::operator ()(int i, int j) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= i && i < this->nrows && 0 <= j && j < this->ncols);
+		_ASSERT_ARGUMENT(0 <= i && i < this->nrows && 0 <= j && j < this->ncols);
 		return this->ptr[this->ncols * i + j];
 	}
 
@@ -82,14 +82,14 @@ namespace Utilities
 	template <class TYPE> inline
 	WeakVector<TYPE> WeakMatrix<TYPE>::Row(int i)
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= i && i < this->nrows);
+		_ASSERT_ARGUMENT(0 <= i && i < this->nrows);
 		return WeakVector<TYPE>(this->ptr + this->ncols * i, this->ncols);
 	}
 
 	template <class TYPE> inline
 	WeakVector<const TYPE> WeakMatrix<TYPE>::Row(int i) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= i && i < this->nrows);
+		_ASSERT_ARGUMENT(0 <= i && i < this->nrows);
 		return WeakVector<TYPE>(this->ptr + this->ncols * i, this->ncols);
 	}
 }

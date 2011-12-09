@@ -19,7 +19,7 @@ namespace Utilities
 
 		Matrix<double> & operator +=(Matrix<double> & A, const Matrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			for (int i = 0; i < m; ++i)
@@ -30,7 +30,7 @@ namespace Utilities
 
 		Matrix<double> & operator -=(Matrix<double> & A, const Matrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			for (int i = 0; i < m; ++i)
@@ -52,7 +52,7 @@ namespace Utilities
 
 		Vector<double> operator *(const Matrix<double> & A, const Vector<double> & v)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == v.Size())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == v.Size())
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			Vector<double> y(m);
@@ -66,7 +66,7 @@ namespace Utilities
 
 		Matrix<double> operator *(const Matrix<double> & A, const Matrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfRows())
 			int m = A.NumberOfRows();
 			int n = B.NumberOfColumns();
 			int l = A.NumberOfColumns();
@@ -82,7 +82,7 @@ namespace Utilities
 
 		Matrix<double> operator +(const Matrix<double> & A, const Matrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			Matrix<double> C(m, n);
@@ -94,7 +94,7 @@ namespace Utilities
 
 		Matrix<double> operator -(const Matrix<double> & A, const Matrix<double> & B)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			Matrix<double> C(m, n);
@@ -186,7 +186,7 @@ namespace Utilities
 
 		TriangularMatrix<double> Lower(const Matrix<double> & A)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
 			const int n = A.NumberOfRows();
 			TriangularMatrix<double> Y(n);
 			for (int i = 0; i < n; ++i)
@@ -197,7 +197,7 @@ namespace Utilities
 
 		TriangularMatrix<double> Upper(const Matrix<double> & A)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
 			const int n = A.NumberOfRows();
 			TriangularMatrix<double> Y(n);
 			for (int i = 0; i < n; ++i)
@@ -208,7 +208,7 @@ namespace Utilities
 
 		TriangularMatrix<double> Symmetric(const Matrix<double> & A)
 		{
-			GLMMGS_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
+			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
 			const int n = A.NumberOfRows();
 			TriangularMatrix<double> Y(n);
 			for (int i = 0; i < n; ++i)

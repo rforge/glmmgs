@@ -17,7 +17,7 @@ namespace Utilities
 
 		Vector<double> & operator +=(Vector<double> & v, const Vector<double> & w)
 		{
-			GLMMGS_ASSERT_ARGUMENT(v.Size() == w.Size())
+			_ASSERT_ARGUMENT(v.Size() == w.Size())
 			int n = v.Size();
 			for (int i = 0; i < n; ++i)
 				v(i) += w(i);
@@ -26,7 +26,7 @@ namespace Utilities
 
 		Vector<double> & operator -=(Vector<double> & v, const Vector<double> & w)
 		{
-			GLMMGS_ASSERT_ARGUMENT(v.Size() == w.Size())
+			_ASSERT_ARGUMENT(v.Size() == w.Size())
 			int n = v.Size();
 			for (int i = 0; i < n; ++i)
 				v(i) -= w(i);
@@ -44,7 +44,7 @@ namespace Utilities
 
 		Vector<double> operator +(const Vector<double> & v, const Vector<double> & w)
 		{
-			GLMMGS_ASSERT_ARGUMENT(v.Size() == w.Size())
+			_ASSERT_ARGUMENT(v.Size() == w.Size())
 			int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
@@ -54,7 +54,7 @@ namespace Utilities
 
 		Vector<double> operator -(const Vector<double> & v, const Vector<double> & w)
 		{
-			GLMMGS_ASSERT_ARGUMENT(v.Size() == w.Size())
+			_ASSERT_ARGUMENT(v.Size() == w.Size())
 			int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
@@ -74,7 +74,7 @@ namespace Utilities
 
 		double ScalarProduct(const Vector<double> & v, const Vector<double> & w)
 		{
-			GLMMGS_ASSERT_ARGUMENT(v.Size() == w.Size())
+			_ASSERT_ARGUMENT(v.Size() == w.Size())
 			const int n = v.Size();
 			double sum = 0.0;
 			for (int i = 0; i < n; ++i)
@@ -106,7 +106,7 @@ namespace Utilities
 		double MaxAbsImpl(const Vector<TYPE> & v)
 		{
 			const int n = v.Size();
-			GLMMGS_VALIDATE_ARGUMENT(n > 0);
+			_VALIDATE_ARGUMENT(n > 0);
 			double max = MaxAbsImpl(v(0));
 			for (int i = 1; i < n; ++i)
 			{
@@ -121,7 +121,7 @@ namespace Utilities
 		double MinAbsImpl(const Vector<TYPE> & v)
 		{
 			const int n = v.Size();
-			GLMMGS_VALIDATE_ARGUMENT(n > 0);
+			_VALIDATE_ARGUMENT(n > 0);
 			double min = MinAbsImpl(v(0));
 			for (int i = 1; i < n; ++i)
 			{
@@ -155,7 +155,7 @@ namespace Utilities
 
 		double ScalarProduct(const Vector<Vector<double> > & x, const Vector<Vector<double> > & y)
 		{
-			GLMMGS_ASSERT_ARGUMENT(x.Size() == y.Size());
+			_ASSERT_ARGUMENT(x.Size() == y.Size());
 			const int n = x.Size();
 			double sum = 0;
 			for (int i = 0; i < n; ++i)

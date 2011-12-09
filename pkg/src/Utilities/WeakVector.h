@@ -56,14 +56,14 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & WeakVector<TYPE>::operator ()(int i)
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= i && i < this->size);
+		_ASSERT_ARGUMENT(0 <= i && i < this->size);
 		return this->ptr[i];
 	}
 
 	template <class TYPE> inline
 	const TYPE & WeakVector<TYPE>::operator ()(int i) const
 	{
-		GLMMGS_ASSERT_ARGUMENT(0 <= i && i < this->size);
+		_ASSERT_ARGUMENT(0 <= i && i < this->size);
 		return this->ptr[i];
 	}
 }

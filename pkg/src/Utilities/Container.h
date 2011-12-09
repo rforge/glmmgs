@@ -46,37 +46,22 @@ namespace Utilities
 
 	template <class TYPE>
 	Container<TYPE>::Container(int capacity)
-		: ptr(NULL), capacity(0)
+		: ptr(Allocator<TYPE>::Allocate(capacity)), capacity(capacity)
 	{
-		GLMMGS_VALIDATE_ARGUMENT(capacity >= 0)
-		
-		// Allocate
-		TYPE * ptr = Allocator<TYPE>::Allocate(capacity);
-		
-		// Construct
-		memset(ptr, 0, sizeof(TYPE) * capacity);
-		Allocator<TYPE>::Construct(ptr, capacity); 
+		// Validate capacity
+		_VALIDATE_ARGUMENT(capacity >= 0);
 
-		// Store
-		this->ptr = ptr;
-		this->capacity = capacity;
+		// Construct
+		memset(this->ptr, 0, sizeof(TYPE) * this->capacity);
+		Allocator<TYPE>::Construct(this->ptr, this->capacity);
 	}
 
-	template <class TYPE>
+	template <class TYPE> inline
 	Container<TYPE>::Container(const Container<TYPE> & src)
-		: ptr(NULL), capacity(0)
+		: ptr(Allocator<TYPE>::Allocate(src.capacity)), capacity(src.capacity)
 	{
-		GLMMGS_ASSERT(this != &src, Exceptions::InvalidArgumentException("Object cannot copy-construct itself"))
-
-		// Allocate
-		TYPE * ptr = Allocator<TYPE>::Allocate(src.capacity);
-
 		// Copy-construct
-		Allocator<TYPE>::CopyConstruct(ptr, src.ptr, src.capacity); 
-
-		// Store
-		this->ptr = ptr;
-		this->capacity = src.capacity;
+		Allocator<TYPE>::CopyConstruct(this->ptr, src.ptr, this->capacity);
 	}
 
 	template <class TYPE> inline 
@@ -94,22 +79,19 @@ namespace Utilities
 	template <class TYPE>
 	void Container<TYPE>::Allocate(int capacity)
 	{
-		// Argument validation
-		GLMMGS_VALIDATE_ARGUMENT(capacity >= 0)
+		// Validate argument
+		_VALIDATE_ARGUMENT(capacity >= 0)
 
 		// Delete and destroy
 		this->Free();
 
 		// Allocate
-		TYPE * ptr = Allocator<TYPE>::Allocate(capacity);
+		this->ptr = Allocator<TYPE>::Allocate(capacity);
+		this->capacity = capacity;
 
 		// Construct
-		memset(ptr, 0, sizeof(TYPE) * capacity);
-		Allocator<TYPE>::Construct(ptr, capacity);
-
-		// Store
-		this->ptr = ptr;
-		this->capacity = capacity;
+		memset(this->ptr, 0, sizeof(TYPE) * this->capacity);
+		Allocator<TYPE>::Construct(this->ptr, this->capacity);
 	}
 
 	template <class TYPE>
@@ -119,12 +101,12 @@ namespace Utilities
 		if (capacity == this->capacity)
 			return;
 
+		// Validate argument
+		_VALIDATE_ARGUMENT(capacity >= 0)
+
 		// If current capacity is zero allocate
 		if (this->capacity == 0)
 			this->Allocate(capacity);
-
-		// Argument validation
-		GLMMGS_VALIDATE_ARGUMENT(capacity >= 0)
 
 		// Allocate
 		TYPE * ptr = Allocator<TYPE>::Allocate(capacity);

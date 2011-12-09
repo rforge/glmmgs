@@ -18,42 +18,21 @@ namespace Utilities
 			CholeskyDecomposition();
 			explicit CholeskyDecomposition(const TriangularMatrix<double> & A);
 
+			// Properties
+			const TriangularMatrix<double> & Lower() const;
+
 			// Methods
 			void Decompose(const TriangularMatrix<double> & A);
 			Vector<double> Solve(const Vector<double> & b) const;
 			TriangularMatrix<double> Inverse() const;
 			double Determinant() const;
-
-			// Properties
-			int NumberOfColumns() const;
-			int NumberOfRows() const;
-			const TriangularMatrix<double> & L() const;
-			double L(int i, int j) const;
 		};
 
-		// Definition
+		// Properties
 		inline
-		int CholeskyDecomposition::NumberOfColumns() const
-		{
-			return this->lower.NumberOfColumns();
-		}
-
-		inline
-		int CholeskyDecomposition::NumberOfRows() const
-		{
-			return this->lower.NumberOfRows();
-		}
-
-		inline
-		const TriangularMatrix<double> & CholeskyDecomposition::L() const
+		const TriangularMatrix<double> & CholeskyDecomposition::Lower() const
 		{
 			return this->lower;
-		}
-		
-		inline
-		double CholeskyDecomposition::L(int i, int j) const
-		{
-			return this->lower(i, j);
 		}
 	}
 }

@@ -8,26 +8,26 @@ namespace Utilities
 	// ReferenceCounter
 	class ReferenceCounter
 	{
+	private:
+		// Disable assignment
+		const ReferenceCounter & operator =(const ReferenceCounter &);
+
+		// Fields
+		int * counter;
+
 	public:
 		// Attributes
 		int Count() const;
 
-	protected:
 		// Construction
 		ReferenceCounter();
-		ReferenceCounter(int count); // Set reference
+		explicit ReferenceCounter(int count); // Set reference
 		ReferenceCounter(const ReferenceCounter & refCounter); // Add reference
 		
 		// Methods
 		void SetReference(int count);
 		void AddReference(const ReferenceCounter & refCounter);
 		int RemoveReference();
-
-	private:
-		const ReferenceCounter & operator =(const ReferenceCounter &);
-		
-		// Data
-		int * counter;
 	};
 
 	// Definition

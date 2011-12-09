@@ -25,8 +25,6 @@ namespace Utilities
 			}
 
 			// Check min_level
-			if (min_level < 0)
-				throw Exceptions::Exception("Negative levels are not allowed");
 			if (min_level != 0)
 				throw Exceptions::Exception("Levels must be zero-based indices");
 

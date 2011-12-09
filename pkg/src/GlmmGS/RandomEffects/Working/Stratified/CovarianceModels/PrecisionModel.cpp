@@ -17,14 +17,19 @@ namespace GlmmGS
 					// Weighted square norm of vector
 					double Square(WeakMatrix<const double> m, const Vector<double> & x)
 					{
-						GLMMGS_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
+						_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 						const int size = x.Size();
 						double sum = 0.0;
 						for (int i = 0; i < size; ++i)
 						{
+							// Diagonal term
 							sum += m(i, i) * Math::Square(x(i));
+
+							// Off diagonal terms
+							double tmp = 0.0;
 							for (int j = 0; j < i; ++j)
-								sum += 2.0 * m(i, j) * x(i) * x(j);
+								tmp += m(i, j) * x(j);
+							sum += 2.0 * x(i) * tmp;
 						}
 						return sum;
 					}
@@ -59,7 +64,7 @@ namespace GlmmGS
 					// Off-diagonal block product
 					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset_row, int offset_col, WeakMatrix<const double> m)
 					{
-						GLMMGS_ASSERT_ARGUMENT(offset_col < offset_row);
+						_ASSERT_ARGUMENT(offset_col < offset_row);
 						const int size = m.NumberOfRows();
 						double sum = 0.0;
 						for (int i = 0; i < size; ++i)
@@ -82,7 +87,7 @@ namespace GlmmGS
 					// Trace of off-diagonal blocks product
 					double BlockSquareTrace(int row, int col, const TriangularMatrix<double> & v, WeakMatrix<const double> m)
 					{
-						GLMMGS_ASSERT_ARGUMENT(col < row);
+						_ASSERT_ARGUMENT(col < row);
 						const int size = m.NumberOfRows();
 						const int offset_row = row * size;
 						const int offset_col = col * size;
