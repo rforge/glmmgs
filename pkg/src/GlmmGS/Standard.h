@@ -6,6 +6,8 @@
 #include "../Utilities/LinearAlgebra/LinearAlgebra.h"
 #include "../Utilities/Math/Math.h"
 #include "../Utilities/Statistics/StatisticFunctions.h"
+#include "../Utilities/LDL/LDL.h"
+#include "../Utilities/NewTypes/NewTypes.h"
 
 namespace GlmmGS
 {
