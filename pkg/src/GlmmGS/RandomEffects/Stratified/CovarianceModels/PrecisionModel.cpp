@@ -25,7 +25,7 @@ namespace GlmmGS
 				Pointer<Working::Stratified::CovarianceModels::ICovarianceModel> PrecisionModel::CreateWorking() const
 				{
 					typedef Working::Stratified::CovarianceModels::PrecisionModel T;
-					return Pointer<T>(new(bl) T(nvars, this->precision));
+					return Pointer<T>(new(bl) T(this->nvars, this->precision));
 				}
 			}
 		}

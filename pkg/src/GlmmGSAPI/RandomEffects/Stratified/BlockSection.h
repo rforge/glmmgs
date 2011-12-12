@@ -25,6 +25,7 @@ namespace GlmmGSAPI
 				void AddCovariate(WeakVector<const double> values);
 				void AddIdentityCovarianceModel();
 				void AddPrecisionModel(WeakMatrix<const double> precision);
+				void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
 				void EndStratifiedBlock();
 
 			public:

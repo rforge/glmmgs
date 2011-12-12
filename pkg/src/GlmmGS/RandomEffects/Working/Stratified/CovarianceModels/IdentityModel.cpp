@@ -82,7 +82,7 @@ namespace GlmmGS
 						}
 
 						// Debug
-						Print("Max update covariance components= %g\n", Max(h));
+						Print("MaxAbs update covariance components= %g\n", MaxAbs(h));
 
 						return update;
 					}

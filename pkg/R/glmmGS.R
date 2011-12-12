@@ -1,22 +1,148 @@
-# Construct control
+# Construct list of controls
 glmmGS.Control = function(reltol = 1.e-6, abstol = 1.e-6, maxit = 50)
 {
 	x = list(reltol = reltol, abstol = abstol, maxit = maxit);
 	return(x);
 }
 
-# Construct identity covariance model
-glmmGS.IdentityCovarianceModel = function()
+# Internal function to construct sparse matrix
+glmmGS.CreateSparseMatrix = function(ncols, values, indices, counts)
 {
-	x = list(type = "IdentityCovarianceModel");
-	return(x);
+	# Check data
+	if ((is.double(values) == FALSE) || (is.vector(values) == FALSE))
+	{
+		stop("\'values\' must be a vector of double")
+	}
+	if ((is.integer(indices) == FALSE) || (is.vector(indices) == FALSE))
+	{
+		stop("\'indices\' must be a vector of integers")
+	}
+	if ((is.integer(counts) == FALSE) || (is.vector(counts) == FALSE))
+	{
+		stop("\'counts\' must be a vector of integers")
+	}
+	
+	# Check length of counts
+	if (length(counts) != ncols + 1)
+	{
+		stop("Wrong length of \'counts\'");
+	}
+	
+	# Retrieve total number of non-zero entries
+	total.count = counts[ncols + 1];
+	
+	# Check length of values and indices
+	if (length(values) != total.count)
+	{
+		stop("Wrong length of \'values\'");
+	}
+	if (length(indices) != total.count)
+	{
+		stop("Wrong length of \'indices\'");
+	}
+	
+	# Check values of counts
+	if (counts[1] != 0)
+	{
+		stop("\'counts[1]\' must be equal to zero");
+	}
+	for (j in 1:ncols)
+	{
+		if (counts[j + 1] < counts[j])
+		{
+			stop("\'counts\' must be monotonic non-descending");
+		}
+	}
+	
+	# Check values of indices
+	for (j in 1:ncols)
+	{
+		for (p in counts[j]:(counts[j + 1] - 1))
+		{
+			# Notice that p is zero-based
+			if ((indices[p + 1L] < 0L) || (indices[p + 1L] >= ncols))
+			{
+				stop("\'indices\' values must be in [0, ncols - 1]")
+			}
+		}
+	}
+	
+	# Set return list
+	retval = list(ncols = ncols, values = values, indices = indices, counts = counts);
+	
+	# Attach "sparse" attribute to list
+	attr(retval, "sparse.matrix") = TRUE;
+	
+	# Return
+	return(retval);
 }
 
-# Construct precision model
-glmmGS.PrecisionModel = function(R)
+# Construct sparse matrix
+glmmGS.SparseMatrix = function(...)
 {
-	x = list(type = "PrecisionModel", R = R);
-	return(x);
+	# Get argument list
+	ls = list(...);
+	
+	# Initialize return value
+	retval = NULL;
+	
+	# Parse argument list
+	if (length(ls) == 1L)
+	{
+		R = ls[[1]];
+		if ((is.null(R) == TRUE) || (is.matrix(R) == FALSE) || (nrow(R) != ncol(R)))
+		{
+			stop("Invalid matrix");
+		}
+		else
+		{
+			# Build sparse matrix
+			# 1) Count non-zero elements
+			ncols = ncol(R);
+			counts = integer(ncols + 1L);
+			count.total = 0L;
+			counts[1] = 0L;
+			for (j in 1:ncols)
+			{
+				nz = which(R[, j] != 0);
+				count.total = count.total + length(nz);
+				counts[j + 1] = count.total;
+			}
+			
+			# 2) Set values and indices
+			values = double(count.total);
+			indices = integer(count.total);
+			index = 0L;
+			for (j in 1:ncols)
+			{
+				nz = which(R[, j] != 0);
+				lnz = length(nz);
+				values[index + 1:lnz] = R[nz, j];
+				indices[index + 1:lnz] = nz - 1L; # must be zero-based
+				index = index + lnz;
+			}
+			
+			# Create sparse matrix
+			retval = glmmGS.CreateSparseMatrix(ncols = ncols, values = values, indices = indices, counts = counts);
+		}
+	}
+	else if (length(ls) == 4L)
+	{
+		# Retrieve data
+		ncols = ls[["ncols"]];
+		values = ls[["values"]];
+		indices = ls[["indices"]];
+		counts = ls[["counts"]];
+		
+		# Create sparse matrix
+		retval = glmmGS.CreateSparseMatrix(ncols = ncols, values = values, indices = indices, counts = counts);
+	}
+	else
+	{
+		stop("Invalid argument list");
+	}
+	
+	return(retval);
 }
 
 # Construct covariance models
@@ -24,14 +150,30 @@ glmmGS.CovarianceModel = function(type, ...)
 {
 	V = NULL;
 	ls = list(...);
-	cat(names(ls));
 	if (type == "identity")
 	{
-		V = glmmGS.IdentityCovarianceModel();
+		V = list(type = "IdentityCovarianceModel");
 	}
 	else if (type == "precision")
 	{
-		V = glmmGS.PrecisionModel(ls[["R"]]);
+		V = NULL;
+		R = ls[[1]];
+		if (is.null(R) == TRUE)
+		{
+			stop("Invalid precision matrix");
+		}
+		else if ((is.matrix(R) == TRUE) && (nrow(R) == ncol(R)))
+		{
+			V = list(type = "PrecisionModel", R = R);
+		}
+		else if (is.null(attr(R, "sparse.matrix", TRUE)) == FALSE)
+		{
+			V = list(type = "SparsePrecisionModel", R = R);
+		}
+		else
+		{
+			stop("Invalid precision matrix");
+		}
 	}
 	else
 	{
@@ -81,6 +223,10 @@ glmmGS.AddCovarianceModel = function(block, covariance.models, env)
 	else if (covariance_model$type == "PrecisionModel")
 	{
 		glmmGSAPI.AddPrecisionModel(covariance_model$R);
+	}
+	else if (covariance_model$type == "SparsePrecisionModel")
+	{
+		glmmGSAPI.AddSparsePrecisionModel(covariance_model$R);
 	}
 	else
 	{

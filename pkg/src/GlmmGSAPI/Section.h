@@ -42,5 +42,6 @@ namespace GlmmGSAPI
 		virtual void AddCovariate(WeakVector<const double> values);
 		virtual void AddIdentityCovarianceModel();
 		virtual void AddPrecisionModel(WeakMatrix<const double> precision);
+		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
 	};
 }

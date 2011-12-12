@@ -51,7 +51,7 @@ namespace Utilities
 
 		template <class TYPE> inline
 		Array<TYPE>::Array(int size)
-			: ptr(new(bl) TYPE[size]), counter(1), size(size)
+			: ptr(new(bl) TYPE[size]), counter(ptr), size(size)
 		{
 		}
 
@@ -63,7 +63,7 @@ namespace Utilities
 
 		template <class TYPE> inline
 		Array<TYPE>::Array(External<TYPE> ptr, int size)
-			: ptr(ptr), counter(2), size(size)
+			: ptr(ptr), counter(NULL), size(size)
 		{
 		}
 

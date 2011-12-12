@@ -57,6 +57,7 @@ namespace GlmmGSAPI
 		// Covariance models
 		void AddIdentityCovarianceModel();
 		void AddPrecisionModel(WeakMatrix<const double> precision);
+		void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
 
 		// Fit
 		void Fit(GlmmGS::Controls controls);

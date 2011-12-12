@@ -67,7 +67,7 @@ namespace GlmmGS
 						}
 
 						// Debug
-						Print("Max update covariance components= %g\n", h);
+						Print("MaxAbs update covariance components= %g\n", Math::Abs(h));
 
 						return update;
 					}

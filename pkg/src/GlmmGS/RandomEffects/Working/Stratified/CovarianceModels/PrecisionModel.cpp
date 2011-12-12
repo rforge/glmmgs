@@ -195,11 +195,6 @@ namespace GlmmGS
 							this->tau -= h;
 						}
 
-						// Debug
-						Print("Update covariance components= %g\n", h);
-						//Print("Covariance components = %g\n", this->tau);
-						//Print("Update covariance components: %d\n", update);
-
 						return update;
 					}
 

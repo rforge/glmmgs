@@ -3,17 +3,23 @@
 
 namespace Utilities
 {
-	void ReferenceCounter::SetReference(int count)
+	void ReferenceCounter::Reset(void * ptr)
 	{
-		_ASSERT_ARGUMENT(this->counter == NULL)
-		this->counter = new(bl) int(count);
+		// This method should only be called after RemoveReference
+		_ASSERT_ARGUMENT(this->counter == NULL);
+		if (ptr)
+			this->counter = new(bl) int(1);
 	}
 
 	void ReferenceCounter::AddReference(const ReferenceCounter & refCounter)
 	{
-		_ASSERT_ARGUMENT(this->counter == NULL)
-		this->counter = refCounter.counter;
-		++(*this->counter);
+		// This method should only be called after RemoveReference
+		_ASSERT_ARGUMENT(this->counter == NULL);
+		if (refCounter.counter)
+		{
+			this->counter = refCounter.counter;
+			++(*this->counter);
+		}
 	}
 	
 	int ReferenceCounter::RemoveReference()

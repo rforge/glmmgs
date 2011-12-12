@@ -36,6 +36,7 @@
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/ICovarianceModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/IdentityModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/PrecisionModel.h"
+#include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/SparsePrecisionModel.h"
 
 // Boosters
 #include "../GlmmGS/RandomEffects/Working/Stratified/Boosters/IBooster.h"

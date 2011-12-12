@@ -41,8 +41,6 @@ namespace GlmmGS
 
 					// Debug
 					Print("MaxAbs update random effects: %g\n", MaxAbs(h_test));
-					//Print("MinAbs random effects: %g\n", MinAbs(this->values));
-					//Print("Update random effects: %d\n", update);
 
 					// Update
 					for (int i = 0; i < h.Size(); ++i)

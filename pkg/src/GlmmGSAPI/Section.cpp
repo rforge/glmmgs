@@ -131,4 +131,9 @@ namespace GlmmGSAPI
 	{
 		throw Exception("Invalid call: AddPrecisionModel");
 	}
+
+	void Section::AddSparsePrecisionModel(const LDL::SparseMatrix<double> &)
+	{
+		throw Exception("Invalid call: AddSparsePrecisionModel");
+	}
 }

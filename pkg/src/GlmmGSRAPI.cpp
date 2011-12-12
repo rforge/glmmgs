@@ -304,6 +304,30 @@ void GlmmGSRAPI_AddPrecisionModel(const double * values, const int * nrows, cons
 	}
 }
 
+void GlmmGSRAPI_AddSparsePrecisionModel(const int * ncols, const double * values, const int * indices, const int * counts)
+{
+	try
+	{
+		// Counters
+		const int n = *ncols;
+		const int count = counts[n];
+
+		// It is safe to use const_cast since we embed the const pointers inside constant objects
+		const NewTypes::Vector<double> vvalues(NewTypes::External<double>(const_cast<double *>(values)), count);
+		const NewTypes::Vector<int> vindices(NewTypes::External<int>(const_cast<int *>(indices)), count);
+		const NewTypes::Vector<int> vcounts(NewTypes::External<int>(const_cast<int *>(counts)), n + 1);
+
+		// Sparse matrix
+		const LDL::SparseMatrix<double> R(n, vvalues, vindices, vcounts);
+
+		the_api.AddSparsePrecisionModel(R);
+	}
+	catch (Exception & e)
+	{
+		the_api.SetLastError(e);
+	}
+}
+
 void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance, const int * maxiter)
 {
 	try

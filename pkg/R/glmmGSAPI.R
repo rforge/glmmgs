@@ -231,19 +231,40 @@ glmmGSAPI.AddCovariate = function(values)
 	}
 }
 
-# Associate identity covariance model
+# Add identity covariance model
 glmmGSAPI.AddIdentityCovarianceModel = function()
 {
 	.C("GlmmGSRAPI_AddIdentityCovarianceModel", PACKAGE = "glmmGS");
 	glmmGSAPI.GetLastError();
 }
 
-# Associate precision model
+# Add precision model
 glmmGSAPI.AddPrecisionModel = function(R)
 {
-	dim = dim(R);
-	.C("GlmmGSRAPI_AddPrecisionModel", R, dim[1], dim[2], DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
-	glmmGSAPI.GetLastError();
+	if ((is.matrix(R) == TRUE) && (is.double(R) == TRUE))
+	{
+		dim = dim(R);
+		.C("GlmmGSRAPI_AddPrecisionModel", R, dim[1], dim[2], DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else
+	{
+		stop("Invalid type");
+	}
+}
+
+# Add sparse-precision model
+glmmGSAPI.AddSparsePrecisionModel = function(R)
+{
+	if (is.null(attr(R, "sparse.matrix", TRUE)) == FALSE)
+	{
+		.C("GlmmGSRAPI_AddSparsePrecisionModel", as.integer(R$ncols), R$values, R$indices, R$counts, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		glmmGSAPI.GetLastError();
+	}
+	else
+	{
+		stop("Invalid type");
+	}
 }
 
 # Fit current model

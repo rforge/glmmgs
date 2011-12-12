@@ -175,6 +175,11 @@ namespace GlmmGSAPI
 		this->sections.Top()->AddPrecisionModel(precision);
 	}
 
+	void GlmmGSAPI::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision)
+	{
+		this->sections.Top()->AddSparsePrecisionModel(precision);
+	}
+
 	// Fit
 	void GlmmGSAPI::Fit(GlmmGS::Controls controls)
 	{

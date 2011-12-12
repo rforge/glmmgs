@@ -25,7 +25,7 @@ namespace GlmmGS
 					Vector<double> h = covariance_model->CoefficientsUpdate(jacobian, this->values);
 
 					// Debug
-					Print("Max update random effects: %g\n", Max(h));
+					Print("MaxAbs update random effects: %g\n", MaxAbs(h));
 
 					// Check if update is significant
 					const int update = comparer.IsZero(h, this->values) ? 0 : 1;

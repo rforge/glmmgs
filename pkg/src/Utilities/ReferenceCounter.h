@@ -21,11 +21,11 @@ namespace Utilities
 
 		// Construction
 		ReferenceCounter();
-		explicit ReferenceCounter(int count); // Set reference
+		explicit ReferenceCounter(void * ptr);
 		ReferenceCounter(const ReferenceCounter & refCounter); // Add reference
 		
 		// Methods
-		void SetReference(int count);
+		void Reset(void * ptr);
 		void AddReference(const ReferenceCounter & refCounter);
 		int RemoveReference();
 	};
@@ -44,8 +44,8 @@ namespace Utilities
 	}
 
 	inline
-	ReferenceCounter::ReferenceCounter(int count)
-		: counter(new(bl) int(count))
+	ReferenceCounter::ReferenceCounter(void * ptr)
+		: counter(ptr != NULL ? new(bl) int(1) : NULL)
 	{
 	}
 

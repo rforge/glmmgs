@@ -72,7 +72,7 @@ namespace Utilities
 	template <class TYPE>
 	template <class OTHER> inline
 	Pointer<TYPE>::Pointer(OTHER * ptr)
-		: ReferenceCounter(1), ptr(ptr)
+		: ReferenceCounter(ptr), ptr(ptr)
 	{
 	}
 
@@ -104,7 +104,7 @@ namespace Utilities
 		if (ReferenceCounter::RemoveReference() == 0)
 			delete this->ptr;
 		this->ptr = ptr;
-		ReferenceCounter::SetReference(1);
+		ReferenceCounter::Reset(ptr);
 	}
 
 	template <class TYPE>

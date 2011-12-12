@@ -1,4 +1,5 @@
 useDynLib(glmmGS, .registration = TRUE)
 export("glmmGS",
        "glmmGS.CovarianceModel",
-       "glmmGS.Control")
+       "glmmGS.Control",
+       "glmmGS.SparseMatrix")

@@ -49,7 +49,7 @@ namespace GlmmGS
 					Vector<Vector<double> > h = this->precision.Solve(jacobian);
 
 					// Debug
-					Print("Max update fixed effects: %g\n", Max(h));
+					Print("MaxAbs update fixed effects: %g\n", MaxAbs(h));
 
 					// Check if update is significant
 					int update = 1;

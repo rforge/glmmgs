@@ -72,6 +72,16 @@ namespace GlmmGSAPI
 				this->covariance_model.Reset(new(bl) T(this->variables.Size(), precision));
 			}
 
+			void BlockSection::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision)
+			{
+				if (this->covariance_model.IsNull() == false)
+					throw Exceptions::MultipleCovarianceModelsException();
+
+				// Add sparse covariance model
+				typedef GlmmGS::RandomEffects::Stratified::CovarianceModels::SparsePrecisionModel T;
+				this->covariance_model.Reset(new(bl) T(this->variables.Size(), precision));
+			}
+
 			void BlockSection::EndStratifiedBlock()
 			{
 				if (this->covariance_model.IsNull() == true)
