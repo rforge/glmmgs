@@ -16,7 +16,6 @@
 #include "New.h"
 
 // Types
-#include "Pair.h"
 #include "Pointer.h"
 #include "Buffer.h"
 #include "Stack.h"
@@ -26,4 +25,3 @@
 
 // Min, Max (vector version), IsSorted
 #include "VectorAlgorithms.h"
-#include "BinarySearch.h"

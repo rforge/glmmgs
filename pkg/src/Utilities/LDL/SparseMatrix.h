@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../NewTypes/Array.h"
+#include "../NewTypes/NewTypes.h"
+#include "Internal/LDL.h"
 
 namespace Utilities
 {
 	namespace LDL
 	{
-		using namespace Utilities::NewTypes;
+		using namespace NewTypes;
 
 		// Data structure for SparseCholeskyDecomposition
 		template <class TYPE>
@@ -22,7 +23,6 @@ namespace Utilities
 		public:
 			// Construction
 			SparseMatrix();
-			SparseMatrix(const SparseMatrix<TYPE> & src);
 			SparseMatrix(int ncols, NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts);
 
 			// Properties
@@ -42,16 +42,19 @@ namespace Utilities
 		{
 		}
 
-		template <class TYPE> inline
-		SparseMatrix<TYPE>::SparseMatrix(const SparseMatrix<TYPE> & src)
-			: ncols(src.ncols), values(src.values), indices(src.indices), counts(src.counts)
-		{
-		}
-
-		template <class TYPE> inline
+		template <class TYPE>
 		SparseMatrix<TYPE>::SparseMatrix(int ncols, NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts)
 			: ncols(ncols), values(values), indices(indices), counts(counts)
 		{
+#ifdef _DEBUG
+			_ASSERT(counts.Size() == ncols + 1, Utilities::Exceptions::Exception("SparseMatrix: Invalid count size"));
+			_ASSERT(values.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid values size"));
+			_ASSERT(indices.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid indices size"));
+			_ASSERT(Internal::LDL_valid_matrix(ncols,
+					Cast<const Array<int> >(counts),
+					Cast<const Array<int> >(indices)) == 1,
+					Utilities::Exceptions::Exception("SparseMatrix: invalid matrix"));
+#endif
 		}
 
 		// Properties

@@ -26,7 +26,7 @@ namespace Utilities
 			// Methods
 			void Decompose(const SparseMatrix<double> upper);
 			NewTypes::Vector<double> Solve(const NewTypes::Vector<double> b) const;
-			//NewTypes::TriangularMatrix<double> Inverse() const;
+			TriangularMatrix<double> Inverse() const;
 			//double Determinant() const;
 		};
 

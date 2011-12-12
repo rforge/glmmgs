@@ -65,59 +65,72 @@ namespace Utilities
 		{
 			_VALIDATE_ARGUMENT(b.Size() == this->lower.NumberOfColumns());
 
-			const int ncols = this->lower.NumberOfColumns();
-			NewTypes::Vector<double> x(ncols);
-			CopyVector(x, b);
-			Internal::LDL_lsolve(ncols,
-					Cast<Array<double> >(x),
-					Cast<const Array<int> >(this->lower.Counts()),
-					Cast<const Array<int> >(this->lower.Indices()),
-					Cast<const Array<double> >(this->lower.Values()));
+			const int n = this->diagonal.Size();
+			NewTypes::Vector<double> x(n);
+			Copy(x, b);
 
-			Internal::LDL_dsolve(ncols,
-					Cast<Array<double> >(x),
-					Cast<const Array<double> >(this->diagonal));
-
-			Internal::LDL_ltsolve(ncols,
-					Cast<Array<double> >(x),
-					Cast<const Array<int> >(this->lower.Counts()),
-					Cast<const Array<int> >(this->lower.Indices()),
-					Cast<const Array<double> >(this->lower.Values()));
-
-			return x;
-		}
-		/*
-		TriangularMatrix<double> SparseCholeskyDecomposition::Inverse() const
-		{
-			const int n = this->lower.NumberOfRows();
-			TriangularMatrix<double> x(n);
-
-			// Calculate inverse
+			// Solve L x = b (the diagonal elements of L are assumed equal to 1)
 			for (int j = 0; j < n; ++j)
 			{
-				// Back-substitution algorithm with b = delta(j)
-				// i == j
-				{
-					const double sum = 1.0 - SparseLinearAlgebra::ScalarProduct(this->lower.SubRow(j), x.Column(j));
-					x(j, j) = sum / this->lower.Diagonal(j);
-				}
-
-				// i > j
-				for (int i = j + 1; i < n; ++i)
-				{
-					const double sum = SparseLinearAlgebra::ScalarProduct(this->lower.SubRow(i), x.Column(j));
-					x(i, j) = sum / this->lower.Diagonal(i);
-				}
-
-				for (int i = n - 1; i >= j; --i)
-				{
-					const double sum = x(i, j) - SparseLinearAlgebra::ScalarProduct(this->lower.SubColumn(i), x.Column(j));
-					x(i, j) = sum / this->lower.Diagonal(i);
-				}
+				const int p2 = this->lower.Count(j + 1);
+				for (int p = this->lower.Count(j); p < p2; ++p)
+					x(this->lower.Index(p)) -= this->lower.Value(p) * x(j);
 			}
+
+			// Solve D x = b
+			for (int j = 0 ; j < n ; ++j)
+				x(j) /= this->diagonal(j);
+
+			// Solve L^T x = b
+			for (int j = n - 1; j >= 0; --j)
+			{
+				const int p2 = this->lower.Count(j + 1);
+				for (int p = this->lower.Count(j); p < p2; ++p)
+					x(j) -= this->lower.Value(p) * x(this->lower.Index(p));
+			}
+
 			return x;
 		}
 
+		TriangularMatrix<double> SparseCholeskyDecomposition::Inverse() const
+		{
+			const int n = this->diagonal.Size();
+			TriangularMatrix<double> y(n);
+			NewTypes::Vector<double> x(n);
+			for (int i = 0; i < n; ++i)
+			{
+				// Prepare RHS vector
+				Set(x, 0);
+				x(i) = 1.0;
+
+				// Solve L x = b (the diagonal elements of L are assumed equal to 1)
+				for (int j = 0; j < n; ++j)
+				{
+					const int p2 = this->lower.Count(j + 1);
+					for (int p = this->lower.Count(j); p < p2; ++p)
+						x(this->lower.Index(p)) -= this->lower.Value(p) * x(j);
+				}
+
+				// Solve D x = b
+				for (int j = 0 ; j < n ; ++j)
+					x(j) /= this->diagonal(j);
+
+				// Solve L^T x = b for j = n - 1, ..., i
+				for (int j = n - 1; j >= i; --j)
+				{
+					const int p2 = this->lower.Count(j + 1);
+					for (int p = this->lower.Count(j); p < p2; ++p)
+						x(j) -= this->lower.Value(p) * x(this->lower.Index(p));
+
+					// Store matrix element
+					y(j, i) = x(j);
+				}
+			}
+
+			return y;
+		}
+
+		/*
 		double SparseCholeskyDecomposition::Determinant() const
 		{
 			const int n = this->lower.NumberOfRows();
