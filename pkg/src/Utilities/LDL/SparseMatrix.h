@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../NewTypes/NewTypes.h"
-#include "Internal/LDL.h"
+#include "Internal/ldl.h"
 
 namespace Utilities
 {

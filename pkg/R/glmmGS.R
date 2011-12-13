@@ -129,10 +129,10 @@ glmmGS.SparseMatrix = function(...)
 	else if (length(ls) == 4L)
 	{
 		# Retrieve data
-		ncols = ls[["ncols"]];
-		values = ls[["values"]];
-		indices = ls[["indices"]];
-		counts = ls[["counts"]];
+		ncols = ls[[1]];
+		values = ls[[2]];
+		indices = ls[[3]];
+		counts = ls[[4]];
 		
 		# Create sparse matrix
 		retval = glmmGS.CreateSparseMatrix(ncols = ncols, values = values, indices = indices, counts = counts);
