@@ -12,7 +12,7 @@
 	with stratified covariates with a large number of levels, and mixed model 
 	with stratified covariates with a large number of levels and diagonal
 	covariance structures. Covariance structures defined by non diagonal dense 
-	or sparse precision matrices can also allowed (see \code{\link{glmmGS.CovarianceModel}}).
+	or sparse precision matrices are also allowed (see \code{\link{glmmGS.CovarianceModel}}).
 }
 \usage{
 	glmmGS(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control(), random.effects.covariance = FALSE)
@@ -95,6 +95,9 @@
 	\item{iterations}{
 		the number of iterations.
 	}
+	\item{fitted.values}{
+		the fitted values.
+	}
 }
 
 \references{
@@ -103,7 +106,7 @@
 	\emph{Journal of Computational and Graphical Statistics}, \bold{4}, 810--837.
 }
 \author{
-	Michele Morara, Luise Ryan, Subarhu Guha, Chris Paciorek  
+	Michele Morara, Luise Ryan, Subarhup Guha, Chris Paciorek  
 }
 \note{
 %%  ~~further notes~~
