@@ -95,9 +95,6 @@
 	\item{iterations}{
 		the number of iterations.
 	}
-	\item{fitted.values}{
-		the fitted values.
-	}
 }
 
 \references{
