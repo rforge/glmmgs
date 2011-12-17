@@ -1,5 +1,5 @@
 # Construct list of controls
-glmmGS.Control = function(reltol = 1.e-6, abstol = 1.e-6, maxit = 50)
+glmmGS.Control = function(reltol = 1.e-6, abstol = 1.e-6, maxit = 500)
 {
 	x = list(reltol = reltol, abstol = abstol, maxit = maxit);
 	return(x);
@@ -387,7 +387,7 @@ glmmGS.AddResponse = function(response, family, data, env)
 }
 
 # Main function
-glmmGS = function(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control())
+glmmGS = function(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control(), random.effects.covariance = FALSE)
 {
 	# Gets environment of calling function
 	env = parent.frame();

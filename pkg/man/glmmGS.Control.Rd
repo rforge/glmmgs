@@ -1,58 +1,64 @@
 \name{glmmGS.Control}
 \alias{glmmGS.Control}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
-Construct list of controls for glmmGS
+Construct control list for \code{glmmGS} function
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+	%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+	Construct a list of control parameters used internally by the 
+	\code{\link{glmmGS}} function.
 }
 \usage{
-glmmGS.Control(reltol = 1e-06, abstol = 1e-06, maxit = 50)
+	glmmGS.Control(reltol = 1e-06, abstol = 1e-06, maxit = 500)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{reltol}{
-%%     ~~Describe \code{reltol} here~~
-minimum relative tolerance of the parameters update
-}
-  \item{abstol}{
-%%     ~~Describe \code{abstol} here~~
-minimum absolute tolerance of the parameters update
-}
-  \item{maxit}{
-%%     ~~Describe \code{maxit} here~~
-maximum number of iterations of the parameters update
-}
+ 	\item{reltol}{
+		minimum relative tolerance of the parameters update.
+	}
+	\item{abstol}{
+		minimum absolute tolerance of the parameters update.
+	}
+  	\item{maxit}{
+		maximum number of iterations of the parameters update.
+	}
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+	%%  ~~ If necessary, more details than the description above ~~
+	The Gauss-Seidel iterative algorithm stops if every parameter-update is less than
+	\code{abstol} or less than \code{reltol} times the current parameter value.
+	If the algorithm reaches \emph{maxit} number of iterations without converging, 
+	then the algorithm stops and returns an error.
 }
+
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+	%%  ~Describe the value returned
+	%%  If it is a LIST, use
+	%%  \item{comp1 }{Description of 'comp1'}
+	%%  \item{comp2 }{Description of 'comp2'}
+	%% ...
+	A list of control parameters for the \code{\link{glmmGS}} function.
 }
 \references{
-%% ~put references to the literature/web site here ~
+	%% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+	%%  ~~who you are~~
+	Michele Morara, Luise Ryan, Subarhu Guha, Chris Paciorek
 }
 \note{
-%%  ~~further notes~~
+	%%  ~~further notes~~
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+	%% ~~objects to See Also as \code{\link{help}}, ~~~
+	\code{\link{glmmGS}}
 }
+
 \examples{
-##---- Should be DIRECTLY executable !! ----
+	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 500);
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

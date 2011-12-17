@@ -1,57 +1,107 @@
 \name{glmmGS.SparseMatrix}
 \alias{glmmGS.SparseMatrix}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
-Construct sparse matrix for glmmGS
+	Construct sparse matrix for \code{glmmGS.CovarianceModel} function
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+	%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+	Construct list of variables defining a column-sparse matrix used 
+	by the \code{\link{glmmGS.CovarianceModel}} function
 }
 \usage{
-glmmGS.SparseMatrix(...)
+	glmmGS.SparseMatrix(\dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{...}{
-	%%     ~~Describe \code{reltol} here~~
-	Can be a dense matrix or the following arguments in order: 
-	1) number of columns; 
-	2) a vector with the non-zero elements of the matrix;
-	3) a vector with the zero-based row indices of the non-zero elements of the matrix;
-	4) a vector of length ncols + 1, such that counts[1] = 0, and counts[j] equal to the total number  
-	of non-zero elements in columns 1, ..., j - 1.
-  }
+	\item{\dots}{
+		can be a dense matrix or the following arguments in order: 
+		- number of columns; 
+		- a vector with the non-zero elements of the matrix;
+		- a vector with the zero-based row indices of the non-zero elements of the matrix;
+		- a vector of length ncols + 1, such that counts[1] = 0, and counts[j] equal to the total number  
+		of non-zero elements in columns 1, \ldots, j - 1.
+	}
 }
 
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+	%%  ~~ If necessary, more details than the description above ~~
+	The list returned by this function defines a column-sparse matrix. The data structure
+	is the same one used by the LDL algorithms written by Tim Davis at 
+	the University of Florida (see reference).
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+	%%  ~Describe the value returned
+	%%  If it is a LIST, use
+	%%  \item{comp1 }{Description of 'comp1'}
+	%%  \item{comp2 }{Description of 'comp2'}
+	%% ...
+	A list with variables named as the arguments, describing a column-sparse matrix. 
 }
 \references{
-%% ~put references to the literature/web site here ~
+	%% ~put references to the literature/web site here ~
+	\url{http://www.cise.ufl.edu/research/sparse/ldl/}
 }
 \author{
-%%  ~~who you are~~
+	%%  ~~who you are~~
+	Michele Morara, Luise Ryan, Subarhu Guha, Chris Paciorek
 }
 \note{
-%%  ~~further notes~~
+	%%  ~~further notes~~
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+	%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
+
+# Set number of columns
+	ncols <- 100;
+	
+#Create sparse matrix from dense matrix
+
+	# Create matrix R
+	R <- diag(rep(1, ncols));
+	for (i in 2:ncols)
+	{
+		R[i - 1, i] <- 0.5;
+		R[i, i - 1] <- 0.5;
+	}
+	
+	# Create sparse matrix from R
+	R.sparse = glmmGS.SparseMatrix(R);
+	
+#Create same sparse matrix from vectors of values, indices, and counts
+	
+	# 1) Set counts
+	counts <- integer(ncols + 1L);
+	count.total <- 0L;
+	counts[1] <- 0L;
+	for (j in 1:ncols)
+	{
+		nz <- which(R[, j] != 0);
+		count.total <- count.total + length(nz);
+		counts[j + 1] <- count.total;
+	}
+	
+	# 2) Set values and indices
+	values <- double(count.total);
+	indices <- integer(count.total);
+	index <- 0L;
+	for (j in 1:ncols)
+	{
+		nz <- which(R[, j] != 0);
+		lnz <- length(nz);
+		values[index + 1:lnz] <- R[nz, j];
+		indices[index + 1:lnz] <- nz - 1L; # must be zero-based
+		index <- index + lnz;
+	}
+	
+	# Build sparse matrix
+	R.sparse2 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
 }
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }

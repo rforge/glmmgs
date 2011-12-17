@@ -5,9 +5,9 @@ namespace Utilities
 {
 	void ReferenceCounter::Reset(void * ptr)
 	{
-		// This method should only be called after RemoveReference
+		// This method should be called only after RemoveReference
 		_ASSERT_ARGUMENT(this->counter == NULL);
-		if (ptr)
+		if (ptr != NULL)
 			this->counter = new(bl) int(1);
 	}
 

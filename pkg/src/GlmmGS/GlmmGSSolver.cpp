@@ -55,7 +55,7 @@ namespace GlmmGS
 			}
 
 			// Debug
-			Print("Iter: %d\n", iter);
+			//Print("Iter: %d\n", iter);
 		}
 	}
 
