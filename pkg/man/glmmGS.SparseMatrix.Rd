@@ -56,7 +56,7 @@
 }
 \examples{
 
-# Create matrix R
+# Create dense matrix R
 	ncols <- 100;
 	R <- diag(rep(1, ncols));
 	for (i in 2:ncols)
@@ -71,8 +71,8 @@
 
 	nz <- R != 0;
 	values <- c(R[nz]);
-	indices = row(R)[nz] - 1L;
-	counts = as.integer(c(0, cumsum(colSums(nz))));
+	indices <- row(R)[nz] - 1L;
+	counts <- as.integer(c(0, cumsum(colSums(nz))));
 	R.sparse2 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
 
 # Create sparse matrix from vectors of values, indices, and counts
@@ -105,6 +105,7 @@
 	
 	# Build sparse matrix
 	R.sparse3 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
+}
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
