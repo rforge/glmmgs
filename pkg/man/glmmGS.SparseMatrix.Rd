@@ -15,10 +15,11 @@
 \arguments{
 	\item{\dots}{
 		can be a dense matrix or the following arguments in order: 
-		- number of columns; 
-		- a vector with the non-zero elements of the matrix;
-		- a vector with the zero-based row indices of the non-zero elements of the matrix;
-		- a vector of length ncols + 1, such that counts[1] = 0, and counts[j] equal to the total number  
+		(1) a numeric (i.e., double) vector with the non-zero elements of the matrix;
+		(2) an integer vector with the zero-based row indices of the non-zero elements of the matrix;
+		(3) an integer vector \code{counts} of length \code{ncols + 1},
+		where \code{ncols} indicates the number of columu of the matrix,
+		such that \code{counts[1] = 0}, and \code{counts[j]} equal to the total number	
 		of non-zero elements in columns 1, \ldots, j - 1.
 	}
 }
@@ -73,7 +74,7 @@
 	values <- c(R[nz]);
 	indices <- row(R)[nz] - 1L;
 	counts <- as.integer(c(0, cumsum(colSums(nz))));
-	R.sparse2 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
+	R.sparse2 <- glmmGS.SparseMatrix(values, indices, counts);
 
 # Create sparse matrix from vectors of values, indices, and counts
 # allocating O(ncols) workspace memory
@@ -104,7 +105,7 @@
 	}
 	
 	# Build sparse matrix
-	R.sparse3 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
+	R.sparse3 <- glmmGS.SparseMatrix(values, indices, counts);
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

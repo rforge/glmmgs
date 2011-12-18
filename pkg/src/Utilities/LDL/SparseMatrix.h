@@ -15,7 +15,6 @@ namespace Utilities
 		{
 		private:
 			// Fields
-			int ncols;
 			NewTypes::Vector<TYPE> values;
 			NewTypes::Vector<int> indices;
 			NewTypes::Vector<int> counts;
@@ -23,7 +22,7 @@ namespace Utilities
 		public:
 			// Construction
 			SparseMatrix();
-			SparseMatrix(int ncols, NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts);
+			SparseMatrix(NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts);
 
 			// Properties
 			int NumberOfColumns() const;
@@ -38,16 +37,15 @@ namespace Utilities
 		// Construction
 		template <class TYPE> inline
 		SparseMatrix<TYPE>::SparseMatrix()
-			: ncols(0)
 		{
 		}
 
 		template <class TYPE>
-		SparseMatrix<TYPE>::SparseMatrix(int ncols, NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts)
-			: ncols(ncols), values(values), indices(indices), counts(counts)
+		SparseMatrix<TYPE>::SparseMatrix(NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts)
+			: values(values), indices(indices), counts(counts)
 		{
 #ifdef _DEBUG
-			_ASSERT(counts.Size() == ncols + 1, Utilities::Exceptions::Exception("SparseMatrix: Invalid count size"));
+			const int ncols = counts.Size() - 1;
 			_ASSERT(values.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid values size"));
 			_ASSERT(indices.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid indices size"));
 			_ASSERT(Internal::LDL_valid_matrix(ncols,
@@ -61,7 +59,7 @@ namespace Utilities
 		template <class TYPE> inline
 		int SparseMatrix<TYPE>::NumberOfColumns() const
 		{
-			return this->ncols;
+			return this->counts.Size() - 1;
 		}
 
 		template <class TYPE> inline

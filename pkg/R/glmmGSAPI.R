@@ -258,7 +258,8 @@ glmmGSAPI.AddSparsePrecisionModel = function(R)
 {
 	if (is.null(attr(R, "sparse.matrix", TRUE)) == FALSE)
 	{
-		.C("GlmmGSRAPI_AddSparsePrecisionModel", as.integer(R$ncols), R$values, R$indices, R$counts, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		ncols = as.integer(length(R$counts)) - 1L;
+		.C("GlmmGSRAPI_AddSparsePrecisionModel", R$values, R$indices, R$counts, ncols, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
 		glmmGSAPI.GetLastError();
 	}
 	else

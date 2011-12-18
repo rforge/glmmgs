@@ -239,7 +239,7 @@ namespace GlmmGS
 						}
 
 						// Build sparse precision matrix
-						LDL::SparseMatrix<double> upper(ncols, values, indices, counts);
+						LDL::SparseMatrix<double> upper(values, indices, counts);
 
 						// Decompose sparse precision matrix
 						this->chol.Decompose(upper);

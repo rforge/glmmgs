@@ -57,7 +57,7 @@ namespace Utilities
 			// TODO: check return value
 
 			// Set members
-			this->lower = SparseMatrix<double>(ncols, lx, li, lp);
+			this->lower = SparseMatrix<double>(lx, li, lp);
 			this->diagonal = d;
 		}
 

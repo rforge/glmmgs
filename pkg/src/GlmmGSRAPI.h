@@ -37,7 +37,7 @@ extern "C"
 	// Covariance models
 	void GlmmGSRAPI_AddIdentityCovarianceModel();
 	void GlmmGSRAPI_AddPrecisionModel(const double * values, const int * nrows, const int * ncols);
-	void GlmmGSRAPI_AddSparsePrecisionModel(const int * ncols, const double * values, const int * indices, const int * counts);
+	void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indices, const int * counts, const int * ncols);
 
 	// Fit
 	void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance, const int * maxiter);

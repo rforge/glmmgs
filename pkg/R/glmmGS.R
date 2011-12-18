@@ -6,40 +6,30 @@ glmmGS.Control = function(reltol = 1.e-6, abstol = 1.e-6, maxit = 500)
 }
 
 # Internal function to construct sparse matrix
-glmmGS.CreateSparseMatrix = function(ncols, values, indices, counts)
+glmmGS.CreateSparseMatrix = function(values, indices, counts)
 {
-	# Check data
+	# Check types
+	if ((is.integer(counts) == FALSE) || (is.vector(counts) == FALSE))
+	{
+		stop("\'counts\' must be a vector of integers");
+	}
 	if ((is.double(values) == FALSE) || (is.vector(values) == FALSE))
 	{
-		stop("\'values\' must be a vector of double")
+		stop("\'values\' must be a vector of double");
 	}
 	if ((is.integer(indices) == FALSE) || (is.vector(indices) == FALSE))
 	{
-		stop("\'indices\' must be a vector of integers")
-	}
-	if ((is.integer(counts) == FALSE) || (is.vector(counts) == FALSE))
-	{
-		stop("\'counts\' must be a vector of integers")
+		stop("\'indices\' must be a vector of integers");
 	}
 	
 	# Check length of counts
-	if (length(counts) != ncols + 1)
+	if (length(counts) == 0)
 	{
-		stop("Wrong length of \'counts\'");
+		stop("\'counts\' must have length greater than zero");
 	}
 	
-	# Retrieve total number of non-zero entries
-	total.count = counts[ncols + 1];
-	
-	# Check length of values and indices
-	if (length(values) != total.count)
-	{
-		stop("Wrong length of \'values\'");
-	}
-	if (length(indices) != total.count)
-	{
-		stop("Wrong length of \'indices\'");
-	}
+	# Set number of columns
+	ncols = length(counts) - 1L;
 	
 	# Check values of counts
 	if (counts[1] != 0)
@@ -53,8 +43,21 @@ glmmGS.CreateSparseMatrix = function(ncols, values, indices, counts)
 			stop("\'counts\' must be monotonic non-descending");
 		}
 	}
+
+	# Retrieve total number of non-zero entries
+	nz = counts[ncols + 1];
 	
-	# Check values of indices
+	# Check length of values and indices
+	if (length(values) != nz)
+	{
+		stop("Wrong length of \'values\'");
+	}
+	if (length(indices) != nz)
+	{
+		stop("Wrong length of \'indices\'");
+	}
+	
+	# Check indices
 	for (j in 1:ncols)
 	{
 		for (p in counts[j]:(counts[j + 1] - 1))
@@ -68,7 +71,7 @@ glmmGS.CreateSparseMatrix = function(ncols, values, indices, counts)
 	}
 	
 	# Set return list
-	retval = list(ncols = ncols, values = values, indices = indices, counts = counts);
+	retval = list(values = values, indices = indices, counts = counts);
 	
 	# Attach "sparse" attribute to list
 	attr(retval, "sparse.matrix") = TRUE;
@@ -123,19 +126,18 @@ glmmGS.SparseMatrix = function(...)
 			}
 			
 			# Create sparse matrix
-			retval = glmmGS.CreateSparseMatrix(ncols = ncols, values = values, indices = indices, counts = counts);
+			retval = glmmGS.CreateSparseMatrix(values, indices, counts);
 		}
 	}
-	else if (length(ls) == 4L)
+	else if (length(ls) == 3L)
 	{
 		# Retrieve data
-		ncols = ls[[1]];
-		values = ls[[2]];
-		indices = ls[[3]];
-		counts = ls[[4]];
+		values = ls[[1]];
+		indices = ls[[2]];
+		counts = ls[[3]];
 		
 		# Create sparse matrix
-		retval = glmmGS.CreateSparseMatrix(ncols = ncols, values = values, indices = indices, counts = counts);
+		retval = glmmGS.CreateSparseMatrix(values, indices, counts);
 	}
 	else
 	{
