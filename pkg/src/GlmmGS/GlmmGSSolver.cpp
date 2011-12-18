@@ -61,8 +61,9 @@ namespace GlmmGS
 
 	int GlmmGSSolver::Update()
 	{
-		// Update fixed-effects
 		int update = 0;
+
+		// Update fixed-effects
 		for (int block = 0; block < this->fixed_effects.Size(); ++block)
 		{
 			update += this->fixed_effects(block)->UpdateCoefficients(this->working_weights, this->working_values, this->controls.Comparer());

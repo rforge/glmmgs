@@ -33,14 +33,13 @@ namespace GlmmGS
 					Vector<Vector<double> > h = covariance_model->CoefficientsUpdate(jacobian, this->values);
 
 					// Re-parameterize updates
-					Vector<Vector<double> > h_test = h;
-					this->booster->Reparameterize(h_test(0));
+					this->booster->Reparameterize(h(0));
 
 					// Check if update is significant
-					const int update = comparer.IsZero(h_test, this->values) ? 0 : 1;
+					const int update = comparer.IsZero(h, this->values) ? 0 : 1;
 
 					// Debug
-					Print("MaxAbs update random effects: %g\n", MaxAbs(h_test));
+					Print("MaxAbs update random effects: %g\n", MaxAbs(h));
 
 					// Update
 					for (int i = 0; i < h.Size(); ++i)

@@ -279,6 +279,9 @@ namespace GlmmGS
 							this->tau -= h;
 						}
 
+						// Debug
+						Print("MaxAbs covariance components: %g\n", MaxAbs(h));
+
 						return update;
 					}
 
