@@ -43,7 +43,7 @@
 }
 \author{
 	%%  ~~who you are~~
-	Michele Morara, Luise Ryan, Subarhup Guha, Chris Paciorek
+	Michele Morara, Louise Ryan, Subharup Guha, Christopher Paciorek
 }
 \note{
 	%%  ~~further notes~~
@@ -56,23 +56,27 @@
 }
 \examples{
 
-# Set number of columns
+# Create matrix R
 	ncols <- 100;
-	
-#Create sparse matrix from dense matrix
-
-	# Create matrix R
 	R <- diag(rep(1, ncols));
 	for (i in 2:ncols)
-	{
-		R[i - 1, i] <- 0.5;
-		R[i, i - 1] <- 0.5;
-	}
+		R[i - 1, i] <- R[i, i - 1] <- 0.5;
 	
-	# Create sparse matrix from R
-	R.sparse = glmmGS.SparseMatrix(R);
+# Create sparse matrix from dense matrix R
+
+	R.sparse <- glmmGS.SparseMatrix(R);
 	
-#Create same sparse matrix from vectors of values, indices, and counts
+# Create sparse matrix from vectors of values, indices, and counts
+# maximizing performance (requires O(ncols^2) workspace memory) 
+
+	nz <- R != 0;
+	values <- c(R[nz]);
+	indices = row(R)[nz] - 1L;
+	counts = as.integer(c(0, cumsum(colSums(nz))));
+	R.sparse2 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
+
+# Create sparse matrix from vectors of values, indices, and counts
+# allocating O(ncols) workspace memory
 	
 	# 1) Set counts
 	counts <- integer(ncols + 1L);
@@ -93,14 +97,14 @@
 	{
 		nz <- which(R[, j] != 0);
 		lnz <- length(nz);
-		values[index + 1:lnz] <- R[nz, j];
-		indices[index + 1:lnz] <- nz - 1L; # must be zero-based
+		kk <- index + 1:lnz;
+		values[kk] <- R[nz, j];
+		indices[kk] <- nz - 1L; # must be zero-based
 		index <- index + lnz;
 	}
 	
 	# Build sparse matrix
-	R.sparse2 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
-}
+	R.sparse3 <- glmmGS.SparseMatrix(ncols, values, indices, counts);
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

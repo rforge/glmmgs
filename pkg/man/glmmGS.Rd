@@ -6,10 +6,10 @@
 \description{
 	glmmGS is used to fit generalized mixed linear models specified by a string-like formula.
 	The MLE estimation of the parameters is performed by using a Gauss-Seidel algorithm 
-	to fit the regression coefficients (see reference), and a a Penalized Quasi Likelihood 
+	to fit the regression coefficients (see reference), and a Penalized Quasi Likelihood (PQL) 
 	approach to fit the covariance components. The algorithm is highly optimized to fit 
 	fixed-effect models to data-sets with a large number of observations and 
-	with stratified covariates with a large number of levels, and mixed model 
+	with stratified covariates with a large number of levels, and mixed models 
 	with stratified covariates with a large number of levels and diagonal
 	covariance structures. Covariance structures defined by non diagonal dense 
 	or sparse precision matrices are also allowed (see \code{\link{glmmGS.CovarianceModel}}).
@@ -29,17 +29,17 @@
 		variable. Only one block of random effects can be currently specified.
 		The covariance model inside the random effect block is specified by using the symbol 
 		\code{~} followed by a variable-name of a previously defined \code{\link{glmmGS.CovarianceModel}}).
-		In an offset \code{a} is present in the linear predictor, it must be specified with keyword
+		If an offset \code{a} is present in the linear predictor, it must be specified with keyword
 		\code{offset(a)} before the specification of the fixed and random effects. 
-		In order to maximize the memory usage, non of the variables present in the formula
+		In order to minimize the memory usage, none of the variables present in the formula
 		are copied or coerced. In particular:
 		discrete outcomes must be integer vectors;
-		covariates must be vectors of either integer or double type; 
+		covariates must be vectors of either integer or numeric (i.e., double) type; 
 		grouping variables used to specify stratified covariates must be integer 
 		vectors containing zero-based consecutive levels.
 	}
 	\item{family}{
-		a description of the error distribution. Only two family are currently allowed:
+		a description of the error distribution. Only two families are currently allowed:
 		\code{binomial} and \code{poisson} with a canonical link.
 	}
 	\item{data}{
@@ -58,8 +58,8 @@
 		by the \code{\link{glmmGS.Control}} function.
 	}
 	\item{random.effects.covariance}{
-		a boolean variable specifying whether or not the full covariance matrix of the random effects
-		should be returned.	
+		a logical variable specifying whether or not the full covariance matrix of 
+		the random-effects should be returned.	
 	}
 }
 \details{
@@ -106,7 +106,7 @@
 	\emph{Journal of Computational and Graphical Statistics}, \bold{4}, 810--837.
 }
 \author{
-	Michele Morara, Luise Ryan, Subarhup Guha, Chris Paciorek  
+	Michele Morara, Louise Ryan, Subharup Guha, Christopher Paciorek
 }
 \note{
 %%  ~~further notes~~

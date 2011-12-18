@@ -14,19 +14,20 @@ Construct control list for \code{glmmGS} function
 %- maybe also 'usage' for other objects documented here.
 \arguments{
  	\item{reltol}{
-		minimum relative tolerance of the parameters update.
+		minimum relative tolerance for the parameters update.
 	}
 	\item{abstol}{
-		minimum absolute tolerance of the parameters update.
+		minimum absolute tolerance for the parameters update.
 	}
   	\item{maxit}{
-		maximum number of iterations of the parameters update.
+		maximum number of iterations for the parameters update.
 	}
 }
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
-	The Gauss-Seidel iterative algorithm stops if every parameter-update is less than
-	\code{abstol} or less than \code{reltol} times the current parameter value.
+	The Gauss-Seidel iterative algorithm stops if the magnitude of every 
+	parameter-update is less than \code{abstol} or less than \code{reltol} 
+	times the magnitude of the current parameter.
 	If the algorithm reaches \emph{maxit} number of iterations without converging, 
 	then the algorithm stops and returns an error.
 }
@@ -44,7 +45,7 @@ Construct control list for \code{glmmGS} function
 }
 \author{
 	%%  ~~who you are~~
-	Michele Morara, Luise Ryan, Subarhup Guha, Chris Paciorek
+	Michele Morara, Louise Ryan, Subharup Guha, Christopher Paciorek
 }
 \note{
 	%%  ~~further notes~~

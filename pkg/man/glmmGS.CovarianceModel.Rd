@@ -41,7 +41,7 @@
 }
 \author{
 	%%  ~~who you are~~
-	Michele Morara, Luise Ryan, Subarhup Guha, Chris Paciorek
+	Michele Morara, Louise Ryan, Subharup Guha, Christopher Paciorek
 }
 \note{
 	%%  ~~further notes~~
