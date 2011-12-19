@@ -6,8 +6,8 @@
 \description{
 	glmmGS is used to fit generalized mixed linear models specified by a string-like formula.
 	The MLE estimation of the parameters is performed by using a Gauss-Seidel algorithm 
-	to fit the regression coefficients (see reference), and a Penalized Quasi Likelihood (PQL) 
-	approach to fit the covariance components. The algorithm is highly optimized to fit 
+	to fit the regression coefficients (see Reference section), and a Penalized Quasi Likelihood (PQL) 
+	approach to fit the covariance components (see Note section). The algorithm is highly optimized to fit 
 	fixed-effect models to data-sets with a large number of observations and 
 	with stratified covariates with a large number of levels, and mixed models 
 	with stratified covariates with a large number of levels and diagonal
@@ -26,11 +26,10 @@
 		comprises fixed-effects and random-effects. Fixed and random effects must be grouped 
 		in blocks (the blocks of the Gauss-Seidel algorithm, see reference) 
 		specified by pairs of parentheses. Blocks of covariates can be stratified by a grouping
-		variable. Only one block of random effects can be currently specified.
-		The covariance model inside the random effect block is specified by using the symbol 
+		variable. The covariance model inside the random effect block is specified by using the symbol 
 		\code{~} followed by a variable-name of a previously defined \code{\link{glmmGS.CovarianceModel}}).
 		If an offset \code{a} is present in the linear predictor, it must be specified with keyword
-		\code{offset(a)} before the specification of the fixed and random effects. 
+		\code{offset(a)} before the specification of the fixed and random effects.
 		In order to minimize the memory usage, none of the variables present in the formula
 		are copied or coerced. In particular:
 		discrete outcomes must be integer vectors;
@@ -74,29 +73,35 @@
 	The function returns a list of values comprised of
 	\item{fixed.effects}{
 		a list containing the items:
-		\code{estimates}: the estimates of the fixed effect coefficients;
-		\code{stderrs}: the standard errors of the fixed effect estimates;
+		\code{estimates}: the estimates of the fixed-effect coefficients;
+		\code{stderrs}: the standard errors of the fixed-effect coefficient estimates;
 		\code{covariance}, a list of conditional covariance matrices 
-		for each fixed effect block specified in the formula.
-	}
-	\item{covariance.components}{
-		a list containing the items:
-		\code{estimates}: the estimates of the covariance components;
-		\code{stderrs}: the standard errors of the covariance component estimates;
-		\code{covariance}: the covariance matrice of the covariance component estimates.
+		for each fixed-effect block specified in the formula. If the fixed-effects 
+		associated with a block are stratified, then the corresponding 
+		covariance matrix is given as list of sub-matrices for each level (strata)
+		in the fixed-effects. 
 	}
 	\item{random.effects}{
 		a list containing the items:
 		\code{estimates}: the estimates of the random effect coefficients;
-		\code{stderrs}: the standard errors of the random effect estimates;
-		\code{covariance}, (optional) the conditional covariance matrix 
-		of the distribution of the random effects.
+		\code{stderrs}: the standard errors of the random effect coefficient estimates;
+		\code{covariance} (optional): a list of conditional covariance matrices 
+		for each random-effect block specified in the formula. If the random-effects 
+		associated with a block are stratified and the covariance-model is diagonal, 
+		then the corresponding covariance matrix is given as list 
+		of sub-matrices for each level (strata) in the random-effects.
 	}
-	\item{iterations}{
-		the number of iterations.
+	\item{covariance.components}{
+		a list containing the items:
+		\code{estimates}: the estimates of the covariance components;
+		\code{stderrs}: the standard errors of the covariance components;
+		\code{covariance}: the covariance matrix of the covariance components.
 	}
 	\item{fitted.values}{
 		the fitted values.
+	}
+	\item{iterations}{
+		the number of iterations.
 	}
 }
 
@@ -110,6 +115,12 @@
 }
 \note{
 %%  ~~further notes~~
+	Although it is possible to specify as many blocks of random-effects as desired, the PQL update
+	of the covariance components is performed one block at a time. This yields to different
+	estimates compared to a joint PQL update of the covariance components. Alternative
+	approaches, more compatible with the component-wise nature of the Gauss-Seidel
+	algorithm, to the PQL approximation of the integration over the random-effect 
+	coefficients, are under consideration.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
