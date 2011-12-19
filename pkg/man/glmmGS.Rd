@@ -34,7 +34,7 @@
 		In order to minimize the memory usage, none of the variables present in the formula
 		are copied or coerced. In particular:
 		discrete outcomes must be integer vectors;
-		covariates must be vectors of either integer or numeric (i.e., double) type; 
+		covariates must be vectors and/or matrices of either integer or numeric (i.e., double) type; 
 		grouping variables used to specify stratified covariates must be integer 
 		vectors containing zero-based consecutive levels.
 	}
