@@ -18,7 +18,7 @@
 		(1) a numeric (i.e., double) vector with the non-zero elements of the matrix;
 		(2) an integer vector with the zero-based row indices of the non-zero elements of the matrix;
 		(3) an integer vector \code{counts} of length \code{ncols + 1},
-		where \code{ncols} indicates the number of columu of the matrix,
+		where \code{ncols} indicates the number of columns of the matrix,
 		such that \code{counts[1] = 0}, and \code{counts[j]} equal to the total number	
 		of non-zero elements in columns 1, \ldots, j - 1.
 	}
