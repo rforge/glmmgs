@@ -26,7 +26,7 @@ namespace Utilities
 			// Construction
 			Matrix();						// Default
 			explicit Matrix(int nrows, int ncols);		// Size
-			Matrix(TYPE * ptr, ReferenceCounter & counter, int nrows, int ncols); // From another ref-counted pointer
+			Matrix(TYPE * ptr, const ReferenceCounter & counter, int nrows, int ncols); // From another ref-counted pointer
 			Matrix(External<TYPE> ptr, int nrows, int ncols); // From an external pointer
 			~Matrix();
 

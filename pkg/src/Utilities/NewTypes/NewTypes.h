@@ -6,6 +6,7 @@
 // Types
 #include "Array.h"
 #include "Vector.h"
+#include "Matrix.h"
 
 // Cast
 #include "ArrayCast.h"
