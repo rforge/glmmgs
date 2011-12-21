@@ -30,6 +30,10 @@ namespace Utilities
 			// Cast
 			operator bool() const;
 
+			// Pointer access - if possible should be avoided
+			TYPE * pointer();
+			const TYPE * pointer() const;
+
 			// Assignment
 			const Array<TYPE> & operator =(const Array<TYPE> & src);
 
@@ -78,6 +82,18 @@ namespace Utilities
 		Array<TYPE>::operator bool () const
 		{
 			return (this->ptr != NULL);
+		}
+
+		template <class TYPE> inline
+		TYPE * Array<TYPE>::pointer()
+		{
+			return this->ptr;
+		}
+
+		template <class TYPE> inline
+		const TYPE * Array<TYPE>::pointer() const
+		{
+			return this->ptr;
 		}
 
 		// Assignment
