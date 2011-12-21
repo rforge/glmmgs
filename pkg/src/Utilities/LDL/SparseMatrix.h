@@ -7,8 +7,6 @@ namespace Utilities
 {
 	namespace LDL
 	{
-		using namespace NewTypes;
-
 		// Data structure for SparseCholeskyDecomposition
 		template <class TYPE>
 		class SparseMatrix
@@ -49,8 +47,8 @@ namespace Utilities
 			_ASSERT(values.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid values size"));
 			_ASSERT(indices.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid indices size"));
 			_ASSERT(Internal::LDL_valid_matrix(ncols,
-					Cast<const Array<int> >(counts),
-					Cast<const Array<int> >(indices)) == 1,
+					NewTypes::Cast<const NewTypes::Array<int> >(counts),
+					NewTypes::Cast<const NewTypes::Array<int> >(indices)) == 1,
 					Utilities::Exceptions::Exception("SparseMatrix: invalid matrix"));
 #endif
 		}
