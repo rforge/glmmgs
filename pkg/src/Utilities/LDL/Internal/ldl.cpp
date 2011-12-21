@@ -157,40 +157,40 @@
 
 #include "ldl.h"
 
-/* ========================================================================== */
-/* === ldl_symbolic ========================================================= */
-/* ========================================================================== */
-
-/* The input to this routine is a sparse matrix A, stored in column form, and
- * an optional permutation P.  The output is the elimination tree
- * and the number of nonzeros in each column of L.  Parent [i] = k if k is the
- * parent of i in the tree.  The Parent array is required by ldl_numeric.
- * Lnz [k] gives the number of nonzeros in the kth column of L, excluding the
- * diagonal.
- *
- * One workspace vector (Flag) of size n is required.
- *
- * If P is NULL, then it is ignored.  The factorization will be LDL' = A.
- * Pinv is not computed.  In this case, neither P nor Pinv are required by
- * ldl_numeric.
- *
- * If P is not NULL, then it is assumed to be a valid permutation.  If
- * row and column j of A is the kth pivot, the P [k] = j.  The factorization
- * will be LDL' = PAP', or A (p,p) in MATLAB notation.  The inverse permutation
- * Pinv is computed, where Pinv [j] = k if P [k] = j.  In this case, both P
- * and Pinv are required as inputs to ldl_numeric.
- *
- * The floating-point operation count of the subsequent call to ldl_numeric
- * is not returned, but could be computed after ldl_symbolic is done.  It is
- * the sum of (Lnz [k]) * (Lnz [k] + 2) for k = 0 to n-1.
- */
-
 namespace Utilities
 {
 	namespace LDL
 	{
 		namespace Internal
 		{
+			/* ========================================================================== */
+			/* === ldl_symbolic ========================================================= */
+			/* ========================================================================== */
+
+			/* The input to this routine is a sparse matrix A, stored in column form, and
+			 * an optional permutation P.  The output is the elimination tree
+			 * and the number of nonzeros in each column of L.  Parent [i] = k if k is the
+			 * parent of i in the tree.  The Parent array is required by ldl_numeric.
+			 * Lnz [k] gives the number of nonzeros in the kth column of L, excluding the
+			 * diagonal.
+			 *
+			 * One workspace vector (Flag) of size n is required.
+			 *
+			 * If P is NULL, then it is ignored.  The factorization will be LDL' = A.
+			 * Pinv is not computed.  In this case, neither P nor Pinv are required by
+			 * ldl_numeric.
+			 *
+			 * If P is not NULL, then it is assumed to be a valid permutation.  If
+			 * row and column j of A is the kth pivot, the P [k] = j.  The factorization
+			 * will be LDL' = PAP', or A (p,p) in MATLAB notation.  The inverse permutation
+			 * Pinv is computed, where Pinv [j] = k if P [k] = j.  In this case, both P
+			 * and Pinv are required as inputs to ldl_numeric.
+			 *
+			 * The floating-point operation count of the subsequent call to ldl_numeric
+			 * is not returned, but could be computed after ldl_symbolic is done.  It is
+			 * the sum of (Lnz [k]) * (Lnz [k] + 2) for k = 0 to n-1.
+			 */
+
 			void LDL_symbolic
 			(
 				int n,		/* A and L are n-by-n, where n >= 0 */
