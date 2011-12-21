@@ -66,25 +66,34 @@ namespace GlmmGS
 							for (int j = 0; j < i; ++j)
 								minus_hessian(i, j) = -Square(variance(i, j));
 						}
+
 						// Calculate update
-						CholeskyDecomposition chol(minus_hessian);
-						Vector<double> h = chol.Solve(jac);
-
-						const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-						// Update sigma_square
-						this->tau += h;
-						while (Min(this->tau) <= 0.0)
+						try
 						{
-							// Back-track
-							h *= 0.5;
-							this->tau -= h;
+							CholeskyDecomposition chol(minus_hessian);
+							Vector<double> h = chol.Solve(jac);
+							const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
+
+							// Debug
+							Print("MaxAbs covariance components: %g\n", MaxAbs(h));
+
+							// Update tau
+							this->tau += h;
+
+							// Check sign
+							while (Min(this->tau) <= 0.0)
+							{
+								// Back-track
+								h *= 0.5;
+								this->tau -= h;
+							}
+
+							return update;
 						}
-
-						// Debug
-						Print("MaxAbs update covariance components= %g\n", MaxAbs(h));
-
-						return update;
+						catch(Exceptions::Exception &)
+						{
+							return 1;
+						}
 					}
 
 					Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const

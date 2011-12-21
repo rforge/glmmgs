@@ -1,6 +1,7 @@
 #include "../../../../Standard.h"
 #include "../../../../Estimate.h"
 #include "PrecisionModel.h"
+#include "Functions.h"
 
 namespace GlmmGS
 {
@@ -12,102 +13,6 @@ namespace GlmmGS
 			{
 				namespace CovarianceModels
 				{
-					// Helpers
-
-					// Weighted square norm of vector
-					double Square(WeakMatrix<const double> m, const Vector<double> & x)
-					{
-						_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
-						const int size = x.Size();
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-						{
-							// Diagonal term
-							sum += m(i, i) * Math::Square(x(i));
-
-							// Off diagonal terms
-							double tmp = 0.0;
-							for (int j = 0; j < i; ++j)
-								tmp += m(i, j) * x(j);
-							sum += 2.0 * x(i) * tmp;
-						}
-						return sum;
-					}
-
-					// Trace of diagonal blocks
-					double BlockTrace(int row, const TriangularMatrix<double> & v, WeakMatrix<const double> m)
-					{
-						const int size = m.NumberOfRows();
-						const int offset = row * size;
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-						{
-							sum += v(offset + i, offset + i) * m(i, i);
-							for (int j = 0; j < i; ++j)
-								sum += 2.0 * v(offset + i, offset + j) * m(i, j);
-						}
-						return sum;
-					}
-
-					// Diagonal block product
-					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset, WeakMatrix<const double> m)
-					{
-						const int size = m.NumberOfRows();
-						double sum = 0.0;
-						for (int i = 0; i <= row; ++i)
-							sum += v(offset + row, offset + i) * m(i, col);
-						for (int i = row + 1; i < size; ++i)
-							sum += v(offset + i, offset + row) * m(i, col);
-						return sum;
-					}
-
-					// Off-diagonal block product
-					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset_row, int offset_col, WeakMatrix<const double> m)
-					{
-						_ASSERT_ARGUMENT(offset_col < offset_row);
-						const int size = m.NumberOfRows();
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-							sum += v(offset_row + row, offset_col + i) * m(i, col);
-						return sum;
-					}
-
-					// Trace of diagonal blocks product
-					double BlockSquareTrace(int row, const TriangularMatrix<double> & v, WeakMatrix<const double> m)
-					{
-						const int size = m.NumberOfRows();
-						const int offset = row * size;
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-							for (int j = 0; j < size; ++j)
-								sum += BlockProduct(i, j, v, offset, m) * BlockProduct(j, i, v, offset, m);
-						return sum;
-					}
-
-					// Trace of off-diagonal blocks product
-					double BlockSquareTrace(int row, int col, const TriangularMatrix<double> & v, WeakMatrix<const double> m)
-					{
-						_ASSERT_ARGUMENT(col < row);
-						const int size = m.NumberOfRows();
-						const int offset_row = row * size;
-						const int offset_col = col * size;
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-							for (int j = 0; j < size; ++j)
-								sum += BlockProduct(i, j, v, offset_row, offset_col, m) * BlockProduct(j, i, v, offset_row, offset_col, m);
-						return sum;
-					}
-
-					// Matrix product
-					double MatrixProduct(int k, WeakMatrix<const double> m, const Vector<double> & x)
-					{
-						const int size = m.NumberOfRows();
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-							sum += m(k, i) * x(i);
-						return sum;
-					}
-
 					// Construction
 					PrecisionModel::PrecisionModel(int nvars, WeakMatrix<const double> R)
 						: nvars(nvars), R(R), tau(nvars)
@@ -164,41 +69,69 @@ namespace GlmmGS
 
 					int PrecisionModel::Update(const Vector<Vector<double> > & beta, Comparer comparer)
 					{
-						// Calculate variance
-						const TriangularMatrix<double> variance = this->chol.Inverse();
+						// Calulate T^{-1} R
+						const int nlevels = this->R.NumberOfColumns();
+						const int size = this->nvars * nlevels;
+						Matrix<double> a(size, size);
+						Vector<double> b(size);
+						for (int i = 0, ik = 0; i < this->nvars; ++i)
+						{
+							for (int k = 0; k < nlevels; ++k, ++ik)
+							{
+								// Prepare b
+								b = 0.0;
+								const int offset = i * nlevels;
+								for (int l = 0; l < nlevels; ++l)
+									b(offset + l) = this->R(l, k);
+
+								// Solve T_j x = b
+								Vector<double> x = this->chol.Solve(b);
+
+								// Store x
+								for (int j = 0; j < size; ++j)
+									a(j, ik) = x(j);
+							}
+						}
 
 						// Calculate jacobian and minus the hessian
 						Vector<double> jac(this->nvars);
 						TriangularMatrix<double> minus_hessian(this->nvars);
-						const int nlevels = this->R.NumberOfRows();
 						for (int i = 0; i < this->nvars; ++i)
 						{
 							const double bsquare = Square(this->R, beta(i));
-							const double trace = BlockTrace(i, variance, this->R);
-							jac(i) = nlevels / this->tau(i) - bsquare - trace;
-							minus_hessian(i, i) = nlevels / Math::Square(this->tau(i)) - BlockSquareTrace(i, variance, this->R);
+							jac(i) = nlevels / this->tau(i) - bsquare - BlockTrace(i, nlevels, a);
+							minus_hessian(i, i) = nlevels / Math::Square(this->tau(i)) - BlockSquareTrace(i, i, nlevels, a);
 							for (int j = 0; j < i; ++j)
-								minus_hessian(i, j) = -BlockSquareTrace(i, j, variance, this->R);
+								minus_hessian(i, j) = -BlockSquareTrace(i, j, nlevels, a);
 						}
+
 						// Calculate update
-						CholeskyDecomposition chol(minus_hessian);
-						Vector<double> h = chol.Solve(jac);
-
-						const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-						// Update sigma_square
-						this->tau += h;
-						while (Min(this->tau) <= 0.0)
+						try
 						{
-							// Back-track
-							h *= 0.5;
-							this->tau -= h;
+							CholeskyDecomposition chol(minus_hessian);
+							Vector<double> h = chol.Solve(jac);
+							const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
+
+							// Debug
+							Print("MaxAbs covariance components: %g\n", MaxAbs(h));
+
+							// Update tau
+							this->tau += h;
+
+							// Check sign
+							while (Min(this->tau) <= 0.0)
+							{
+								// Back-track
+								h *= 0.5;
+								this->tau -= h;
+							}
+
+							return update;
 						}
-
-						// Debug
-						Print("MaxAbs covariance components: %g\n", MaxAbs(h));
-
-						return update;
+						catch(Exceptions::Exception &)
+						{
+							return 1;
+						}
 					}
 
 					Vector<Vector<double> > PrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
@@ -212,7 +145,7 @@ namespace GlmmGS
 							const Vector<double> & beta_i = beta(i);
 							const double tau_i = this->tau(i);
 							for (int k = 0; k < nlevels; ++k, ++index)
-								jac(index) = design_jacobian_i(k) - tau_i * CovarianceModels::MatrixProduct(k, this->R, beta_i);
+								jac(index) = design_jacobian_i(k) - tau_i * MatrixProduct(k, this->R, beta_i);
 						}
 
 						// Solve

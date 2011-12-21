@@ -1,6 +1,7 @@
 #include "../../../../Standard.h"
 #include "../../../../Estimate.h"
 #include "SparsePrecisionModel.h"
+#include "Functions.h"
 
 namespace GlmmGS
 {
@@ -12,66 +13,6 @@ namespace GlmmGS
 			{
 				namespace CovarianceModels
 				{
-					// Helpers
-
-					// Weighted square norm of vector
-					double Square(const LDL::SparseMatrix<double> & R, const Vector<double> & x)
-					{
-						_ASSERT_ARGUMENT(R.NumberOfColumns() == x.Size());
-						const int ncols = R.NumberOfColumns();
-						double sum = 0.0;
-						for (int j = 0; j < ncols; ++j)
-						{
-							const int p2 = R.Count(j + 1);
-							double tmp = 0.0;
-							for (int p = R.Count(j); p < p2; ++p)
-							{
-								const int i = R.Index(p);
-								const double value = R.Value(p);
-								tmp += x(i) * value;
-							}
-							sum += x(j) * tmp;
-						}
-						return sum;
-					}
-
-					// Trace of diagonal blocks
-					double BlockTrace(int row, int nlevels, const Matrix<double> & a)
-					{
-						const int offset = row * nlevels;
-						double sum = 0.0;
-						for (int j = 0; j < nlevels; ++j)
-							sum += a(offset + j, offset + j);
-						return sum;
-					}
-
-					// Trace of diagonal blocks product
-					double BlockSquareTrace(int row, int col, int nlevels, const Matrix<double> & a)
-					{
-						const int offset_row = row * nlevels;
-						const int offset_col = col * nlevels;
-						const int size = a.NumberOfColumns();
-						double sum = 0.0;
-						for (int i = 0; i < nlevels; ++i)
-							for (int j = 0; j < size; ++j)
-								sum += a(offset_row + i, j) * a(j, offset_col + i);
-						return sum;
-					}
-
-					// Transposed-matrix product
-					double TMatrixProduct(int k, const LDL::SparseMatrix<double> & R, const Vector<double> & x)
-					{
-						double sum = 0.0;
-						const int p2 = R.Count(k + 1);
-						for (int p = R.Count(k); p < p2; ++p)
-						{
-							const int i = R.Index(p);
-							const double value = R.Value(p);
-							sum += value * x(i);
-						}
-						return sum;
-					}
-
 					// Construction
 					SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> R)
 						: nvars(nvars), R(R), tau(nvars)
@@ -218,24 +159,32 @@ namespace GlmmGS
 						}
 
 						// Calculate update
-						CholeskyDecomposition chol(minus_hessian);
-						Vector<double> h = chol.Solve(jac);
-
-						const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-						// Update sigma_square
-						this->tau += h;
-						while (Min(this->tau) <= 0.0)
+						try
 						{
-							// Back-track
-							h *= 0.5;
-							this->tau -= h;
+							CholeskyDecomposition chol(minus_hessian);
+							Vector<double> h = chol.Solve(jac);
+							const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
+
+							// Debug
+							Print("MaxAbs covariance components: %g\n", MaxAbs(h));
+
+							// Update tau
+							this->tau += h;
+
+							// Check sign
+							while (Min(this->tau) <= 0.0)
+							{
+								// Back-track
+								h *= 0.5;
+								this->tau -= h;
+							}
+
+							return update;
 						}
-
-						// Debug
-						Print("MaxAbs covariance components: %g\n", MaxAbs(h));
-
-						return update;
+						catch(Exceptions::Exception &)
+						{
+							return 1;
+						}
 					}
 
 					Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
