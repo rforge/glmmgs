@@ -1,4 +1,7 @@
-# Source files
+# C source files
+CSRCS += $(wildcard Utilities/LDL/Internal/*.c)
+
+# C++ source files
 SRCS := $(wildcard *.cpp)
 SRCS += $(wildcard Utilities/*.cpp)
 SRCS += $(wildcard Utilities/Exceptions/*.cpp)
@@ -43,4 +46,5 @@ SRCS += $(wildcard GlmmGSAPI/RandomEffects/Global/*.cpp)
 SRCS += $(wildcard GlmmGSAPI/RandomEffects/Stratified/*.cpp)
 
 # objects
-OBJECTS = $(patsubst %.cpp, %.o, $(SRCS))
+OBJECTS = $(patsubst %.c, %.o, $(CSRCS))
+OBJECTS += $(patsubst %.cpp, %.o, $(SRCS))
