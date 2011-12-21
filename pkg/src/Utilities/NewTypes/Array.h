@@ -23,9 +23,8 @@ namespace Utilities
 			// Construction
 			Array();						// Default
 			explicit Array(int size);		// Size
-			Array(TYPE * ptr, ReferenceCounter counter, int size); // From another ref-counted pointer
+			Array(TYPE * ptr, const ReferenceCounter & counter, int size); // From another ref-counted pointer
 			Array(External<TYPE> ptr, int size); // From an external pointer
-			Array(const Array<TYPE> & src); // Copy constructor
 			~Array();
 
 			// Cast
@@ -56,7 +55,7 @@ namespace Utilities
 		}
 
 		template <class TYPE> inline
-		Array<TYPE>::Array(TYPE * ptr, ReferenceCounter counter, int size)
+		Array<TYPE>::Array(TYPE * ptr, const ReferenceCounter & counter, int size)
 			: ptr(ptr), counter(counter), size(size)
 		{
 		}
@@ -64,12 +63,6 @@ namespace Utilities
 		template <class TYPE> inline
 		Array<TYPE>::Array(External<TYPE> ptr, int size)
 			: ptr(ptr), counter(NULL), size(size)
-		{
-		}
-
-		template <class TYPE> inline
-		Array<TYPE>::Array(const Array<TYPE> & src)
-			: ptr(src.ptr), counter(src.counter), size(src.size)
 		{
 		}
 

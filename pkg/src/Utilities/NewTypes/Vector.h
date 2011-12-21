@@ -25,9 +25,8 @@ namespace Utilities
 			// Construction
 			Vector();						// Default
 			explicit Vector(int size);		// Size
-			Vector(TYPE * ptr, ReferenceCounter counter, int size); // From another ref-counted pointer
+			Vector(TYPE * ptr, const ReferenceCounter & counter, int size); // From another ref-counted pointer
 			Vector(External<TYPE> ptr, int size); // From an external pointer
-			Vector(const Vector<TYPE> & src); // Copy constructor
 			~Vector();
 
 			// Properties
@@ -58,7 +57,7 @@ namespace Utilities
 		}
 
 		template <class TYPE> inline
-		Vector<TYPE>::Vector(TYPE * ptr, ReferenceCounter counter, int size)
+		Vector<TYPE>::Vector(TYPE * ptr, const ReferenceCounter & counter, int size)
 			: ptr(ptr), counter(counter), size(size)
 		{
 		}
@@ -66,12 +65,6 @@ namespace Utilities
 		template <class TYPE> inline
 		Vector<TYPE>::Vector(External<TYPE> ptr, int size)
 			: ptr(ptr), counter(NULL), size(size)
-		{
-		}
-
-		template <class TYPE> inline
-		Vector<TYPE>::Vector(const Vector<TYPE> & src)
-			: ptr(src.ptr), counter(src.counter), size(src.size)
 		{
 		}
 
