@@ -23,7 +23,7 @@ namespace GlmmGS
 						for (int j = 0; j < ncols; ++j)
 						{
 							const int p2 = R.Count(j + 1);
-							double tmp = 0;
+							double tmp = 0.0;
 							for (int p = R.Count(j); p < p2; ++p)
 							{
 								const int i = R.Index(p);
@@ -36,95 +36,25 @@ namespace GlmmGS
 					}
 
 					// Trace of diagonal blocks
-					double BlockTrace(int row, const TriangularMatrix<double> & v, const LDL::SparseMatrix<double> & R)
+					double BlockTrace(int row, int nlevels, const Matrix<double> & a)
 					{
-						const int ncols = R.NumberOfColumns();
-						const int offset = row * ncols;
+						const int offset = row * nlevels;
 						double sum = 0.0;
-						for (int j = 0; j < ncols; ++j)
-						{
-							const int p2 = R.Count(j + 1);
-							for (int p = R.Count(j); p < p2; ++p)
-							{
-								const int i = R.Index(p);
-								const double value = R.Value(p);
-								if (j <= i)
-								{
-									// Lower/diagonal elements
-									sum += v(offset + i, offset + j) * value;
-								}
-								else // i > j
-								{
-									// Upper elements
-									sum += v(offset + j, offset + i) * value;
-								}
-							}
-						}
-						return sum;
-					}
-
-					// Diagonal block product
-					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset, const LDL::SparseMatrix<double> & R)
-					{
-						double sum = 0.0;
-						const int p2 = R.Count(col + 1);
-						for (int p = R.Count(col); p < p2; ++p)
-						{
-							const int i = R.Index(p);
-							const int value = R.Value(p);
-							if (i <= row)
-							{
-								// Lower/diagonal elements
-								sum += v(offset + row, offset + i) * value;
-							}
-							else
-							{
-								// Upper elements
-								sum += v(offset + i, offset + row) * value;
-							}
-						}
-						return sum;
-					}
-
-					// Off-diagonal block product
-					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset_row, int offset_col, const LDL::SparseMatrix<double> & R)
-					{
-						_ASSERT_ARGUMENT(offset_col < offset_row);
-						double sum = 0.0;
-						const int p2 = R.Count(col + 1);
-						for (int p = R.Count(col); p < p2; ++p)
-						{
-							const int i = R.Index(p);
-							const int value = R.Value(p);
-							sum += v(offset_row + row, offset_col + i) * value;
-						}
+						for (int j = 0; j < nlevels; ++j)
+							sum += a(offset + j, offset + j);
 						return sum;
 					}
 
 					// Trace of diagonal blocks product
-					double BlockSquareTrace(int row, const TriangularMatrix<double> & v, const LDL::SparseMatrix<double> & R)
+					double BlockSquareTrace(int row, int col, int nlevels, const Matrix<double> & a)
 					{
-						// TODO: optimize by saving the block products into a matrix A and then computing tr(A^2)
-						const int ncols = R.NumberOfColumns();
-						const int offset = row * ncols;
+						const int offset_row = row * nlevels;
+						const int offset_col = col * nlevels;
+						const int size = a.NumberOfColumns();
 						double sum = 0.0;
-						for (int i = 0; i < ncols; ++i)
-							for (int j = 0; j < ncols; ++j)
-								sum += BlockProduct(i, j, v, offset, R) * BlockProduct(j, i, v, offset, R);
-						return sum;
-					}
-
-					// Trace of off-diagonal blocks product
-					double BlockSquareTrace(int row, int col, const TriangularMatrix<double> & v, const LDL::SparseMatrix<double> & R)
-					{
-						_ASSERT_ARGUMENT(col < row);
-						const int ncols = R.NumberOfColumns();
-						const int offset_row = row * ncols;
-						const int offset_col = col * ncols;
-						double sum = 0.0;
-						for (int i = 0; i < ncols; ++i)
-							for (int j = 0; j < ncols; ++j)
-								sum += BlockProduct(i, j, v, offset_row, offset_col, R) * BlockProduct(j, i, v, offset_row, offset_col, R);
+						for (int i = 0; i < nlevels; ++i)
+							for (int j = 0; j < size; ++j)
+								sum += a(offset_row + i, j) * a(j, offset_col + i);
 						return sum;
 					}
 
@@ -247,21 +177,44 @@ namespace GlmmGS
 
 					int SparsePrecisionModel::Update(const Vector<Vector<double> > & beta, Comparer comparer)
 					{
-						// Calculate variance
-						const TriangularMatrix<double> variance = this->chol.Inverse();
+						// Calulate T^{-1} R
+						const int nlevels = this->R.NumberOfColumns();
+						const int size = this->nvars * nlevels;
+						Matrix<double> A(size, size);
+						NewTypes::Vector<double> b(size);
+						for (int i = 0, ik = 0; i < this->nvars; ++i)
+						{
+							for (int k = 0; k < nlevels; ++k, ++ik)
+							{
+								// Prepare b
+								NewTypes::Set(b, 0.0);
+								const int offset = i * nlevels;
+								const int p2 = this->R.Count(k + 1);
+								for (int p = this->R.Count(k); p < p2; ++p)
+								{
+									const int j = this->R.Index(p);
+									b(offset + j) = this->R.Value(p);
+								}
+
+								// Solve T_j x = b
+								NewTypes::Vector<double> x = this->chol.Solve(b);
+
+								// Store x
+								for (int j = 0; j < size; ++j)
+									A(j, ik) = x(j);
+							}
+						}
 
 						// Calculate jacobian and minus the hessian
 						Vector<double> jac(this->nvars);
 						TriangularMatrix<double> minus_hessian(this->nvars);
-						const int nlevels = this->R.NumberOfColumns();
 						for (int i = 0; i < this->nvars; ++i)
 						{
 							const double bsquare = Square(this->R, beta(i));
-							const double trace = BlockTrace(i, variance, this->R);
-							jac(i) = nlevels / this->tau(i) - bsquare - trace;
-							minus_hessian(i, i) = nlevels / Math::Square(this->tau(i)) - BlockSquareTrace(i, variance, this->R);
+							jac(i) = nlevels / this->tau(i) - bsquare - BlockTrace(i, nlevels, A);
+							minus_hessian(i, i) = nlevels / Math::Square(this->tau(i)) - BlockSquareTrace(i, i, nlevels, A);
 							for (int j = 0; j < i; ++j)
-								minus_hessian(i, j) = -BlockSquareTrace(i, j, variance, this->R);
+								minus_hessian(i, j) = -BlockSquareTrace(i, j, nlevels, A);
 						}
 
 						// Calculate update
