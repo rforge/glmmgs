@@ -5,6 +5,7 @@
 #include "SparseMatrix.h"
 
 #include "Internal/ldl.h"
+#include "Internal/amd.h"
 
 namespace Utilities 
 {
@@ -22,6 +23,21 @@ namespace Utilities
 
 			const int ncols = upper.NumberOfColumns();
 
+			// Allocate permutations
+			this->permutation = NewTypes::Vector<int>(ncols);
+			this->permutation_inverse = NewTypes::Vector<int>(ncols);
+
+			// Find permutation
+			int amd_retval = amd_order(ncols,
+					Cast<const Array<int> >(upper.Counts()).pointer(),
+					Cast<const Array<int> >(upper.Indices()).pointer(),
+					Cast<const Array<int> >(this->permutation).pointer(),
+					NULL,
+					NULL);
+
+			if (amd_retval == AMD_INVALID || amd_retval == AMD_OUT_OF_MEMORY)
+				throw Exceptions::NumericException("AMD failed");
+
 			// Symbolic decomposition
 			NewTypes::Vector<int> lp(ncols + 1);
 			Array<int> parent(ncols);
@@ -33,7 +49,9 @@ namespace Utilities
 					Cast<const Array<int> >(upper.Counts()),
 					Cast<const Array<int> >(upper.Indices()),
 					Cast<Array<int> >(lp),
-					parent, lnz, flag, null, null);
+					parent, lnz, flag,
+					Cast<const Array<int> >(this->permutation),
+					Cast<Array<int> >(this->permutation_inverse));
 
 			// Numeric decomposition
 			const int lsize = lp(ncols);
@@ -43,7 +61,7 @@ namespace Utilities
 			Array<double> y(ncols);
 			Array<int> pattern(ncols);
 
-			Internal::LDL_numeric(ncols,
+			const int ldl_retval = Internal::LDL_numeric(ncols,
 					Cast<const Array<int> >(upper.Counts()),
 					Cast<const Array<int> >(upper.Indices()),
 					Cast<const Array<double> >(upper.Values()),
@@ -52,11 +70,14 @@ namespace Utilities
 					Cast<const Array<int> >(li),
 					Cast<Array<double> >(lx),
 					Cast<Array<double> >(d),
-					y, pattern, flag, null, null);
+					y, pattern, flag,
+					Cast<const Array<int> >(this->permutation),
+					Cast<const Array<int> >(this->permutation_inverse));
 
-			// TODO: check return value
+			if (ldl_retval != ncols)
+				throw Exceptions::Exception("LDL failed");
 
-			// Set members
+			// Set lower and diagonal matrices
 			this->lower = SparseMatrix<double>(lx, li, lp);
 			this->diagonal = d;
 		}
@@ -66,8 +87,11 @@ namespace Utilities
 			_VALIDATE_ARGUMENT(b.Size() == this->lower.NumberOfColumns());
 
 			const int n = this->diagonal.Size();
+
+			// Permute b
 			NewTypes::Vector<double> x(n);
-			Copy(x, b);
+			for (int j = 0; j < n ; ++j)
+				x(j) = b(this->permutation(j));
 
 			// Solve L x = b (the diagonal elements of L are assumed equal to 1)
 			for (int j = 0; j < n; ++j)
@@ -89,9 +113,15 @@ namespace Utilities
 					x(j) -= this->lower.Value(p) * x(this->lower.Index(p));
 			}
 
-			return x;
+			// Permute solution
+			NewTypes::Vector<double> y(n);
+			for (int j = 0; j < n ; ++j)
+				y(this->permutation(j)) = x(j);
+
+			return y;
 		}
 
+		/*
 		TriangularMatrix<double> SparseCholeskyDecomposition::Inverse() const
 		{
 			const int n = this->diagonal.Size();
@@ -129,6 +159,7 @@ namespace Utilities
 
 			return y;
 		}
+		*/
 
 		/*
 		double SparseCholeskyDecomposition::Determinant() const
