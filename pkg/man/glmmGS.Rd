@@ -15,7 +15,7 @@
 	or sparse precision matrices are also allowed (see \code{\link{glmmGS.CovarianceModel}}).
 }
 \usage{
-	glmmGS(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control(), random.effects.covariance = FALSE)
+	glmmGS(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,12 +24,15 @@
 		The formula object must be of the type \emph{response ~ linear-predictor}. For a binomial
 		response, the response must be defined as \code{(outcome | counts)}. The linear predictor 
 		comprises fixed-effects and random-effects. Fixed and random effects must be grouped 
-		in blocks (the blocks of the Gauss-Seidel algorithm, see reference) 
+		in blocks (the blocks of the Gauss-Seidel algorithm, see Reference section) 
 		specified by pairs of parentheses. Blocks of covariates can be stratified by a grouping
 		variable. The covariance model inside the random effect block is specified by using the symbol 
 		\code{~} followed by a variable-name of a previously defined \code{\link{glmmGS.CovarianceModel}}).
 		If an offset \code{a} is present in the linear predictor, it must be specified with keyword
-		\code{offset(a)} before the specification of the fixed and random effects.
+		\code{offset(a)} before the specification of the fixed and random effects. The intercepts should
+		always be explicitly specified by the symbol \code{1}: implicit specification
+		of the intercept is not assumed. See Details section for informations on how non-identifiability 
+		introduced by multiple intercepts is handled. 
 		In order to minimize the memory usage, none of the variables present in the formula
 		are copied or coerced. In particular:
 		discrete outcomes must be integer vectors;
@@ -56,13 +59,12 @@
 		a list of parameters for controlling the fitting process. The list is returned
 		by the \code{\link{glmmGS.Control}} function.
 	}
-	\item{random.effects.covariance}{
-		a logical variable specifying whether or not the full covariance matrix of 
-		the random-effects should be returned.	
-	}
 }
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
+	If a global intercept is specified, then each stratified intercept is constrained to
+	have zero mean. In all the other cases where multiple intercepts are specified, if the fitting 
+	algorithm converges, then the values of the intercept are determined up to a random constant.
 }
 \value{
 	%%  ~Describe the value returned
@@ -70,35 +72,24 @@
 	%%  \item{comp1 }{Description of 'comp1'}
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
-	The function returns a list of values comprised of
+	In the current implementation (see Note), the function returns 
+	a list of values comprised of:
 	\item{fixed.effects}{
 		a list containing the items:
 		\code{estimates}: the estimates of the fixed-effect coefficients;
-		\code{stderrs}: the standard errors of the fixed-effect coefficient estimates;
-		\code{covariance}, a list of conditional covariance matrices 
-		for each fixed-effect block specified in the formula. If the fixed-effects 
-		associated with a block are stratified, then the corresponding 
-		covariance matrix is given as list of sub-matrices for each level (strata)
-		in the fixed-effects. 
+		\code{stderrs}: the standard errors of the fixed-effect coefficient estimates
+		(see Note section).
 	}
 	\item{random.effects}{
 		a list containing the items:
 		\code{estimates}: the estimates of the random effect coefficients;
-		\code{stderrs}: the standard errors of the random effect coefficient estimates;
-		\code{covariance} (optional): a list of conditional covariance matrices 
-		for each random-effect block specified in the formula. If the random-effects 
-		associated with a block are stratified and the covariance-model is diagonal, 
-		then the corresponding covariance matrix is given as list 
-		of sub-matrices for each level (strata) in the random-effects.
+		\code{stderrs}: the standard errors of the random effect coefficient estimates
+		(see Note section).
 	}
 	\item{covariance.components}{
 		a list containing the items:
 		\code{estimates}: the estimates of the covariance components;
-		\code{stderrs}: the standard errors of the covariance components;
-		\code{covariance}: the covariance matrix of the covariance components.
-	}
-	\item{fitted.values}{
-		the fitted values.
+		\code{stderrs}: the standard errors of the covariance components.
 	}
 	\item{iterations}{
 		the number of iterations.
@@ -115,6 +106,28 @@
 }
 \note{
 %%  ~~further notes~~
+	The distinguishing characteristic of the Gauss-Seidel algorithm, is that the full
+	precision matrix of the posterior distribution of the parameters
+	is never computed. Only diagonal-blocks of the precision matrix are computed, 
+	one for each pair of parentheses in the formula. Furthermore, in the presence
+	of stratified variables, each precision-block is subdivided in as many sub-blocks 
+	as many levels are present in the grouping factor. As a consequence, 
+	the standard errors associated with the coefficient estimates, are computed 
+	for each block conditionally to the other blocks. Hence
+	the standard-errors returned by the \code{glmmGS} function tend to be
+	smaller than the standard-errors calculated using the full posterior
+	distribution of the parameters. 
+	
+	The \code{glmmGS} function is optimized to handle data-sets with a large number of observations 
+	and data stratifications with a large number of levels. 
+	To avoid unnecessary memory allocation, the return value contains only minimal fitting information.
+	Auxiliary functions to calculate quantities such as	block covariance matrices, 
+	fitted values, predictors, will be soon released. We strongly recommend not to commit 
+	to the current format of the return value, since it will likely change in the next release. 
+	A user should write accessor functions to parse the return value, so that user-code 
+	using \code{glmmGS} would only need to change the accessor functions in the next
+	release. 
+	
 	Although it is possible to specify as many blocks of random-effects as desired, the PQL update
 	of the covariance components is performed one block at a time. This yields to different
 	estimates compared to a joint PQL update of the covariance components. Alternative

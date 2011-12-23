@@ -12,7 +12,7 @@ namespace GlmmGS
 
 	public:
 		// Construction
-		Controls(double relative_tolerance, double absolute_tolerance, int maxiter);
+		Controls(double relative_tolerance = 1.e-6, double absolute_tolerance = 1.e-6, int maxiter = 100);
 
 		// Properties
 		Utilities::Comparer Comparer() const;

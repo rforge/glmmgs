@@ -10,12 +10,15 @@
 namespace GlmmGS
 {
 	// GlmmGSSolver
-	GlmmGSSolver::GlmmGSSolver(Controls controls)
-		: controls(controls)
+	GlmmGSSolver::GlmmGSSolver()
 	{
 	}
 
-	void GlmmGSSolver::Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z)
+	void GlmmGSSolver::Fit(const Pointer<Responses::IResponse> & y,
+			const Pointer<Offsets::IOffset> & offset,
+			const Vector<Pointer<FixedEffects::IBlock> > & x,
+			const Vector<Pointer<RandomEffects::IBlock> > & z,
+			const Controls & controls)
 	{
 		// Set response
 		this->response = y;
@@ -40,22 +43,29 @@ namespace GlmmGS
 		this->working_values.Size(nrecords);
 		this->EvaluateWorkingWeightsAndValues();
 
+		// Set controls
+		this->controls = controls;
+
 		// Gauss-Seidel loop
-		for (int iter = 0;; ++iter)
+		this->iterations = 0;
+		for (;;)
 		{
 			// Update
 			if (this->Update() == 0)
 				break;
 
+			// Increase counter
+			++this->iterations;
+
 			// Check number of iterations
-			if (iter >= this->controls.Maxiter())
+			if (this->iterations >= this->controls.Maxiter())
 			{
 				throw MaxIterationsException();
 				break;
 			}
 
 			// Debug
-			printf("Iter: %d\n", iter);
+			printf("Iterations: %d\n", this->iterations);
 		}
 	}
 

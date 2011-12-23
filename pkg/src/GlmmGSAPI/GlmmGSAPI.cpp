@@ -13,7 +13,7 @@ namespace GlmmGSAPI
 
 	// GlmmGSAPI
 	GlmmGSAPI::GlmmGSAPI()
-		: last_error(error_buffer_size), fixed_intercept(false)
+		: last_error(error_buffer_size), iterations(-1), fixed_intercept(false)
 	{
 	}
 
@@ -187,75 +187,89 @@ namespace GlmmGSAPI
 		if (this->offset.IsNull())
 			this->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset());
 
+		// Reset results
+		this->fixed_effects_estimates = Vector<GlmmGS::Estimate>();
+		this->random_effects_estimates = Vector<GlmmGS::Estimate>();
+		this->covariance_components_estimates = Vector<GlmmGS::Estimate>();
+		this->iterations = -1;
+
 		// Fit the model
-		GlmmGS::GlmmGS glmmGS(controls);
-		glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects);
-		this->beta = glmmGS.FixedEffectsCoefficients();
-		this->b = glmmGS.RandomEffectsCoefficients();
-		this->theta = glmmGS.CovarianceComponents();
+		GlmmGS::GlmmGS glmmGS;
+		glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
+
+		// Set results
+		this->fixed_effects_estimates = glmmGS.FixedEffectsCoefficients();
+		this->random_effects_estimates = glmmGS.RandomEffectsCoefficients();
+		this->covariance_components_estimates = glmmGS.CovarianceComponents();
+		this->iterations = glmmGS.Iterations();
 	}
 
 	// Results
 	int GlmmGSAPI::GetFixedEffectsSize() const
 	{
-		return this->beta.Size();
+		return this->fixed_effects_estimates.Size();
 	}
 
 	void GlmmGSAPI::GetFixedEffectsEstimates(WeakVector<double> values) const
 	{
-		if (values.Size() != this->beta.Size())
+		if (values.Size() != this->fixed_effects_estimates.Size())
 			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->beta.Size(); ++i)
-			values(i) = this->beta(i).Value();
+		for (int i = 0; i < this->fixed_effects_estimates.Size(); ++i)
+			values(i) = this->fixed_effects_estimates(i).Value();
 	}
 
 	void GlmmGSAPI::GetFixedEffectsErrors(WeakVector<double> values) const
 	{
-		if (values.Size() != this->beta.Size())
+		if (values.Size() != this->fixed_effects_estimates.Size())
 			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->beta.Size(); ++i)
-			values(i) = sqrt(this->beta(i).Variance());
+		for (int i = 0; i < this->fixed_effects_estimates.Size(); ++i)
+			values(i) = sqrt(this->fixed_effects_estimates(i).Variance());
 	}
 
 	int GlmmGSAPI::GetRandomEffectsSize() const
 	{
-		return this->b.Size();
+		return this->random_effects_estimates.Size();
 	}
 
 	void GlmmGSAPI::GetRandomEffectsEstimates(WeakVector<double> values) const
 	{
-		if (values.Size() != this->b.Size())
+		if (values.Size() != this->random_effects_estimates.Size())
 			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->b.Size(); ++i)
-			values(i) = this->b(i).Value();
+		for (int i = 0; i < this->random_effects_estimates.Size(); ++i)
+			values(i) = this->random_effects_estimates(i).Value();
 	}
 
 	void GlmmGSAPI::GetRandomEffectsErrors(WeakVector<double> values) const
 	{
-		if (values.Size() != this->b.Size())
+		if (values.Size() != this->random_effects_estimates.Size())
 			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->b.Size(); ++i)
-			values(i) = sqrt(this->b(i).Variance());
+		for (int i = 0; i < this->random_effects_estimates.Size(); ++i)
+			values(i) = sqrt(this->random_effects_estimates(i).Variance());
 	}
 
 	int GlmmGSAPI::GetCovarianceComponentsSize() const
 	{
-		return this->theta.Size();
+		return this->covariance_components_estimates.Size();
 	}
 
 	void GlmmGSAPI::GetCovarianceComponentsEstimates(WeakVector<double> values) const
 	{
-		if (values.Size() != this->theta.Size())
+		if (values.Size() != this->covariance_components_estimates.Size())
 			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->theta.Size(); ++i)
-			values(i) = this->theta(i).Value();
+		for (int i = 0; i < this->covariance_components_estimates.Size(); ++i)
+			values(i) = this->covariance_components_estimates(i).Value();
 	}
 
 	void GlmmGSAPI::GetCovarianceComponentsErrors(WeakVector<double> values) const
 	{
-		if (values.Size() != this->theta.Size())
+		if (values.Size() != this->covariance_components_estimates.Size())
 			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->theta.Size(); ++i)
-			values(i) = sqrt(this->theta(i).Variance());
+		for (int i = 0; i < this->covariance_components_estimates.Size(); ++i)
+			values(i) = sqrt(this->covariance_components_estimates(i).Variance());
+	}
+
+	int GlmmGSAPI::GetIterations() const
+	{
+		return this->iterations;
 	}
 }

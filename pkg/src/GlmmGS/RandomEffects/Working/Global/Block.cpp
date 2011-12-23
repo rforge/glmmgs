@@ -21,8 +21,9 @@ namespace GlmmGS
 				Vector<Estimate> Block::Coefficients() const
 				{
 					Vector<Estimate> estimates(this->beta.Size());
+					Vector<double> variance = this->covariance_model->CoefficientsVariance();
 					for (int i = 0; i < this->beta.Size(); ++i)
-						estimates(i) = Estimate(this->beta.Value(i), 0.0);
+						estimates(i) = Estimate(this->beta.Value(i), variance(i));
 					return estimates;
 				}
 

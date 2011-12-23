@@ -25,6 +25,7 @@ namespace GlmmGS
 		Vector<double> eta;
 		Vector<double> working_weights;
 		Vector<double> working_values;
+		int iterations;
 
 		// Implementation
 		int Update();
@@ -32,14 +33,25 @@ namespace GlmmGS
 
 	public:
 		// Construction
-		GlmmGSSolver(Controls controls);
+		GlmmGSSolver();
 
 		// Methods
-		void Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z);
+		void Fit(const Pointer<Responses::IResponse> & y,
+				const Pointer<Offsets::IOffset> & offset,
+				const Vector<Pointer<FixedEffects::IBlock> > & x,
+				const Vector<Pointer<RandomEffects::IBlock> > & z,
+				const Controls & controls);
 
 		// Properties
 		Vector<Vector<Estimate> > FixedEffectsCoefficients() const;
 		Vector<Vector<Estimate> > RandomEffectsCoefficients() const;
 		Vector<Vector<Estimate> > CovarianceComponents() const;
+		int Iterations() const;
 	};
+
+	inline
+	int GlmmGSSolver::Iterations() const
+	{
+		return this->iterations;
+	}
 }

@@ -15,7 +15,7 @@ namespace GlmmGS
 				{
 					// Construction
 					PrecisionModel::PrecisionModel(int nvars, WeakMatrix<const double> R)
-						: ICovarianceModel(nvars), R(R)
+						: ICovarianceModel(nvars), nvars(nvars), R(R)
 					{
 						this->theta = 1.0;
 					}

@@ -448,3 +448,15 @@ void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size)
 		the_api.SetLastError(e);
 	}
 }
+
+void GlmmGSRAPI_GetIterations(int * iterations)
+{
+	try
+	{
+		*iterations = the_api.GetIterations();
+	}
+	catch (Exception & e)
+	{
+		the_api.SetLastError(e);
+	}
+}

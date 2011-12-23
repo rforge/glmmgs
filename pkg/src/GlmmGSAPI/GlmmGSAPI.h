@@ -11,9 +11,10 @@ namespace GlmmGSAPI
 		static const int error_buffer_size = 1024;
 		Buffer last_error;
 		Stack<Pointer<Section> > sections;
-		Vector<GlmmGS::Estimate> beta; // Fixed-effects coefficients estimates
-		Vector<GlmmGS::Estimate> b; // Random-effects coefficients estimates
-		Vector<GlmmGS::Estimate> theta; // Variance component estimates
+		Vector<GlmmGS::Estimate> fixed_effects_estimates; // Fixed-effects coefficients estimates
+		Vector<GlmmGS::Estimate> random_effects_estimates; // Random-effects coefficients estimates
+		Vector<GlmmGS::Estimate> covariance_components_estimates; // Variance component estimates
+		int iterations;
 
 	public:
 		Pointer<GlmmGS::Responses::IResponse> response;
@@ -73,6 +74,7 @@ namespace GlmmGSAPI
 		int GetCovarianceComponentsSize() const;
 		void GetCovarianceComponentsEstimates(WeakVector<double> values) const;
 		void GetCovarianceComponentsErrors(WeakVector<double> values) const;
+		int GetIterations() const;
 	};
 
 	extern GlmmGSAPI the_api;

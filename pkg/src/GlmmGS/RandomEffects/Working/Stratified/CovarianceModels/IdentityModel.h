@@ -19,6 +19,7 @@ namespace GlmmGS
 					{
 					private:
 						// Fields
+						int nvars;
 						int nlevels;
 						VectorialCholeskyDecomposition beta_precision_chol;
 

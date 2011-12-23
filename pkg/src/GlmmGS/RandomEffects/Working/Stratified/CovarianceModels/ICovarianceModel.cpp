@@ -11,8 +11,8 @@ namespace GlmmGS
 				namespace CovarianceModels
 				{
 					// Construction
-					ICovarianceModel::ICovarianceModel(int nvars)
-						: nvars(nvars), theta(nvars)
+					ICovarianceModel::ICovarianceModel(int npars)
+						: theta(npars)
 					{
 					}
 
@@ -23,9 +23,10 @@ namespace GlmmGS
 					// Properties
 					Vector<Estimate> ICovarianceModel::Estimates() const
 					{
-						Vector<Estimate> estimates(nvars);
+						int npars = this->theta.Size();
+						Vector<Estimate> estimates(npars);
 						TriangularMatrix<double> covariance = this->chol.Inverse();
-						for (int j = 0; j < nvars; ++j)
+						for (int j = 0; j < npars; ++j)
 							estimates(j) = Estimate(this->theta(j), covariance(j, j));
 						return estimates;
 					}
@@ -58,7 +59,8 @@ namespace GlmmGS
 						}
 						catch(Exceptions::Exception &)
 						{
-							throw Exceptions::Exception("Failed to update covariance components");
+							//throw Exceptions::Exception("Failed to update covariance components");
+							puts("Warning: Failed to update covariance components");
 							return 1;
 						}
 					}

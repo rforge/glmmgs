@@ -329,3 +329,12 @@ glmmGSAPI.GetCovarianceComponents = function()
 	return(list(estimates = est, standard.errors = err));
 }
 
+# Get number of iterations
+glmmGSAPI.GetIterations = function()
+{
+	iterations = integer(1);
+	.C("GlmmGSRAPI_GetIterations", iterations, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+	glmmGSAPI.GetLastError();
+	return(iterations);
+}
+

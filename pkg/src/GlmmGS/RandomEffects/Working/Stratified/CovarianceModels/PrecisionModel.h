@@ -19,6 +19,7 @@ namespace GlmmGS
 					{
 					private:
 						// Fields
+						int nvars;
 						WeakMatrix<const double> R;
 						CholeskyDecomposition beta_precision_chol;
 

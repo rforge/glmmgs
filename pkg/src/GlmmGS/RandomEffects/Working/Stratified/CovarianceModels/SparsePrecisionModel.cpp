@@ -14,8 +14,8 @@ namespace GlmmGS
 				namespace CovarianceModels
 				{
 					// Construction
-					SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> R)
-						: ICovarianceModel(nvars), R(R)
+					SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R)
+						: ICovarianceModel(nvars), nvars(nvars), R(R)
 					{
 						this->theta = 1.0;
 					}

@@ -14,8 +14,9 @@ namespace GlmmGS
 				{
 					// Construction
 					IdentityModel::IdentityModel(int nvars)
-						: size(nvars), tau(1.0)
+						: ICovarianceModel(1), size(nvars)
 					{
+						this->theta(0) = 1.0;
 					}
 
 					IdentityModel::~IdentityModel()
@@ -23,11 +24,10 @@ namespace GlmmGS
 					}
 
 					// Properties
-					Vector<Estimate> IdentityModel::Estimates() const
+					Vector<double> IdentityModel::CoefficientsVariance() const
 					{
-						Vector<Estimate> estimates(1);
-						estimates(0) = Estimate(this->tau, 0.0); // TODO: calculate variance
-						return estimates;
+						const TriangularMatrix<double> covariance = this->beta_precision_chol.Inverse();
+						return LinearAlgebra::Diagonal(covariance);
 					}
 
 					// Methods
@@ -36,40 +36,27 @@ namespace GlmmGS
 						// Add diagonal to precision
 						TriangularMatrix<double> prec = design_precision;
 						for (int i = 0; i < this->size; ++i)
-							prec(i, i) += this->tau;
+							prec(i, i) += this->theta(0);
 
 						// Decompose
-						this->chol.Decompose(prec);
+						this->beta_precision_chol.Decompose(prec);
 					}
 
 					int IdentityModel::Update(const Vector<double> & beta, Comparer comparer)
 					{
 						// Calculate variance
-						const TriangularMatrix<double> variance = this->chol.Inverse();
+						const TriangularMatrix<double> covariance = this->beta_precision_chol.Inverse();
 
 						// Calculate jacobian and minus the hessian
+						Vector<double> jac(1);
+						TriangularMatrix<double> minus_hessian(1);
 						const double bsquare = LinearAlgebra::Square(beta);
-						const double trace = LinearAlgebra::Trace(variance);
-						const double jac = this->size / this->tau - bsquare - trace;
-						const double minus_hessian = this->size / Math::Square(this->tau) - LinearAlgebra::SquareTrace(variance);
+						const double trace = LinearAlgebra::Trace(covariance);
+						jac(0) = this->size / this->theta(0) - bsquare - trace;
+						minus_hessian(0, 0) = this->size / Math::Square(this->theta(0)) - LinearAlgebra::SquareTrace(covariance);
 
-						// Calculate update
-						double h = jac / minus_hessian;
-						const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-						// Update sigma_square
-						this->tau += h;
-						while (this->tau <= 0.0)
-						{
-							// Back-track
-							h *= 0.5;
-							this->tau -= h;
-						}
-
-						// Debug
-						Print("MaxAbs update covariance components= %g\n", Math::Abs(h));
-
-						return update;
+						// Update covariance components
+						return ICovarianceModel::Update(minus_hessian, jac, comparer);
 					}
 
 					Vector<double> IdentityModel::CoefficientsUpdate(const Vector<double> & jacobian, const Vector<double> & beta) const
@@ -77,10 +64,10 @@ namespace GlmmGS
 						// Add diagonal terms
 						Vector<double> jac = jacobian;
 						for (int i = 0; i < this->size; ++i)
-							jac(i) -= this->tau * beta(i);
+							jac(i) -= this->theta(0) * beta(i);
 
 						// Decomposes
-						return this->chol.Solve(jac);
+						return this->beta_precision_chol.Solve(jac);
 					}
 				}
 			}

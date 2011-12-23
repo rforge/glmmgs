@@ -20,11 +20,10 @@ namespace GlmmGS
 					private:
 						// Fields
 						WeakMatrix<const double> R;
-						double tau;
-						CholeskyDecomposition chol;
+						CholeskyDecomposition beta_precision_chol;
 
 						// Implementation
-						Vector<Estimate> Estimates() const;
+						Vector<double> CoefficientsVariance() const;
 						void Decompose(const TriangularMatrix<double> & precision);
 						int Update(const Vector<double> & beta, Comparer comparer);
 						Vector<double> CoefficientsUpdate(const Vector<double> & jacobian, const Vector<double> & beta) const;

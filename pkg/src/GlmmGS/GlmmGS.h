@@ -15,39 +15,50 @@ namespace GlmmGS
 	{
 		// Fields
 		Controls controls;
-		Vector<Estimate> beta;
-		Vector<Estimate> b;
-		Vector<Estimate> theta;
+		Vector<Estimate> fixed_effects_estimates;
+		Vector<Estimate> random_effects_estimates;
+		Vector<Estimate> covariance_components_estimates;
+		int iterations;
 
 	public:
 		// Construction
-		GlmmGS(Controls controls);
+		GlmmGS();
 
 		// Properties
-		void SetControls(Controls controls);
 		const Vector<Estimate> & FixedEffectsCoefficients() const;
 		const Vector<Estimate> & RandomEffectsCoefficients() const;
 		const Vector<Estimate> & CovarianceComponents() const;
+		int Iterations() const;
 
 		// Methods
-		void Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z);
+		void Fit(const Pointer<Responses::IResponse> & y,
+				const Pointer<Offsets::IOffset> & offset,
+				const Vector<Pointer<FixedEffects::IBlock> > & x,
+				const Vector<Pointer<RandomEffects::IBlock> > & z,
+				const Controls & controls);
 	};
 
 	inline
 	const Vector<Estimate> & GlmmGS::FixedEffectsCoefficients() const
 	{
-		return this->beta;
+		return this->fixed_effects_estimates;
 	}
 
 	inline
 	const Vector<Estimate> & GlmmGS::RandomEffectsCoefficients() const
 	{
-		return this->b;
+		return this->random_effects_estimates;
 	}
 
 	inline
 	const Vector<Estimate> & GlmmGS::CovarianceComponents() const
 	{
-		return this->theta;
+		return this->covariance_components_estimates;
+	}
+
+	inline
+	int GlmmGS::Iterations() const
+	{
+		return this->iterations;
 	}
 }

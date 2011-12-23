@@ -194,9 +194,11 @@ glmmGS.Fit = function(control)
 	fixed.effects = glmmGSAPI.GetFixedEffectsCoefficients();
 	random.effects = glmmGSAPI.GetRandomEffectsCoefficients();
 	covariance.components = glmmGSAPI.GetCovarianceComponents();
+	iterations = glmmGSAPI.GetIterations();
 	return(list(fixed.effects = fixed.effects,
 		random.effects = random.effects,
-		covariance.components = covariance.components));
+		covariance.components = covariance.components,
+		iterations = iterations));
 }
 
 # Get variable
@@ -392,7 +394,7 @@ glmmGS.AddResponse = function(response, family, data, env)
 }
 
 # Main function
-glmmGS = function(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control(), random.effects.covariance = FALSE)
+glmmGS = function(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control())
 {
 	# Gets environment of calling function
 	env = parent.frame();

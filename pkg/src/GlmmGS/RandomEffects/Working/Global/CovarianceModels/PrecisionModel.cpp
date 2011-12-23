@@ -62,8 +62,9 @@ namespace GlmmGS
 
 					// Construction
 					PrecisionModel::PrecisionModel(WeakMatrix<const double> R)
-						: R(R), tau(1.0)
+						: ICovarianceModel(1), R(R)
 					{
+						this->theta = 1.0;
 					}
 
 					PrecisionModel::~PrecisionModel()
@@ -71,11 +72,10 @@ namespace GlmmGS
 					}
 
 					// Properties
-					Vector<Estimate> PrecisionModel::Estimates() const
+					Vector<double> PrecisionModel::CoefficientsVariance() const
 					{
-						Vector<Estimate> estimates(1);
-						estimates(0) = Estimate(this->tau, 0.0); // TODO: calculate variance
-						return estimates;
+						const TriangularMatrix<double> covariance = this->beta_precision_chol.Inverse();
+						return LinearAlgebra::Diagonal(covariance);
 					}
 
 					// Methods
@@ -86,13 +86,13 @@ namespace GlmmGS
 						const int size = this->R.NumberOfRows();
 						for (int i = 0; i < size; ++i)
 						{
-							prec(i, i) += this->tau * this->R(i, i);
+							prec(i, i) += this->theta(0) * this->R(i, i);
 							for (int j = 0; j < i; ++j)
 								prec(i, j) += this->R(i, j);
 						}
 
 						// Decompose
-						this->chol.Decompose(prec);
+						this->beta_precision_chol.Decompose(prec);
 					}
 
 					int PrecisionModel::Update(const Vector<double> & beta, Comparer comparer)
@@ -108,7 +108,7 @@ namespace GlmmGS
 								b(i) = this->R(i, j);
 
 							// Solve T x = b
-							Vector<double> x = this->chol.Solve(b);
+							Vector<double> x = this->beta_precision_chol.Solve(b);
 
 							// Store x
 							for (int i = 0; i < ncols; ++i)
@@ -116,25 +116,15 @@ namespace GlmmGS
 						}
 
 						// Calculate jacobian and minus the hessian
+						Vector<double> jac(1);
+						TriangularMatrix<double> minus_hessian(1);
 						const double bsquare = Square(this->R, beta);
 						const double trace = Trace(a);
-						const double jac = ncols / this->tau - bsquare - trace;
-						const double minus_hessian = ncols / Math::Square(this->tau) - SquareTrace(a);
+						jac(0) = ncols / this->theta(0) - bsquare - trace;
+						minus_hessian(0, 0) = ncols / Math::Square(this->theta(0)) - SquareTrace(a);
 
-						// Calculate update
-						double h = jac / minus_hessian;
-						const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-						// Update sigma_square
-						this->tau += h;
-						while (this->tau <= 0.0)
-						{
-							// Back-track
-							h *= 0.5;
-							this->tau -= h;
-						}
-
-						return update;
+						// Update covariance components
+						return ICovarianceModel::Update(minus_hessian, jac, comparer);
 					}
 
 					Vector<double> PrecisionModel::CoefficientsUpdate(const Vector<double> & design_jacobian, const Vector<double> & beta) const
@@ -143,10 +133,10 @@ namespace GlmmGS
 						const int size = this->R.NumberOfRows();
 						Vector<double> jac(size);
 						for (int i = 0; i < size; ++i)
-							jac(i) = design_jacobian(i) - this->tau * MatrixProduct(i, this->R, beta);
+							jac(i) = design_jacobian(i) - this->theta(0) * MatrixProduct(i, this->R, beta);
 
 						// Solve
-						return this->chol.Solve(jac);
+						return this->beta_precision_chol.Solve(jac);
 					}
 				}
 			}

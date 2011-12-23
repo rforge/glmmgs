@@ -19,6 +19,7 @@ namespace GlmmGS
 					{
 					private:
 						// Fields
+						int nvars;
 						const LDL::SparseMatrix<double> R;
 						LDL::SparseCholeskyDecomposition beta_precision_chol;
 
@@ -30,7 +31,7 @@ namespace GlmmGS
 
 					public:
 						// Construction
-						SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> R);
+						SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R);
 						~SparsePrecisionModel();
 					};
 				}

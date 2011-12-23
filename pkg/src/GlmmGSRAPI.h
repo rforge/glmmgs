@@ -52,4 +52,5 @@ extern "C"
 	void GlmmGSRAPI_GetCovarianceComponentsSize(int * size);
 	void GlmmGSRAPI_GetCovarianceComponentsEstimates(double * values, const int * size);
 	void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size);
+	void GlmmGSRAPI_GetIterations(int * iterations);
 }

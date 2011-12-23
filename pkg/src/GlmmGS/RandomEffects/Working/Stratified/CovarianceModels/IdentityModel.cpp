@@ -14,7 +14,7 @@ namespace GlmmGS
 				{
 					// Construction
 					IdentityModel::IdentityModel(int nvars, int nlevels)
-						: ICovarianceModel(nvars), nlevels(nlevels)
+						: ICovarianceModel(nvars), nvars(nvars), nlevels(nlevels)
 					{
 						this->theta = 1.0;
 					}

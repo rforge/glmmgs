@@ -18,7 +18,6 @@ namespace GlmmGS
 					{
 					protected:
 						// Fields
-						int nvars;
 						Vector<double> theta;
 					private:
 						CholeskyDecomposition chol;
@@ -29,7 +28,7 @@ namespace GlmmGS
 								const Vector<double> & jacobian, Comparer comparer);
 					public:
 						// Construction
-						ICovarianceModel(int nvars);
+						ICovarianceModel(int npars);
 						virtual ~ICovarianceModel();
 
 						// Properties
