@@ -191,9 +191,12 @@ glmmGS.Fit = function(control)
 	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit);
 	
 	# Retrieve results
-	beta = glmmGSAPI.GetFixedEffectsCoefficients();
-	theta = glmmGSAPI.GetVarianceComponents();
-	return(list(beta = beta, theta = theta));
+	fixed.effects = glmmGSAPI.GetFixedEffectsCoefficients();
+	random.effects = glmmGSAPI.GetRandomEffectsCoefficients();
+	covariance.components = glmmGSAPI.GetVarianceComponents();
+	return(list(fixed.effects = fixed.effects,
+		random.effects = random.effects,
+		covariance.components = covariance.components));
 }
 
 # Get variable
