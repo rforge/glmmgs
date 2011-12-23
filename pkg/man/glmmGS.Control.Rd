@@ -9,7 +9,7 @@ Construct control list for \code{glmmGS} function
 	\code{\link{glmmGS}} function.
 }
 \usage{
-	glmmGS.Control(reltol = 1e-06, abstol = 1e-06, maxit = 500)
+	glmmGS.Control(reltol = 1e-06, abstol = 1e-06, maxit = 200)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

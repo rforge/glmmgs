@@ -24,7 +24,7 @@
 		The formula object must be of the type \emph{response ~ linear-predictor}. For a binomial
 		response, the response must be defined as \code{(outcome | counts)}. The linear predictor 
 		comprises fixed effects and random effects. Fixed and random effects must be grouped 
-		in blocks (the blocks of the Gauss-Seidel algorithm, see Reference section) 
+		in blocks (the blocks of the Gauss-Seidel algorithm, see Reference) 
 		specified by pairs of parentheses. Blocks of covariates can be stratified by a grouping
 		variable. The covariance model inside the random effect block is specified by using the symbol 
 		\code{~} followed by a variable-name of a previously defined \code{\link{glmmGS.CovarianceModel}}).
@@ -166,20 +166,22 @@
 	beta.seifa <- rnorm(nPostCodes, sd = sd.seifa);
 	
 	# Generate linear predictor
-	eta <- intercept + days \%*\% beta.days + intercept.seifa[as.integer(postCodes)] + seifa * beta.seifa[as.integer(postCodes)];
+	eta <- intercept + days \%*\% beta.days;
+	eta <- eta + intercept.seifa[as.integer(postCodes)] + seifa * beta.seifa[as.integer(postCodes)];
 
 	# Generate response
 	y <- as.integer(rbinom(nobs, counts, plogis(eta)));
 
 	# Define identity precision model and control list
 	I <- glmmGS.CovarianceModel("identity");
-	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 500);
+	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 200);
 	
 	# Fit model using Gauss-Seidel algorithm with two blocks: 
 	# - one fixed effect block: (1 + days);
 	# - one stratified random effect block with an identity  
 	#   covariance model: (1 + seifa | ipostCodes ~ I).
-	results <- glmmGS(formula = (y | counts) ~ offset(offset) + (1 + days) + (1 + seifa | ipostCodes ~ I), family = binomial, control = control);
+	formula = (y | counts) ~ offset(offset) + (1 + days) + (1 + seifa | ipostCodes ~ I);
+	results <- glmmGS(formula = formula, family = binomial, control = control);
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
