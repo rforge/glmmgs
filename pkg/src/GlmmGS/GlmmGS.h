@@ -16,6 +16,7 @@ namespace GlmmGS
 		// Fields
 		Controls controls;
 		Vector<Estimate> beta;
+		Vector<Estimate> b;
 		Vector<Estimate> theta;
 
 	public:
@@ -25,6 +26,7 @@ namespace GlmmGS
 		// Properties
 		void SetControls(Controls controls);
 		const Vector<Estimate> & FixedEffectsCoefficients() const;
+		const Vector<Estimate> & RandomEffectsCoefficients() const;
 		const Vector<Estimate> & VarianceComponents() const;
 
 		// Methods
@@ -35,6 +37,12 @@ namespace GlmmGS
 	const Vector<Estimate> & GlmmGS::FixedEffectsCoefficients() const
 	{
 		return this->beta;
+	}
+
+	inline
+	const Vector<Estimate> & GlmmGS::RandomEffectsCoefficients() const
+	{
+		return this->b;
 	}
 
 	inline

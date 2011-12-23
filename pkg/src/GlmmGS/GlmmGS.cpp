@@ -41,9 +41,11 @@ namespace GlmmGS
 		solver.Fit(y, offset, x, z);
 
 		Vector<Vector<Estimate> > beta = solver.FixedEffectsCoefficients();
+		Vector<Vector<Estimate> > b = solver.RandomEffectsCoefficients();
 		Vector<Vector<Estimate> > theta = solver.VarianceComponents();
 
 		ToVector(this->beta, beta);
+		ToVector(this->b, b);
 		ToVector(this->theta, theta);
 	}
 }

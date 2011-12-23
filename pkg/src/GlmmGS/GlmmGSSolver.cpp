@@ -106,6 +106,18 @@ namespace GlmmGS
 		return estimates;
 	}
 
+	Vector<Vector<Estimate> > GlmmGSSolver::RandomEffectsCoefficients() const
+	{
+		const int nblocks = this->random_effects.Size();
+		Vector<Vector<Estimate> > estimates(nblocks);
+		for (int block = 0; block < nblocks; ++block)
+		{
+			Vector<Estimate> tmp = this->random_effects(block)->Coefficients();
+			Move(estimates(block), tmp);
+		}
+		return estimates;
+	}
+
 	Vector<Vector<Estimate> > GlmmGSSolver::VarianceComponents() const
 	{
 		const int nblocks = this->random_effects.Size();

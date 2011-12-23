@@ -22,6 +22,19 @@ namespace GlmmGS
 				{
 				}
 
+				Vector<Estimate> Block::Coefficients() const
+				{
+					Vector<Estimate> estimates(this->beta.Size());
+					const int nvars = this->variables.Size();
+					for (int i = 0, ik = 0; i < nvars; ++i)
+					{
+						const Vector<double> & v = this->beta.Value(i);
+						for (int k = 0; k < v.Size(); ++k, ++ik)
+							estimates(ik) = Estimate(v(k), 0.0);
+					}
+					return estimates;
+				}
+
 				Vector<Estimate> Block::VarianceComponents() const
 				{
 					return this->covariance_model->Estimates();
@@ -56,6 +69,7 @@ namespace GlmmGS
 					int update = 0;
 					update += this->beta.Update(jacobian, this->covariance_model, comparer);
 					update += this->covariance_model->Update(this->beta.Values(), comparer);
+					this->covariance_model->Decompose(precision);
 					return update;
 				}
 			}

@@ -191,6 +191,7 @@ namespace GlmmGSAPI
 		GlmmGS::GlmmGS glmmGS(controls);
 		glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects);
 		this->beta = glmmGS.FixedEffectsCoefficients();
+		this->b = glmmGS.RandomEffectsCoefficients();
 		this->theta = glmmGS.VarianceComponents();
 	}
 
@@ -214,6 +215,27 @@ namespace GlmmGSAPI
 			throw Exceptions::InvalidSizeException();
 		for (int i = 0; i < this->beta.Size(); ++i)
 			values(i) = sqrt(this->beta(i).Variance());
+	}
+
+	int GlmmGSAPI::GetRandomEffectsSize() const
+	{
+		return this->b.Size();
+	}
+
+	void GlmmGSAPI::GetRandomEffectsEstimates(WeakVector<double> values) const
+	{
+		if (values.Size() != this->b.Size())
+			throw Exceptions::InvalidSizeException();
+		for (int i = 0; i < this->b.Size(); ++i)
+			values(i) = this->b(i).Value();
+	}
+
+	void GlmmGSAPI::GetRandomEffectsErrors(WeakVector<double> values) const
+	{
+		if (values.Size() != this->b.Size())
+			throw Exceptions::InvalidSizeException();
+		for (int i = 0; i < this->b.Size(); ++i)
+			values(i) = sqrt(this->b(i).Variance());
 	}
 
 	int GlmmGSAPI::GetVarianceComponentsSize() const

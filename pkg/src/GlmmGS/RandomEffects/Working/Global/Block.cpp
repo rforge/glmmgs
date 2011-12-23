@@ -18,6 +18,14 @@ namespace GlmmGS
 				{
 				}
 
+				Vector<Estimate> Block::Coefficients() const
+				{
+					Vector<Estimate> estimates(this->beta.Size());
+					for (int i = 0; i < this->beta.Size(); ++i)
+						estimates(i) = Estimate(this->beta.Value(i), 0.0);
+					return estimates;
+				}
+
 				Vector<Estimate> Block::VarianceComponents() const
 				{
 					return this->covariance_model->Estimates();

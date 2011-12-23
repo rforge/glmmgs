@@ -19,6 +19,7 @@ namespace GlmmGS
 				virtual ~IBlock();
 
 				// Properties
+				virtual Vector<Estimate> Coefficients() const = 0;
 				virtual Vector<Estimate> VarianceComponents() const = 0;
 
 				// Methods

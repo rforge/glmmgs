@@ -29,7 +29,7 @@ namespace GlmmGS
 					{
 						Vector<Estimate> estimates(nvars);
 						for (int j = 0; j < nvars; ++j)
-							estimates(j) = Estimate(1.0 / sqrt(this->tau(j)), -1); // TODO: calculate variance
+							estimates(j) = Estimate(this->tau(j), 0.0); // TODO: calculate variance
 						return estimates;
 					}
 
@@ -183,6 +183,7 @@ namespace GlmmGS
 						}
 						catch(Exceptions::Exception &)
 						{
+							throw Exceptions::Exception("Failed to update covariance components");
 							return 1;
 						}
 					}

@@ -21,10 +21,11 @@ namespace GlmmGS
 				private:
 					// Fields
 					Vector<Pointer<Variables::IVariable> > variables;
-					Coefficients beta;
+					Global::Coefficients beta;
 					Pointer<CovarianceModels::ICovarianceModel> covariance_model;
 
 					// Implementation
+					Vector<Estimate> Coefficients() const;
 					Vector<Estimate> VarianceComponents() const;
 					void UpdatePredictor(Vector<double> & eta) const;
 					int Update(const Vector<double> & w, const Vector<double> & z, Comparer comparer);

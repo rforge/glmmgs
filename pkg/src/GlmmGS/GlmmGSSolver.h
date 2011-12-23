@@ -39,6 +39,7 @@ namespace GlmmGS
 
 		// Properties
 		Vector<Vector<Estimate> > FixedEffectsCoefficients() const;
+		Vector<Vector<Estimate> > RandomEffectsCoefficients() const;
 		Vector<Vector<Estimate> > VarianceComponents() const;
 	};
 }

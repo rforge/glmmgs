@@ -26,7 +26,7 @@ namespace GlmmGS
 					Vector<Estimate> IdentityModel::Estimates() const
 					{
 						Vector<Estimate> estimates(1);
-						estimates(0) = Estimate(sqrt(1.0 / this->tau), -1); // TODO: calculate variance
+						estimates(0) = Estimate(this->tau, 0.0); // TODO: calculate variance
 						return estimates;
 					}
 

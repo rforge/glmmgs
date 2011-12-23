@@ -12,6 +12,7 @@ namespace GlmmGSAPI
 		Buffer last_error;
 		Stack<Pointer<Section> > sections;
 		Vector<GlmmGS::Estimate> beta; // Fixed-effects coefficients estimates
+		Vector<GlmmGS::Estimate> b; // Random-effects coefficients estimates
 		Vector<GlmmGS::Estimate> theta; // Variance component estimates
 
 	public:
@@ -66,6 +67,9 @@ namespace GlmmGSAPI
 		int GetFixedEffectsSize() const;
 		void GetFixedEffectsEstimates(WeakVector<double> values) const;
 		void GetFixedEffectsErrors(WeakVector<double> values) const;
+		int GetRandomEffectsSize() const;
+		void GetRandomEffectsEstimates(WeakVector<double> values) const;
+		void GetRandomEffectsErrors(WeakVector<double> values) const;
 		int GetVarianceComponentsSize() const;
 		void GetVarianceComponentsEstimates(WeakVector<double> values) const;
 		void GetVarianceComponentsErrors(WeakVector<double> values) const;

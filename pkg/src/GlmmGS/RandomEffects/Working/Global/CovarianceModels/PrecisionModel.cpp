@@ -30,70 +30,28 @@ namespace GlmmGS
 					}
 
 					// Trace
-					double Trace(const TriangularMatrix<double> & v, WeakMatrix<const double> m)
+					double Trace(const Matrix<double> & a)
 					{
-						const int size = m.NumberOfRows();
+						const int size = a.NumberOfColumns();
 						double sum = 0.0;
 						for (int i = 0; i < size; ++i)
-						{
-							sum += v(i, i) * m(i, i);
-							for (int j = 0; j < i; ++j)
-								sum += 2.0 * v(i, j) * m(i, j);
-						}
-						return sum;
-					}
-
-					// Diagonal block product
-					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset, WeakMatrix<const double> m)
-					{
-						const int size = m.NumberOfRows();
-						double sum = 0.0;
-						for (int i = 0; i <= row; ++i)
-							sum += v(offset + row, offset + i) * m(i, col);
-						for (int i = row + 1; i < size; ++i)
-							sum += v(offset + i, offset + row) * m(i, col);
-						return sum;
-					}
-
-					// Off-diagonal block product
-					double BlockProduct(int row, int col, const TriangularMatrix<double> & v, int offset_row, int offset_col, WeakMatrix<const double> m)
-					{
-						_ASSERT_ARGUMENT(offset_col < offset_row);
-						const int size = m.NumberOfRows();
-						double sum = 0.0;
-						for (int i = 0; i < size; ++i)
-							sum += v(offset_row + row, offset_col + i) * m(i, col);
-						return sum;
-					}
-
-					// Matrix-matrix product
-					double Product(const int i, const int j, const TriangularMatrix<double> & v, WeakMatrix<const double> m)
-					{
-						const int size = m.NumberOfRows();
-						double sum = 0.0;
-						for (int k = 0; k <= i; ++k)
-							sum += v(i, k) * m(k, j);
-						for (int k = i + 1; k < size; ++k)
-							sum += v(k, i) * m(k, j);
+							sum += a(i, i);
 						return sum;
 					}
 
 					// Trace of square product
-					double SquareTrace(const TriangularMatrix<double> & v, WeakMatrix<const double> m)
+					double SquareTrace(const Matrix<double> & a)
 					{
-						const int size = m.NumberOfRows();
+						const int size = a.NumberOfColumns();
 						double sum = 0.0;
 						for (int i = 0; i < size; ++i)
-						{
-							sum += Math::Square(Product(i, i, v, m));
-							for (int j = 0; j < i; ++j)
-								sum += 2.0 * Product(i, j, v, m) * Product(j, i, v, m);
-						}
+							for (int j = 0; j < size; ++j)
+								sum += a(i, j) * a(j, i);
 						return sum;
 					}
 
 					// Matrix-vector product
-					double Product(int k, WeakMatrix<const double> m, const Vector<double> & x)
+					double MatrixProduct(int k, WeakMatrix<const double> m, const Vector<double> & x)
 					{
 						const int size = m.NumberOfRows();
 						double sum = 0.0;
@@ -116,7 +74,7 @@ namespace GlmmGS
 					Vector<Estimate> PrecisionModel::Estimates() const
 					{
 						Vector<Estimate> estimates(1);
-						estimates(0) = Estimate(1.0 / sqrt(this->tau), -1); // TODO: calculate variance
+						estimates(0) = Estimate(this->tau, 0.0); // TODO: calculate variance
 						return estimates;
 					}
 
@@ -139,15 +97,29 @@ namespace GlmmGS
 
 					int PrecisionModel::Update(const Vector<double> & beta, Comparer comparer)
 					{
-						// Calculate variance
-						const TriangularMatrix<double> variance = this->chol.Inverse();
+						// Calulate T^{-1} R
+						const int ncols = this->R.NumberOfColumns();
+						Matrix<double> a(ncols, ncols);
+						Vector<double> b(ncols);
+						for (int j = 0; j < ncols; ++j)
+						{
+							// Prepare b
+							for (int i = 0; i < ncols; ++i)
+								b(i) = this->R(i, j);
+
+							// Solve T x = b
+							Vector<double> x = this->chol.Solve(b);
+
+							// Store x
+							for (int i = 0; i < ncols; ++i)
+								a(i, j) = x(i);
+						}
 
 						// Calculate jacobian and minus the hessian
-						const int size = this->R.NumberOfRows();
 						const double bsquare = Square(this->R, beta);
-						const double trace = Trace(variance, this->R);
-						const double jac = size / this->tau - bsquare - trace;
-						const double minus_hessian = size / Math::Square(this->tau) - SquareTrace(variance, this->R);
+						const double trace = Trace(a);
+						const double jac = ncols / this->tau - bsquare - trace;
+						const double minus_hessian = ncols / Math::Square(this->tau) - SquareTrace(a);
 
 						// Calculate update
 						double h = jac / minus_hessian;
@@ -171,7 +143,7 @@ namespace GlmmGS
 						const int size = this->R.NumberOfRows();
 						Vector<double> jac(size);
 						for (int i = 0; i < size; ++i)
-							jac(i) = design_jacobian(i) - this->tau * Product(i, this->R, beta);
+							jac(i) = design_jacobian(i) - this->tau * MatrixProduct(i, this->R, beta);
 
 						// Solve
 						return this->chol.Solve(jac);

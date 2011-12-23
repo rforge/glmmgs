@@ -23,10 +23,11 @@ namespace GlmmGS
 					// Fields
 					Vector<Pointer<Variables::IVariable> > variables;
 					WeakFactor factor;
-					Coefficients beta;
+					Stratified::Coefficients beta;
 					Pointer<CovarianceModels::ICovarianceModel> covariance_model;
 
 					// Implementation
+					Vector<Estimate> Coefficients() const;
 					Vector<Estimate> VarianceComponents() const;
 					void UpdatePredictor(Vector<double> & eta) const;
 					int Update(const Vector<double> & w, const Vector<double> & z, Comparer comparer);

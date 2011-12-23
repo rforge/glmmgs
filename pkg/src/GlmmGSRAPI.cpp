@@ -377,6 +377,42 @@ void GlmmGSRAPI_GetFixedEffectsErrors(double * values, const int * size)
 	}
 }
 
+void GlmmGSRAPI_GetRandomEffectsSize(int * size)
+{
+	try
+	{
+		*size = the_api.GetRandomEffectsSize();
+	}
+	catch (Exception & e)
+	{
+		the_api.SetLastError(e);
+	}
+}
+
+void GlmmGSRAPI_GetRandomEffectsEstimates(double * values, const int * size)
+{
+	try
+	{
+		the_api.GetRandomEffectsEstimates(WeakVector<double>(values, *size));
+	}
+	catch (Exception & e)
+	{
+		the_api.SetLastError(e);
+	}
+}
+
+void GlmmGSRAPI_GetRandomEffectsErrors(double * values, const int * size)
+{
+	try
+	{
+		the_api.GetRandomEffectsErrors(WeakVector<double>(values, *size));
+	}
+	catch (Exception & e)
+	{
+		the_api.SetLastError(e);
+	}
+}
+
 void GlmmGSRAPI_GetVarianceComponentsSize(int * size)
 {
 	try
