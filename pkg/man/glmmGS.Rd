@@ -6,9 +6,9 @@
 \description{
 	glmmGS is used to fit generalized mixed linear models specified by a string-like formula.
 	The MLE estimation of the parameters is performed by using a Gauss-Seidel algorithm 
-	to fit the regression coefficients (see Reference section), and a Penalized Quasi Likelihood (PQL) 
-	approach to fit the covariance components (see Note section). The algorithm is highly optimized to fit 
-	fixed-effect models to data-sets with a large number of observations and 
+	to fit the regression coefficients (see Reference), and a Penalized Quasi Likelihood (PQL) 
+	approach to fit the covariance components (see Note). The algorithm is highly optimized to fit 
+	fixed effect models to data-sets with a large number of observations and 
 	with stratified covariates with a large number of levels, and mixed models 
 	with stratified covariates with a large number of levels and diagonal
 	covariance structures. Covariance structures defined by non diagonal dense 
@@ -23,15 +23,15 @@
 		a formula object providing a symbolic description of the model to be fitted.
 		The formula object must be of the type \emph{response ~ linear-predictor}. For a binomial
 		response, the response must be defined as \code{(outcome | counts)}. The linear predictor 
-		comprises fixed-effects and random-effects. Fixed and random effects must be grouped 
+		comprises fixed effects and random effects. Fixed and random effects must be grouped 
 		in blocks (the blocks of the Gauss-Seidel algorithm, see Reference section) 
 		specified by pairs of parentheses. Blocks of covariates can be stratified by a grouping
 		variable. The covariance model inside the random effect block is specified by using the symbol 
 		\code{~} followed by a variable-name of a previously defined \code{\link{glmmGS.CovarianceModel}}).
-		If an offset \code{a} is present in the linear predictor, it must be specified with keyword
-		\code{offset(a)} before the specification of the fixed and random effects. The intercepts should
-		always be explicitly specified by the symbol \code{1}: implicit specification
-		of the intercept is not assumed. See Details section for informations on how non-identifiability 
+		If an offset \code{off} is present in the linear predictor, it must be specified with keyword
+		\code{offset(off)} before the specification of the fixed and random effects. The intercepts should
+		always be explicitly specified by the symbol \code{1}; implicit specification
+		of the intercept is not assumed. See Details for information on how non-identifiability 
 		introduced by multiple intercepts is handled. 
 		In order to minimize the memory usage, none of the variables present in the formula
 		are copied or coerced. In particular:
@@ -76,20 +76,20 @@
 	a list of values comprised of:
 	\item{fixed.effects}{
 		a list containing the items:
-		\code{estimates}: the estimates of the fixed-effect coefficients;
-		\code{stderrs}: the standard errors of the fixed-effect coefficient estimates
-		(see Note section).
+		\code{estimates}: the estimates of the fixed effect coefficients;
+		\code{standard.errors}: the standard errors of the fixed effect coefficient estimates
+		(see Note).
 	}
 	\item{random.effects}{
 		a list containing the items:
 		\code{estimates}: the estimates of the random effect coefficients;
-		\code{stderrs}: the standard errors of the random effect coefficient estimates
-		(see Note section).
+		\code{standard.errors}: the standard errors of the random effect coefficient estimates
+		(see Note).
 	}
 	\item{covariance.components}{
 		a list containing the items:
 		\code{estimates}: the estimates of the covariance components;
-		\code{stderrs}: the standard errors of the covariance components.
+		\code{standard.errors}: the standard errors of the covariance components.
 	}
 	\item{iterations}{
 		the number of iterations.
@@ -106,15 +106,14 @@
 }
 \note{
 %%  ~~further notes~~
-	The distinguishing characteristic of the Gauss-Seidel algorithm, is that the full
+	The distinguishing characteristic of the Gauss-Seidel algorithm is that the full
 	precision matrix of the posterior distribution of the parameters
-	is never computed. Only diagonal-blocks of the precision matrix are computed, 
-	one for each pair of parentheses in the formula. Furthermore, in the presence
-	of stratified variables, each precision-block is subdivided in as many sub-blocks 
-	as many levels are present in the grouping factor. As a consequence, 
-	the standard errors associated with the coefficient estimates, are computed 
-	for each block conditionally to the other blocks. Hence
-	the standard-errors returned by the \code{glmmGS} function tend to be
+	is never computed. Only diagonal blocks of the precision matrix are computed, 
+	one for each pair of parentheses in the formula. Furthermore, each precision-block
+	associated with stratified covariates, is subdivided in as many sub-blocks 
+	as many levels there are in the grouping factor. As a consequence, 
+	the standard errors associated with the coefficient estimates are computed 
+	for each block conditionally to the other blocks, and they tend to be
 	smaller than the standard-errors calculated using the full posterior
 	distribution of the parameters. 
 	
@@ -124,15 +123,15 @@
 	Auxiliary functions to calculate quantities such as	block covariance matrices, 
 	fitted values, predictors, will be soon released. We strongly recommend not to commit 
 	to the current format of the return value, since it will likely change in the next release. 
-	A user should write accessor functions to parse the return value, so that user-code 
-	using \code{glmmGS} would only need to change the accessor functions in the next
+	A user should write \sQuote{accessor} functions to parse the return value, so that user-code 
+	using \code{glmmGS} would only need to change the \sQuote{accessor} functions in the next
 	release. 
 	
-	Although it is possible to specify as many blocks of random-effects as desired, the PQL update
+	Although it is possible to specify as many blocks of random effects as desired, the PQL update
 	of the covariance components is performed one block at a time. This yields to different
 	estimates compared to a joint PQL update of the covariance components. Alternative
 	approaches, more compatible with the component-wise nature of the Gauss-Seidel
-	algorithm, to the PQL approximation of the integration over the random-effect 
+	algorithm, to the PQL approximation of the integration over the random effect 
 	coefficients, are under consideration.
 }
 

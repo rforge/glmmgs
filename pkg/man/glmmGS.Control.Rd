@@ -26,7 +26,7 @@ Construct control list for \code{glmmGS} function
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
 	The Gauss-Seidel iterative algorithm stops if the magnitude of every 
-	parameter-update is less than \code{abstol} or less than \code{reltol} 
+	parameter update is less than \code{abstol} or less than \code{reltol} 
 	times the magnitude of the current parameter.
 	If the algorithm reaches \emph{maxit} number of iterations without converging, 
 	then the algorithm stops and returns an error.

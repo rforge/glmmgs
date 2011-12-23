@@ -17,7 +17,8 @@
 \arguments{
   	\item{type}{
 		a string specifying the type of the covariance model. Current valid types are:
-		\code{identity}, \code{precision}.
+		\code{identity}, \code{precision}. The covariance components of the identity
+		and precision models represent the global precision parameters.
   	}
   	\item{\dots}{
     	optional arguments containing information about the precision or covariance structure
