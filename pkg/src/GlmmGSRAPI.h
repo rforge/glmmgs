@@ -49,7 +49,7 @@ extern "C"
 	void GlmmGSRAPI_GetRandomEffectsSize(int * size);
 	void GlmmGSRAPI_GetRandomEffectsEstimates(double * values, const int * size);
 	void GlmmGSRAPI_GetRandomEffectsErrors(double * values, const int * size);
-	void GlmmGSRAPI_GetVarianceComponentsSize(int * size);
-	void GlmmGSRAPI_GetVarianceComponentsEstimates(double * values, const int * size);
-	void GlmmGSRAPI_GetVarianceComponentsErrors(double * values, const int * size);
+	void GlmmGSRAPI_GetCovarianceComponentsSize(int * size);
+	void GlmmGSRAPI_GetCovarianceComponentsEstimates(double * values, const int * size);
+	void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size);
 }

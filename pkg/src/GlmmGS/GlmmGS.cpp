@@ -42,7 +42,7 @@ namespace GlmmGS
 
 		Vector<Vector<Estimate> > beta = solver.FixedEffectsCoefficients();
 		Vector<Vector<Estimate> > b = solver.RandomEffectsCoefficients();
-		Vector<Vector<Estimate> > theta = solver.VarianceComponents();
+		Vector<Vector<Estimate> > theta = solver.CovarianceComponents();
 
 		ToVector(this->beta, beta);
 		ToVector(this->b, b);

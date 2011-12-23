@@ -26,7 +26,7 @@ namespace GlmmGS
 					return estimates;
 				}
 
-				Vector<Estimate> Block::VarianceComponents() const
+				Vector<Estimate> Block::CovarianceComponents() const
 				{
 					return this->covariance_model->Estimates();
 				}

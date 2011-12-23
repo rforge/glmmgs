@@ -70,9 +70,9 @@ namespace GlmmGSAPI
 		int GetRandomEffectsSize() const;
 		void GetRandomEffectsEstimates(WeakVector<double> values) const;
 		void GetRandomEffectsErrors(WeakVector<double> values) const;
-		int GetVarianceComponentsSize() const;
-		void GetVarianceComponentsEstimates(WeakVector<double> values) const;
-		void GetVarianceComponentsErrors(WeakVector<double> values) const;
+		int GetCovarianceComponentsSize() const;
+		void GetCovarianceComponentsEstimates(WeakVector<double> values) const;
+		void GetCovarianceComponentsErrors(WeakVector<double> values) const;
 	};
 
 	extern GlmmGSAPI the_api;

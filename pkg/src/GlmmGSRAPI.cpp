@@ -413,11 +413,11 @@ void GlmmGSRAPI_GetRandomEffectsErrors(double * values, const int * size)
 	}
 }
 
-void GlmmGSRAPI_GetVarianceComponentsSize(int * size)
+void GlmmGSRAPI_GetCovarianceComponentsSize(int * size)
 {
 	try
 	{
-		*size = the_api.GetVarianceComponentsSize();
+		*size = the_api.GetCovarianceComponentsSize();
 	}
 	catch (Exception & e)
 	{
@@ -425,11 +425,11 @@ void GlmmGSRAPI_GetVarianceComponentsSize(int * size)
 	}
 }
 
-void GlmmGSRAPI_GetVarianceComponentsEstimates(double * values, const int * size)
+void GlmmGSRAPI_GetCovarianceComponentsEstimates(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetVarianceComponentsEstimates(WeakVector<double>(values, *size));
+		the_api.GetCovarianceComponentsEstimates(WeakVector<double>(values, *size));
 	}
 	catch (Exception & e)
 	{
@@ -437,11 +437,11 @@ void GlmmGSRAPI_GetVarianceComponentsEstimates(double * values, const int * size
 	}
 }
 
-void GlmmGSRAPI_GetVarianceComponentsErrors(double * values, const int * size)
+void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetVarianceComponentsErrors(WeakVector<double>(values, *size));
+		the_api.GetCovarianceComponentsErrors(WeakVector<double>(values, *size));
 	}
 	catch (Exception & e)
 	{

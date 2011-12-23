@@ -290,7 +290,7 @@ glmmGSAPI.GetFixedEffectsCoefficients = function()
 		.C("GlmmGSRAPI_GetFixedEffectsErrors", err, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
 		glmmGSAPI.GetLastError();
 	}
-	return(list(estimates = est, errors = err));
+	return(list(estimates = est, standard.errors = err));
 }
 
 # Get estimated random-effects coefficients
@@ -305,25 +305,27 @@ glmmGSAPI.GetRandomEffectsCoefficients = function()
 	{
 		.C("GlmmGSRAPI_GetRandomEffectsEstimates", est, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
 		glmmGSAPI.GetLastError();
-		#.C("GlmmGSRAPI_GetRandomEffectsErrors", err, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
-		#glmmGSAPI.GetLastError();
+		.C("GlmmGSRAPI_GetRandomEffectsErrors", err, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		glmmGSAPI.GetLastError();
 	}
-	#return(list(estimates = est, errors = err));
-	return(list(estimates = est));
+	return(list(estimates = est, standard.errors = err));
 }
 
 # Get estimated covariance components
-glmmGSAPI.GetVarianceComponents = function()
+glmmGSAPI.GetCovarianceComponents = function()
 {
 	size = integer(1);
-	.C("GlmmGSRAPI_GetVarianceComponentsSize", size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+	.C("GlmmGSRAPI_GetCovarianceComponentsSize", size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
 	glmmGSAPI.GetLastError();
 	est = double(size);
+	err = double(size);
 	if (size > 0)
 	{
-		.C("GlmmGSRAPI_GetVarianceComponentsEstimates", est, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		.C("GlmmGSRAPI_GetCovarianceComponentsEstimates", est, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
+		glmmGSAPI.GetLastError();
+		.C("GlmmGSRAPI_GetCovarianceComponentsErrors", err, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS");
 		glmmGSAPI.GetLastError();
 	}
-	return(list(estimates = est));
+	return(list(estimates = est, standard.errors = err));
 }
 

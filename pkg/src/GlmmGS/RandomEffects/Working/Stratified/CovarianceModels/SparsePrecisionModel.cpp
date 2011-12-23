@@ -15,9 +15,9 @@ namespace GlmmGS
 				{
 					// Construction
 					SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> R)
-						: nvars(nvars), R(R), tau(nvars)
+						: ICovarianceModel(nvars), R(R)
 					{
-						this->tau = 1.0;
+						this->theta = 1.0;
 					}
 
 					SparsePrecisionModel::~SparsePrecisionModel()
@@ -25,12 +25,29 @@ namespace GlmmGS
 					}
 
 					// Properties
-					Vector<Estimate> SparsePrecisionModel::Estimates() const
+					Vector<double> SparsePrecisionModel::CoefficientsVariance() const
 					{
-						Vector<Estimate> estimates(nvars);
-						for (int j = 0; j < nvars; ++j)
-							estimates(j) = Estimate(this->tau(j), 0.0); // TODO: calculate variance
-						return estimates;
+						// Calculate standard-errors
+						const int nlevels = this->R.NumberOfColumns();
+						const int size = this->nvars * nlevels;
+						Vector<double> variance(size);
+						NewTypes::Vector<double> b(size);
+						for (int j = 0, jk = 0; j < this->nvars; ++j)
+						{
+							for (int k = 0; k < nlevels; ++k, ++jk)
+							{
+								// Prepare b
+								NewTypes::Set(b, 0.0);
+								b(jk) = 1.0;
+
+								// Solve T_j x = b
+								NewTypes::Vector<double> x = this->beta_precision_chol.Solve(b);
+
+								// Calculate standard-error
+								variance(jk) = x(jk);
+							}
+						}
+						return variance;
 					}
 
 					// Methods
@@ -64,7 +81,7 @@ namespace GlmmGS
 						// Set values and indices
 						for (int index = 0, i = 0; i < this->nvars; ++i)
 						{
-							const double tau_i = this->tau(i);
+							const double tau_i = this->theta(i);
 							const Vector<double> & design_precision_i = design_precision(i, i);
 							const int offset_i = i * nlevels;
 
@@ -113,7 +130,7 @@ namespace GlmmGS
 						LDL::SparseMatrix<double> upper(values, indices, counts);
 
 						// Decompose sparse precision matrix
-						this->chol.Decompose(upper);
+						this->beta_precision_chol.Decompose(upper);
 					}
 
 					int SparsePrecisionModel::Update(const Vector<Vector<double> > & beta, Comparer comparer)
@@ -121,28 +138,28 @@ namespace GlmmGS
 						// Calulate T^{-1} R
 						const int nlevels = this->R.NumberOfColumns();
 						const int size = this->nvars * nlevels;
-						Matrix<double> A(size, size);
+						Matrix<double> a(size, size);
 						NewTypes::Vector<double> b(size);
-						for (int i = 0, ik = 0; i < this->nvars; ++i)
+						for (int j = 0, jk = 0; j < this->nvars; ++j)
 						{
-							for (int k = 0; k < nlevels; ++k, ++ik)
+							const int offset = j * nlevels;
+							for (int k = 0; k < nlevels; ++k, ++jk)
 							{
 								// Prepare b
 								NewTypes::Set(b, 0.0);
-								const int offset = i * nlevels;
 								const int p2 = this->R.Count(k + 1);
 								for (int p = this->R.Count(k); p < p2; ++p)
 								{
-									const int j = this->R.Index(p);
-									b(offset + j) = this->R.Value(p);
+									const int i = this->R.Index(p);
+									b(offset + i) = this->R.Value(p);
 								}
 
 								// Solve T_j x = b
-								NewTypes::Vector<double> x = this->chol.Solve(b);
+								NewTypes::Vector<double> x = this->beta_precision_chol.Solve(b);
 
 								// Store x
-								for (int j = 0; j < size; ++j)
-									A(j, ik) = x(j);
+								for (int i = 0; i < size; ++i)
+									a(i, jk) = x(i);
 							}
 						}
 
@@ -152,40 +169,14 @@ namespace GlmmGS
 						for (int i = 0; i < this->nvars; ++i)
 						{
 							const double bsquare = Square(this->R, beta(i));
-							jac(i) = nlevels / this->tau(i) - bsquare - BlockTrace(i, nlevels, A);
-							minus_hessian(i, i) = nlevels / Math::Square(this->tau(i)) - BlockSquareTrace(i, i, nlevels, A);
+							jac(i) = nlevels / this->theta(i) - bsquare - BlockTrace(i, nlevels, a);
+							minus_hessian(i, i) = nlevels / Math::Square(this->theta(i)) - BlockSquareTrace(i, i, nlevels, a);
 							for (int j = 0; j < i; ++j)
-								minus_hessian(i, j) = -BlockSquareTrace(i, j, nlevels, A);
+								minus_hessian(i, j) = -BlockSquareTrace(i, j, nlevels, a);
 						}
 
-						// Calculate update
-						try
-						{
-							CholeskyDecomposition chol(minus_hessian);
-							Vector<double> h = chol.Solve(jac);
-							const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-							// Debug
-							Print("MaxAbs covariance components: %g\n", MaxAbs(h));
-
-							// Update tau
-							this->tau += h;
-
-							// Check sign
-							while (Min(this->tau) <= 0.0)
-							{
-								// Back-track
-								h *= 0.5;
-								this->tau -= h;
-							}
-
-							return update;
-						}
-						catch(Exceptions::Exception &)
-						{
-							throw Exceptions::Exception("Failed to update covariance components");
-							return 1;
-						}
+						// Update covariance components
+						return ICovarianceModel::Update(minus_hessian, jac, comparer);
 					}
 
 					Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
@@ -194,29 +185,23 @@ namespace GlmmGS
 						const int nlevels = this->R.NumberOfColumns();
 						NewTypes::Vector<double> jac(nlevels * this->nvars);
 						for (int index = 0, i = 0; i < this->nvars; ++i)
-						{
-							const Vector<double> & design_jacobian_i = design_jacobian(i);
-							const Vector<double> & beta_i = beta(i);
-							const double tau_i = this->tau(i);
 							for (int k = 0; k < nlevels; ++k, ++index)
 							{
 								// Notice that since R = R^T, we can use a transpose matrix product
 								// optimized by the column-sparse structure of R
-								jac(index) = design_jacobian_i(k) - tau_i * TMatrixProduct(k, this->R, beta_i);
+								jac(index) = design_jacobian(i)(k) - this->theta(i) * TMatrixProduct(k, this->R, beta(i));
 							}
-						}
 
 						// Solve
-						NewTypes::Vector<double> h_tmp = this->chol.Solve(jac);
+						NewTypes::Vector<double> h_tmp = this->beta_precision_chol.Solve(jac);
 
 						// Copy update. TODO: Change return type to NewType::Vector
 						Vector<Vector<double> > h(this->nvars);
 						for (int index = 0, i = 0; i < this->nvars; ++i)
 						{
 							h(i).Size(nlevels);
-							Vector<double> & hi = h(i);
 							for (int k = 0; k < nlevels; ++k, ++index)
-								hi(k) = h_tmp(index);
+								h(i)(k) = h_tmp(index);
 						}
 
 						return h;

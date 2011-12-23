@@ -26,7 +26,7 @@ namespace GlmmGS
 
 					// Implementation
 					Vector<Estimate> Coefficients() const;
-					Vector<Estimate> VarianceComponents() const;
+					Vector<Estimate> CovarianceComponents() const;
 					void UpdatePredictor(Vector<double> & eta) const;
 					int Update(const Vector<double> & w, const Vector<double> & z, Comparer comparer);
 

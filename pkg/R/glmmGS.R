@@ -193,7 +193,7 @@ glmmGS.Fit = function(control)
 	# Retrieve results
 	fixed.effects = glmmGSAPI.GetFixedEffectsCoefficients();
 	random.effects = glmmGSAPI.GetRandomEffectsCoefficients();
-	covariance.components = glmmGSAPI.GetVarianceComponents();
+	covariance.components = glmmGSAPI.GetCovarianceComponents();
 	return(list(fixed.effects = fixed.effects,
 		random.effects = random.effects,
 		covariance.components = covariance.components));

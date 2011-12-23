@@ -28,11 +28,11 @@ namespace GlmmGS
 					const int nvars = this->values.Size();
 					const int nlevels = nvars > 0 ? this->values(0).Size() : 0;
 					Vector<Estimate> y(nvars * nlevels);
-					TriangularMatrix<Vector<double> > variance = this->precision.Inverse();
+					TriangularMatrix<Vector<double> > covariance = this->precision.Inverse();
 					for (int index = 0, i = 0; i < nvars; ++i)
 					{
 						const Vector<double> & valuei = this->values(i);
-						const Vector<double> & diagi = variance(i, i);
+						const Vector<double> & diagi = covariance(i, i);
 						for (int j = 0; j < nlevels; ++j, ++index)
 							y(index) = Estimate(valuei(j), diagi(j));
 					}

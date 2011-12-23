@@ -14,9 +14,9 @@ namespace GlmmGS
 				{
 					// Construction
 					IdentityModel::IdentityModel(int nvars, int nlevels)
-						: nvars(nvars), nlevels(nlevels), tau(nvars)
+						: ICovarianceModel(nvars), nlevels(nlevels)
 					{
-						this->tau = 1.0;
+						this->theta = 1.0;
 					}
 
 					IdentityModel::~IdentityModel()
@@ -24,12 +24,17 @@ namespace GlmmGS
 					}
 
 					// Properties
-					Vector<Estimate> IdentityModel::Estimates() const
+					Vector<double> IdentityModel::CoefficientsVariance() const
 					{
-						Vector<Estimate> estimates(nvars);
-						for (int j = 0; j < nvars; ++j)
-							estimates(j) = Estimate(this->tau(j), 0.0); // TODO: calculate variance
-						return estimates;
+						const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
+
+						// Calculate standard-errors
+						const int size = this->nvars * this->nlevels;
+						Vector<double> variance(size);
+						for (int j = 0, jk = 0; j < this->nvars; ++j)
+							for (int k = 0; k < nlevels; ++k, ++jk)
+								variance(jk) = covariance(j, j)(k);
+						return variance;
 					}
 
 					// Methods
@@ -38,21 +43,17 @@ namespace GlmmGS
 						// Add diagonal to precision
 						TriangularMatrix<Vector<double> > prec = design_precision;
 						for (int i = 0; i < this->nvars; ++i)
-						{
-							Vector<double> & prec_i = prec(i, i);
-							const double tau_i = this->tau(i);
 							for (int k = 0; k < this->nlevels; ++k)
-								prec_i(k) += tau_i;
-						}
+								prec(i, i)(k) += this->theta(i);
 
 						// Decompose
-						this->vchol.Decompose(prec);
+						this->beta_precision_chol.Decompose(prec);
 					}
 
 					int IdentityModel::Update(const Vector<Vector<double> > & beta, Comparer comparer)
 					{
 						// Calculate variance
-						const TriangularMatrix<Vector<double> > variance = this->vchol.Inverse();
+						const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
 
 						// Calculate jacobian and minus the hessian
 						Vector<double> jac(this->nvars);
@@ -60,41 +61,15 @@ namespace GlmmGS
 						for (int i = 0; i < this->nvars; ++i)
 						{
 							const double bsquare = Square(beta(i));
-							const double trace = Sum(variance(i, i));
-							jac(i) = this->nlevels / this->tau(i) - bsquare - trace;
-							minus_hessian(i, i) = this->nlevels / Square(this->tau(i)) - Square(variance(i, i));
+							const double trace = Sum(covariance(i, i));
+							jac(i) = this->nlevels / this->theta(i) - bsquare - trace;
+							minus_hessian(i, i) = this->nlevels / Square(this->theta(i)) - Square(covariance(i, i));
 							for (int j = 0; j < i; ++j)
-								minus_hessian(i, j) = -Square(variance(i, j));
+								minus_hessian(i, j) = -Square(covariance(i, j));
 						}
 
-						// Calculate update
-						try
-						{
-							CholeskyDecomposition chol(minus_hessian);
-							Vector<double> h = chol.Solve(jac);
-							const int update = comparer.IsZero(h, this->tau) ? 0 : 1;
-
-							// Debug
-							Print("MaxAbs covariance components: %g\n", MaxAbs(h));
-
-							// Update tau
-							this->tau += h;
-
-							// Reverse sign
-							while (Min(this->tau) <= 0.0)
-							{
-								// Back-track
-								h *= 0.5;
-								this->tau -= h;
-							}
-
-							return update;
-						}
-						catch(Exceptions::Exception &)
-						{
-							throw Exceptions::Exception("Failed to update covariance components");
-							return 1;
-						}
+						// Update covariance components
+						return ICovarianceModel::Update(minus_hessian, jac, comparer);
 					}
 
 					Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
@@ -102,16 +77,11 @@ namespace GlmmGS
 						// Add diagonal terms
 						Vector<Vector<double> > jac = jacobian;
 						for (int i = 0; i < this->nvars; ++i)
-						{
-							Vector<double> & jaci = jac(i);
-							const Vector<double> & betai = beta(i);
-							const double taui = this->tau(i);
 							for (int k = 0; k < this->nlevels; ++k)
-								jaci(k) -= taui * betai(k);
-						}
+								jac(i)(k) -= this->theta(i) * beta(i)(k);
 
 						// Decomposes
-						return this->vchol.Solve(jac);
+						return this->beta_precision_chol.Solve(jac);
 					}
 				}
 			}

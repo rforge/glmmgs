@@ -192,7 +192,7 @@ namespace GlmmGSAPI
 		glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects);
 		this->beta = glmmGS.FixedEffectsCoefficients();
 		this->b = glmmGS.RandomEffectsCoefficients();
-		this->theta = glmmGS.VarianceComponents();
+		this->theta = glmmGS.CovarianceComponents();
 	}
 
 	// Results
@@ -238,12 +238,12 @@ namespace GlmmGSAPI
 			values(i) = sqrt(this->b(i).Variance());
 	}
 
-	int GlmmGSAPI::GetVarianceComponentsSize() const
+	int GlmmGSAPI::GetCovarianceComponentsSize() const
 	{
 		return this->theta.Size();
 	}
 
-	void GlmmGSAPI::GetVarianceComponentsEstimates(WeakVector<double> values) const
+	void GlmmGSAPI::GetCovarianceComponentsEstimates(WeakVector<double> values) const
 	{
 		if (values.Size() != this->theta.Size())
 			throw Exceptions::InvalidSizeException();
@@ -251,7 +251,7 @@ namespace GlmmGSAPI
 			values(i) = this->theta(i).Value();
 	}
 
-	void GlmmGSAPI::GetVarianceComponentsErrors(WeakVector<double> values) const
+	void GlmmGSAPI::GetCovarianceComponentsErrors(WeakVector<double> values) const
 	{
 		if (values.Size() != this->theta.Size())
 			throw Exceptions::InvalidSizeException();

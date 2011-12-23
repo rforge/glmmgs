@@ -27,7 +27,7 @@ namespace GlmmGS
 		void SetControls(Controls controls);
 		const Vector<Estimate> & FixedEffectsCoefficients() const;
 		const Vector<Estimate> & RandomEffectsCoefficients() const;
-		const Vector<Estimate> & VarianceComponents() const;
+		const Vector<Estimate> & CovarianceComponents() const;
 
 		// Methods
 		void Fit(const Pointer<Responses::IResponse> y, const Pointer<Offsets::IOffset> offset, const Vector<Pointer<FixedEffects::IBlock> > & x, const Vector<Pointer<RandomEffects::IBlock> > & z);
@@ -46,7 +46,7 @@ namespace GlmmGS
 	}
 
 	inline
-	const Vector<Estimate> & GlmmGS::VarianceComponents() const
+	const Vector<Estimate> & GlmmGS::CovarianceComponents() const
 	{
 		return this->theta;
 	}

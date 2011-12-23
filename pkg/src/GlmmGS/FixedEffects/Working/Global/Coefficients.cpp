@@ -23,9 +23,9 @@ namespace GlmmGS
 				{
 					const int n = this->values.Size();
 					Vector<Estimate> y(n);
-					TriangularMatrix<double> variance = this->precision.Inverse();
+					TriangularMatrix<double> covariance = this->precision.Inverse();
 					for (int i = 0; i < n; ++i)
-						y(i) = Estimate(this->values(i), variance(i, i));
+						y(i) = Estimate(this->values(i), covariance(i, i));
 					return y;
 				}
 
