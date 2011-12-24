@@ -62,9 +62,16 @@
 }
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
-	If a global intercept is specified, then each stratified intercept is constrained to
-	have zero mean. In all the other cases where multiple intercepts are specified, if the fitting 
-	algorithm converges, then the values of the intercept are determined up to a random constant.
+	If at least one fixed intercept is specified (either a global intercept or 
+	a stratified intercept), then each stratified random-intercept is constrained to have a zero mean. 
+	If both global and stratified fixed intercepts are specified, then their fitted values 
+	are determined up to a random constant. This is because the G-S algorithm displays
+	best convergence properties	when updating each fixed intercept component-wise
+	without imposing any constraints, such as setting the value of the intercept associated 
+	to the first level of a factor equal to zero. (Notice that the same does not hold for
+	random intercepts, where removing the overall mean is necessary to boost converge.) 
+	A simple post-processing of the fitted value can be used to adjust the offset 
+	of the estimated fixed intercepts.
 }
 \value{
 	%%  ~Describe the value returned
