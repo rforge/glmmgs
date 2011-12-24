@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GLMMGS_RANDOMEFFECTS_WORKING_STRATIFIED_COEFFICIENTS_H
+#define GLMMGS_RANDOMEFFECTS_WORKING_STRATIFIED_COEFFICIENTS_H
 
 #include "../../../Standard.h"
 #include "CovarianceModels/ICovarianceModel.h"
@@ -57,3 +58,5 @@ namespace GlmmGS
 		}
 	}
 }
+
+#endif

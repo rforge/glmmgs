@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GLMMGS_RANDOMEFFECTS_WORKING_STRATIFIED_BOOSTER_IBOOSTER_H
+#define GLMMGS_RANDOMEFFECTS_WORKING_STRATIFIED_BOOSTER_IBOOSTER_H
 
 #include "../../../../Standard.h"
 
@@ -22,3 +23,5 @@ namespace GlmmGS
 		}
 	}
 }
+
+#endif

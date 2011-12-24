@@ -47,13 +47,13 @@
 	\item{data}{
 		an optional data frame, list or environment (or object coercible by as.data.frame 
 		to a data frame) containing the variables in the model. 
-		If not found in data, the variables are taken from environment(formula), 
+		If not found in \code{data}, the variables are taken from \code{environment(formula)}, 
 		typically the environment from which \code{glmmGS} is called.
 	}
 	\item{covariance.models}{
 		an optional list or environment containing the covariance models referenced 
-		in the formula. If not found in covariance.models, the covariance models are taken from 
-		environment(formula), typically the environment from which \code{glmmGS} is called.
+		in the formula. If not found in \code{covariance.models}, the covariance models are taken from 
+		\code{environment(formula)}, typically the environment from which \code{glmmGS} is called.
 	}
 	\item{control}{
 		a list of parameters for controlling the fitting process. The list is returned
@@ -139,6 +139,7 @@
 
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{glmmGS.CovarianceModel}}, \code{\link{glmmGS.Control}} 
 }
 \examples{
 	# Set data dimension: 
