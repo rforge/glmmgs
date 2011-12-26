@@ -5,7 +5,6 @@
 #include "../../../Variables/IVariable.h"
 #include "../../../Estimate.h"
 #include "../IBlock.h"
-#include "Coefficients.h"
 #include "Boosters/IBooster.h"
 #include "CovarianceModels/ICovarianceModel.h"
 
@@ -24,18 +23,21 @@ namespace GlmmGS
 					// Fields
 					Vector<Pointer<Variables::IVariable> > variables;
 					WeakFactor factor;
-					Stratified::Coefficients beta;
+					Vector<Vector<double> > beta;
 					Pointer<CovarianceModels::ICovarianceModel> covariance_model;
+					Pointer<Boosters::IBooster> booster;
 
 					// Implementation
 					Vector<Estimate> Coefficients() const;
 					Vector<Estimate> CovarianceComponents() const;
 					void UpdatePredictor(Vector<double> & eta) const;
-					int Update(const Vector<double> & w, const Vector<double> & z, Comparer comparer);
+					int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 
 				public:
 					// Construction
-					Block(Vector<Pointer<Variables::IVariable> > variables, WeakFactor factor, Pointer<CovarianceModels::ICovarianceModel> covariance_model, Pointer<Boosters::IBooster> booster);
+					Block(const Vector<Pointer<Variables::IVariable> > & variables, WeakFactor factor,
+							const Pointer<CovarianceModels::ICovarianceModel> & covariance_model,
+							const Pointer<Boosters::IBooster> & booster);
 				};
 			}
 		}

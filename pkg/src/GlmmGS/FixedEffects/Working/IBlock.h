@@ -3,6 +3,7 @@
 
 #include "../../Standard.h"
 #include "../../Estimate.h"
+#include "../../Controls.h"
 
 namespace GlmmGS
 {
@@ -24,7 +25,7 @@ namespace GlmmGS
 
 				// Methods
 				virtual void UpdatePredictor(Vector<double> & eta) const = 0;
-				virtual int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, Comparer comparer) = 0;
+				virtual int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, const Controls & controls) = 0;
 			};
 		}
 	}

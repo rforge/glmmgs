@@ -331,11 +331,12 @@ void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indic
 	}
 }
 
-void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance, const int * maxiter)
+void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance,
+		const int * maxiter, const int * verbose)
 {
 	try
 	{
-		GlmmGS::Controls controls(*relative_tolerance, *absolute_tolerance, *maxiter);
+		GlmmGS::Controls controls(*relative_tolerance, *absolute_tolerance, *maxiter, (*verbose) != 0);
 		GlmmGSAPI::theApi.Fit(controls);
 	}
 	catch (Exception & e)

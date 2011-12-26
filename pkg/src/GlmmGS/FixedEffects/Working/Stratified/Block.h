@@ -4,8 +4,8 @@
 #include "../../../Standard.h"
 #include "../../../Variables/IVariable.h"
 #include "../../../Estimate.h"
+#include "../../../Controls.h"
 #include "../IBlock.h"
-#include "Coefficients.h"
 
 namespace GlmmGS
 {
@@ -22,11 +22,12 @@ namespace GlmmGS
 					// Fields
 					Vector<Pointer<Variables::IVariable> > variables;
 					WeakFactor factor;
-					Stratified::Coefficients beta;
+					Vector<Vector<double> > beta;
+					VectorialCholeskyDecomposition chol;
 
 					// Implementation
 					Vector<Estimate> Coefficients() const;
-					int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, Comparer comparer);
+					int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 					void UpdatePredictor(Vector<double> & eta) const;
 
 				public:

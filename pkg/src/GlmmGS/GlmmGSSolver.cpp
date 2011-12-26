@@ -64,8 +64,9 @@ namespace GlmmGS
 				break;
 			}
 
-			// Debug
-			printf("Iterations: %d\n", this->iterations);
+			// Print iterations
+			if (this->controls.Verbose())
+				Print("Iterations: %d\n", this->iterations);
 		}
 	}
 
@@ -76,14 +77,14 @@ namespace GlmmGS
 		// Update fixed-effects
 		for (int block = 0; block < this->fixed_effects.Size(); ++block)
 		{
-			update += this->fixed_effects(block)->UpdateCoefficients(this->working_weights, this->working_values, this->controls.Comparer());
+			update += this->fixed_effects(block)->UpdateCoefficients(this->working_weights, this->working_values, this->controls);
 			this->EvaluateWorkingWeightsAndValues();
 		}
 
 		// Update random-effects
 		for (int block = 0; block < this->random_effects.Size(); ++block)
 		{
-			update += this->random_effects(block)->Update(this->working_weights, this->working_values, this->controls.Comparer());
+			update += this->random_effects(block)->Update(this->working_weights, this->working_values, this->controls);
 			this->EvaluateWorkingWeightsAndValues();
 		}
 

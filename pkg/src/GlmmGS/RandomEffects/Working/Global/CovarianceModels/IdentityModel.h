@@ -26,7 +26,7 @@ namespace GlmmGS
 						// Implementation
 						Vector<double> CoefficientsVariance() const;
 						void Decompose(const TriangularMatrix<double> & precision);
-						int Update(const Vector<double> & beta, Comparer comparer);
+						int Update(const Vector<double> & beta, const Controls & controls);
 						Vector<double> CoefficientsUpdate(const Vector<double> & jacobian, const Vector<double> & beta) const;
 
 					public:

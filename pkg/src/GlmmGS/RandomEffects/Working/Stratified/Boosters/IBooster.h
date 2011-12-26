@@ -16,6 +16,11 @@ namespace GlmmGS
 					class IBooster
 					{
 					public:
+						// Construction
+						IBooster();
+						virtual ~IBooster();
+
+						// Methods
 						virtual void Reparameterize(Vector<double> & intercept) = 0;
 					};
 				}

@@ -1,6 +1,7 @@
 #include "../../../Standard.h"
 #include "../../../Variables/IVariable.h"
 #include "../../../Estimate.h"
+#include "../../../Controls.h"
 #include "Block.h"
 #include "Boosters/IBooster.h"
 #include "CovarianceModels/ICovarianceModel.h"
@@ -14,22 +15,26 @@ namespace GlmmGS
 			namespace Stratified
 			{
 				// Block
-				Block::Block(Vector<Pointer<Variables::IVariable> > variables, WeakFactor factor, Pointer<CovarianceModels::ICovarianceModel> covariance_model, Pointer<Boosters::IBooster> booster)
-					: variables(variables),
-					  factor(factor),
-					  beta(variables.Size(), factor.NumberOfLevels(), booster),
-					  covariance_model(covariance_model)
+				Block::Block(const Vector<Pointer<Variables::IVariable> > & variables,
+						WeakFactor factor,
+						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model,
+						const Pointer<Boosters::IBooster> & booster)
+					: variables(variables), factor(factor), beta(variables.Size()),
+					  covariance_model(covariance_model), booster(booster)
 				{
+					for (int i = 0; i < this->variables.Size(); ++i)
+						this->beta(i).Size(this->factor.NumberOfLevels());
 				}
 
 				Vector<Estimate> Block::Coefficients() const
 				{
-					Vector<Estimate> estimates(this->beta.Size());
-					Vector<double> variance = this->covariance_model->CoefficientsVariance();
 					const int nvars = this->variables.Size();
+					const int nlevels = this->factor.NumberOfLevels();
+					Vector<Estimate> estimates(nvars * nlevels);
+					Vector<double> variance = this->covariance_model->CoefficientsVariance();
 					for (int i = 0, ik = 0; i < nvars; ++i)
 					{
-						const Vector<double> & v = this->beta.Value(i);
+						const Vector<double> & v = this->beta(i);
 						for (int k = 0; k < v.Size(); ++k, ++ik)
 							estimates(ik) = Estimate(v(k), variance(ik));
 					}
@@ -45,10 +50,10 @@ namespace GlmmGS
 				{
 					const int nvars = this->variables.Size();
 					for (int j = 0; j < nvars; ++j)
-						this->variables(j)->UpdatePredictor(eta, this->beta.Value(j), this->factor);
+						this->variables(j)->UpdatePredictor(eta, this->beta(j), this->factor);
 				}
 
-				int Block::Update(const Vector<double> & weights, const Vector<double> & values, Comparer comparer)
+				int Block::Update(const Vector<double> & weights, const Vector<double> & values, const Controls & controls)
 				{
 					const int nvars = this->variables.Size();
 					TriangularMatrix<Vector<double> >precision(nvars);
@@ -66,11 +71,32 @@ namespace GlmmGS
 						}
 					}
 
+					// Decompose precision
 					this->covariance_model->Decompose(precision);
-					int update = 0;
-					update += this->beta.Update(jacobian, this->covariance_model, comparer);
-					update += this->covariance_model->Update(this->beta.Values(), comparer);
-					this->covariance_model->Decompose(precision);
+
+					// Re-parameterize coefficients
+					this->booster->Reparameterize(this->beta(0));
+
+					// Evaluate coefficients update
+					Vector<Vector<double> > h = this->covariance_model->CoefficientsUpdate(jacobian, this->beta);
+
+					// Re-parameterize updates
+					this->booster->Reparameterize(h(0));
+
+					// Check if update is significant
+					int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;
+
+					// Print
+					if (controls.Verbose())
+						Print("Max update random effects: %g\n", MaxAbs(h));
+
+					// Update
+					for (int i = 0; i < h.Size(); ++i)
+						this->beta(i) += h(i);
+
+					// Update covariance components
+					update += this->covariance_model->Update(this->beta, controls);
+
 					return update;
 				}
 			}

@@ -133,7 +133,7 @@ namespace GlmmGS
 						this->beta_precision_chol.Decompose(upper);
 					}
 
-					int SparsePrecisionModel::Update(const Vector<Vector<double> > & beta, Comparer comparer)
+					int SparsePrecisionModel::Update(const Vector<Vector<double> > & beta, const Controls & controls)
 					{
 						// Calulate T^{-1} R
 						const int nlevels = this->R.NumberOfColumns();
@@ -176,7 +176,7 @@ namespace GlmmGS
 						}
 
 						// Update covariance components
-						return ICovarianceModel::Update(minus_hessian, jac, comparer);
+						return ICovarianceModel::Update(minus_hessian, jac, controls);
 					}
 
 					Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const

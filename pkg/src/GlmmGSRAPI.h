@@ -41,7 +41,8 @@ extern "C"
 	void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indices, const int * counts, const int * ncols);
 
 	// Fit
-	void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance, const int * maxiter);
+	void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance,
+			const int * maxiter, const int * verbose);
 
 	// Results
 	void GlmmGSRAPI_GetFixedEffectsSize(int * size);

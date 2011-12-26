@@ -3,7 +3,6 @@
 
 #include "Exceptions/Assertions.h"
 #include "WeakVector.h"
-#include "IO/BasicPrint.h"
 
 namespace Utilities
 {

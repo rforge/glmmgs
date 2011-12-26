@@ -5,8 +5,8 @@
 #include "../../../Variables/IVariable.h"
 #include "CovarianceModels/ICovarianceModel.h"
 #include "../../../Estimate.h"
+#include "../../../Controls.h"
 #include "../IBlock.h"
-#include "Coefficients.h"
 
 namespace GlmmGS
 {
@@ -22,18 +22,19 @@ namespace GlmmGS
 				private:
 					// Fields
 					Vector<Pointer<Variables::IVariable> > variables;
-					Global::Coefficients beta;
+					Vector<double> beta;
 					Pointer<CovarianceModels::ICovarianceModel> covariance_model;
 
 					// Implementation
 					Vector<Estimate> Coefficients() const;
 					Vector<Estimate> CovarianceComponents() const;
 					void UpdatePredictor(Vector<double> & eta) const;
-					int Update(const Vector<double> & w, const Vector<double> & z, Comparer comparer);
+					int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 
 				public:
 					// Construction
-					Block(Vector<Pointer<Variables::IVariable> > variables, Pointer<CovarianceModels::ICovarianceModel> covariance_model);
+					Block(const Vector<Pointer<Variables::IVariable> > & variables,
+							const Pointer<CovarianceModels::ICovarianceModel> & covariance_model);
 				};
 			}
 		}

@@ -1,7 +1,6 @@
 #include "Exceptions/Exception.h"
 #include "Vector.h"
 #include "WeakFactor.h"
-#include "IO/BasicPrint.h"
 
 namespace Utilities
 {

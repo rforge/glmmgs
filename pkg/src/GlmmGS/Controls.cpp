@@ -3,8 +3,8 @@
 
 namespace GlmmGS
 {
-	Controls::Controls(double relative_tolerance, double absolute_tolerance, int maxiter)
-		: comparer(relative_tolerance, absolute_tolerance), maxiter(maxiter)
+	Controls::Controls(double relative_tolerance, double absolute_tolerance, int maxiter, bool verbose)
+		: comparer(relative_tolerance, absolute_tolerance), maxiter(maxiter), verbose(verbose)
 	{
 	}
 }

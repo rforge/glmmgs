@@ -95,7 +95,7 @@ namespace GlmmGS
 						this->beta_precision_chol.Decompose(prec);
 					}
 
-					int PrecisionModel::Update(const Vector<double> & beta, Comparer comparer)
+					int PrecisionModel::Update(const Vector<double> & beta, const Controls & controls)
 					{
 						// Calulate T^{-1} R
 						const int ncols = this->R.NumberOfColumns();
@@ -124,7 +124,7 @@ namespace GlmmGS
 						minus_hessian(0, 0) = ncols / Math::Square(this->theta(0)) - SquareTrace(a);
 
 						// Update covariance components
-						return ICovarianceModel::Update(minus_hessian, jac, comparer);
+						return ICovarianceModel::Update(minus_hessian, jac, controls);
 					}
 
 					Vector<double> PrecisionModel::CoefficientsUpdate(const Vector<double> & design_jacobian, const Vector<double> & beta) const

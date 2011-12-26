@@ -3,6 +3,7 @@
 
 #include "../../../../Standard.h"
 #include "../../../../Estimate.h"
+#include "../../../../Controls.h"
 
 namespace GlmmGS
 {
@@ -26,7 +27,7 @@ namespace GlmmGS
 					protected:
 						// Implementation
 						int Update(const TriangularMatrix<double> & minus_hessian,
-								const Vector<double> & jacobian, Comparer comparer);
+								const Vector<double> & jacobian, const Controls & controls);
 					public:
 						// Construction
 						ICovarianceModel(int npars);
@@ -38,7 +39,7 @@ namespace GlmmGS
 
 						// Methods
 						virtual void Decompose(const TriangularMatrix<Vector<double> > & precision) = 0;
-						virtual int Update(const Vector<Vector<double> > & beta, Comparer comparer) = 0;
+						virtual int Update(const Vector<Vector<double> > & beta, const Controls & controls) = 0;
 						virtual Vector<Vector<double> > CoefficientsUpdate(const Vector<Vector<double> > & jacobian,
 								const Vector<Vector<double> > & beta) const = 0;
 					};

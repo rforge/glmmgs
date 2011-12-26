@@ -1,5 +1,6 @@
 #include "../../../Standard.h"
 #include "../../../Estimate.h"
+#include "../../../Controls.h"
 #include "../../../Variables/IVariable.h"
 #include "CovarianceModels/ICovarianceModel.h"
 #include "Block.h"
@@ -13,8 +14,11 @@ namespace GlmmGS
 			namespace Global
 			{
 				// Block
-				Block::Block(Vector<Pointer<Variables::IVariable> > variables, Pointer<CovarianceModels::ICovarianceModel> covariance_model)
-					: variables(variables), beta(variables.Size()), covariance_model(covariance_model)
+				Block::Block(const Vector<Pointer<Variables::IVariable> > & variables,
+						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model)
+					: variables(variables),
+					  beta(variables.Size()),
+					  covariance_model(covariance_model)
 				{
 				}
 
@@ -23,7 +27,7 @@ namespace GlmmGS
 					Vector<Estimate> estimates(this->beta.Size());
 					Vector<double> variance = this->covariance_model->CoefficientsVariance();
 					for (int i = 0; i < this->beta.Size(); ++i)
-						estimates(i) = Estimate(this->beta.Value(i), variance(i));
+						estimates(i) = Estimate(this->beta(i), variance(i));
 					return estimates;
 				}
 
@@ -34,12 +38,11 @@ namespace GlmmGS
 
 				void Block::UpdatePredictor(Vector<double> & eta) const
 				{
-					const int nvars = this->variables.Size();
-					for (int j = 0; j < nvars; ++j)
-						this->variables(j)->UpdatePredictor(eta, this->beta.Value(j));
+					for (int j = 0; j < this->variables.Size(); ++j)
+						this->variables(j)->UpdatePredictor(eta, this->beta(j));
 				}
 
-				int Block::Update(const Vector<double> & weights, const Vector<double> & values, Comparer comparer)
+				int Block::Update(const Vector<double> & weights, const Vector<double> & values, const Controls & controls)
 				{
 					const int nvars = this->variables.Size();
 					Vector<double> jacobian(nvars);
@@ -53,11 +56,25 @@ namespace GlmmGS
 							precision(j, k) = Variables::ScalarProduct(this->variables(j), weights, this->variables(k));
 					}
 
-					// Calculate update
+					// Decompose precision
 					this->covariance_model->Decompose(precision);
-					int update = 0;
-					update += this->beta.Update(jacobian, this->covariance_model, comparer);
-					update += this->covariance_model->Update(this->beta.Values(), comparer);
+
+					// Evaluate coefficients update
+					Vector<double> h = covariance_model->CoefficientsUpdate(jacobian, this->beta);
+
+					// Print
+					if (controls.Verbose())
+						Print("Max update random effects: %g\n", MaxAbs(h));
+
+					// Check if update is significant
+					int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;
+
+					// Update coefficients
+					this->beta += h;
+
+					// Update covariance model
+					update += this->covariance_model->Update(this->beta, controls);
+
 					return update;
 				}
 			}

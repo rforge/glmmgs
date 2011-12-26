@@ -11,14 +11,17 @@ namespace GlmmGS
 		// Fields
 		Utilities::Comparer comparer;
 		int maxiter;
+		bool verbose;
 
 	public:
 		// Construction
-		Controls(double relative_tolerance = 1.e-6, double absolute_tolerance = 1.e-6, int maxiter = 100);
+		Controls(double relative_tolerance = 1.e-6, double absolute_tolerance = 1.e-6,
+				int maxiter = 200, bool verbose = false);
 
 		// Properties
 		Utilities::Comparer Comparer() const;
 		double Maxiter() const;
+		bool Verbose() const;
 	};
 
 	inline
@@ -31,6 +34,12 @@ namespace GlmmGS
 	double Controls::Maxiter() const
 	{
 		return this->maxiter;
+	}
+
+	inline
+	bool Controls::Verbose() const
+	{
+		return this->verbose;
 	}
 }
 

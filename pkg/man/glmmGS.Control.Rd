@@ -9,7 +9,7 @@ Construct control list for \code{glmmGS} function
 	\code{\link{glmmGS}} function.
 }
 \usage{
-	glmmGS.Control(reltol = 1e-06, abstol = 1e-06, maxit = 200)
+	glmmGS.Control(reltol = 1e-06, abstol = 1e-06, maxit = 200, verbose = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,6 +21,9 @@ Construct control list for \code{glmmGS} function
 	}
   	\item{maxit}{
 		maximum number of iterations for the parameters update.
+	}
+  	\item{verbose}{
+		logical scalar. If TRUE, then verbose output is generated during the estimation of the parameters.
 	}
 }
 \details{

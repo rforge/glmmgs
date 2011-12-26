@@ -50,7 +50,7 @@ namespace GlmmGS
 						this->beta_precision_chol.Decompose(prec);
 					}
 
-					int IdentityModel::Update(const Vector<Vector<double> > & beta, Comparer comparer)
+					int IdentityModel::Update(const Vector<Vector<double> > & beta, const Controls & controls)
 					{
 						// Calculate variance
 						const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
@@ -69,7 +69,7 @@ namespace GlmmGS
 						}
 
 						// Update covariance components
-						return ICovarianceModel::Update(minus_hessian, jac, comparer);
+						return ICovarianceModel::Update(minus_hessian, jac, controls);
 					}
 
 					Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const

@@ -270,9 +270,10 @@ glmmGSAPI.AddSparsePrecisionModel = function(R)
 }
 
 # Fit current model
-glmmGSAPI.Fit = function(relative.tolerance, absolute.tolerance, maxiter)
+glmmGSAPI.Fit = function(relative.tolerance, absolute.tolerance, maxiter, verbose)
 {
-	.C("GlmmGSRAPI_Fit", as.double(relative.tolerance), as.double(absolute.tolerance), as.integer(maxiter), PACKAGE = "glmmGS");
+	.C("GlmmGSRAPI_Fit", as.double(relative.tolerance), as.double(absolute.tolerance), 
+			as.integer(maxiter), as.integer(verbose), PACKAGE = "glmmGS");
 	glmmGSAPI.GetLastError();
 }
 

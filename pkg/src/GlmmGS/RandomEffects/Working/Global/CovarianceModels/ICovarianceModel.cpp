@@ -1,4 +1,6 @@
 #include "ICovarianceModel.h"
+#include "../../../../Estimate.h"
+#include "../../../../Controls.h"
 
 namespace GlmmGS
 {
@@ -32,17 +34,18 @@ namespace GlmmGS
 					}
 
 					int ICovarianceModel::Update(const TriangularMatrix<double> & minus_hessian,
-							const Vector<double> & jacobian, Comparer comparer)
+							const Vector<double> & jacobian, const Controls & controls)
 					{
 						// Calculate update
 						try
 						{
 							this->chol.Decompose(minus_hessian);
 							Vector<double> h = chol.Solve(jacobian);
-							const int update = comparer.IsZero(h, this->theta) ? 0 : 1;
+							const int update = controls.Comparer().IsZero(h, this->theta) ? 0 : 1;
 
-							// Debug
-							Print("MaxAbs covariance components: %g\n", MaxAbs(h));
+							// Print
+							if (controls.Verbose())
+								Print("Max update covariance components: %g\n", MaxAbs(h));
 
 							// Update tau
 							this->theta += h;
@@ -60,9 +63,11 @@ namespace GlmmGS
 						catch(Exceptions::Exception &)
 						{
 							//throw Exceptions::Exception("Failed to update covariance components");
-							puts("Warning: Failed to update covariance components");
-							return 1;
+							Print("Warning: Failed to update covariance components");
 						}
+
+						// Here only if update failed. Keep updating
+						return 1;
 					}
 				}
 			}
