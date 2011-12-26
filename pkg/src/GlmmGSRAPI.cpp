@@ -1,33 +1,42 @@
 #include "GlmmGSRAPI.h"
 #include "GlmmGSAPI/GlmmGSAPI.h"
 #include "GlmmGS/Controls.h"
-#include "Utilities/Exceptions/Exception.h"
+#include "Utilities/Exceptions/Exceptions.h"
+#include "GlmmGSAPI/Exceptions/Exceptions.h"
 
-using namespace GlmmGSAPI;
+// Use 'using' only on Utilities name spaces
+using namespace Utilities;
+using namespace Utilities::Exceptions;
 
-void GlmmGSRAPI_SetOutputFile(const char ** buffer)
+void GlmmGSRAPI_SetOutputFile(const char ** filename)
 {
-	const char * filename = *buffer;
+	const char * fname = *filename;
 	if (Utilities::IO::stream != stdout)
 		fclose(Utilities::IO::stream);
-	Utilities::IO::stream = fopen(filename, "wt");
+	Utilities::IO::stream = fopen(fname, "wt");
 }
 
 void GlmmGSRAPI_GetLastError(char ** buffer, const int * size)
 {
 	if (*buffer != NULL && *size > 0)
-		the_api.GetLastError(*buffer, *size);
+		GlmmGSAPI::theApi.GetLastError(*buffer, *size);
+}
+
+void GlmmGSRAPI_Tidy()
+{
+	// No exceptions should be thrown here
+	GlmmGSAPI::theApi.Tidy();
 }
 
 void GlmmGSRAPI_Begin()
 {
 	try
 	{
-		the_api.Begin();
+		GlmmGSAPI::theApi.Begin();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -35,29 +44,23 @@ void GlmmGSRAPI_End()
 {
 	try
 	{
-		the_api.End();
+		GlmmGSAPI::theApi.End();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
-}
-
-void GlmmGSRAPI_ForceEnd()
-{
-	// No exceptions should be thrown here
-	the_api.ForceEnd();
 }
 
 void GlmmGSRAPI_BeginResponse(const char ** family, const int * length)
 {
 	try
 	{
-		the_api.BeginResponse(WeakString<const char>(*family, *length));
+		GlmmGSAPI::theApi.BeginResponse(WeakString<const char>(*family, *length));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -65,11 +68,11 @@ void GlmmGSRAPI_EndResponse()
 {
 	try
 	{
-		the_api.EndResponse();
+		GlmmGSAPI::theApi.EndResponse();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -77,11 +80,11 @@ void GlmmGSRAPI_BeginFixedEffects()
 {
 	try
 	{
-		the_api.BeginFixedEffects();
+		GlmmGSAPI::theApi.BeginFixedEffects();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -89,11 +92,11 @@ void GlmmGSRAPI_EndFixedEffects()
 {
 	try
 	{
-		the_api.EndFixedEffects();
+		GlmmGSAPI::theApi.EndFixedEffects();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -101,11 +104,11 @@ void GlmmGSRAPI_BeginRandomEffects()
 {
 	try
 	{
-		the_api.BeginRandomEffects();
+		GlmmGSAPI::theApi.BeginRandomEffects();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -113,11 +116,11 @@ void GlmmGSRAPI_EndRandomEffects()
 {
 	try
 	{
-		the_api.EndRandomEffects();
+		GlmmGSAPI::theApi.EndRandomEffects();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -125,11 +128,11 @@ void GlmmGSRAPI_BeginGlobalBlock()
 {
 	try
 	{
-		the_api.BeginGlobalBlock();
+		GlmmGSAPI::theApi.BeginGlobalBlock();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -137,11 +140,11 @@ void GlmmGSRAPI_EndGlobalBlock()
 {
 	try
 	{
-		the_api.EndGlobalBlock();
+		GlmmGSAPI::theApi.EndGlobalBlock();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -149,11 +152,11 @@ void GlmmGSRAPI_BeginStratifiedBlock(const int * levels, const int * size)
 {
 	try
 	{
-		the_api.BeginStratifiedBlock(WeakFactor(levels, *size));
+		GlmmGSAPI::theApi.BeginStratifiedBlock(WeakFactor(levels, *size));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -161,11 +164,11 @@ void GlmmGSRAPI_EndStratifiedBlock()
 {
 	try
 	{
-		the_api.EndStratifiedBlock();
+		GlmmGSAPI::theApi.EndStratifiedBlock();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -173,11 +176,11 @@ void GlmmGSRAPI_AddResponseInt(const int * values, const int * size)
 {
 	try
 	{
-		the_api.AddResponse(WeakVector<const int>(values, * size));
+		GlmmGSAPI::theApi.AddResponse(WeakVector<const int>(values, * size));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -185,11 +188,11 @@ void GlmmGSRAPI_AddCountsInt(const int * values, const int * size)
 {
 	try
 	{
-		the_api.AddCounts(WeakVector<const int>(values, *size));
+		GlmmGSAPI::theApi.AddCounts(WeakVector<const int>(values, *size));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -198,11 +201,11 @@ void GlmmGSRAPI_AddOffsetImpl(const TYPE * values, const int * size)
 {
 	try
 	{
-		the_api.AddOffset(WeakVector<const TYPE>(values, *size));
+		GlmmGSAPI::theApi.AddOffset(WeakVector<const TYPE>(values, *size));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -220,11 +223,11 @@ void GlmmGSRAPI_AddIntercept()
 {
 	try
 	{
-		the_api.AddIntercept();
+		GlmmGSAPI::theApi.AddIntercept();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -233,11 +236,11 @@ void GlmmGSRAPI_AddCovariateImpl(const TYPE * values, const int * size)
 {
 	try
 	{
-		the_api.AddCovariate(WeakVector<const TYPE>(values, *size));
+		GlmmGSAPI::theApi.AddCovariate(WeakVector<const TYPE>(values, *size));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -259,11 +262,11 @@ void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dimensions)
 		const int nrows = dimensions[0];
 		const int ncols = dimensions[1];
 		for (int j = 0; j < ncols; ++j)
-			the_api.AddCovariate(WeakVector<const TYPE>(values + j * nrows, nrows));
+			GlmmGSAPI::theApi.AddCovariate(WeakVector<const TYPE>(values + j * nrows, nrows));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -281,11 +284,11 @@ void GlmmGSRAPI_AddIdentityCovarianceModel()
 {
 	try
 	{
-		the_api.AddIdentityCovarianceModel();
+		GlmmGSAPI::theApi.AddIdentityCovarianceModel();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -296,11 +299,11 @@ void GlmmGSRAPI_AddPrecisionModel(const double * values, const int * nrows, cons
 		if (*nrows != *ncols)
 			throw Utilities::Exceptions::Exception("Precision matrix must be square");
 		// TODO: check matrix is symmetric
-		the_api.AddPrecisionModel(WeakMatrix<const double>(values, *nrows, *ncols));
+		GlmmGSAPI::theApi.AddPrecisionModel(WeakMatrix<const double>(values, *nrows, *ncols));
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -320,11 +323,11 @@ void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indic
 		// Sparse matrix
 		const LDL::SparseMatrix<double> R(vvalues, vindices, vcounts);
 
-		the_api.AddSparsePrecisionModel(R);
+		GlmmGSAPI::theApi.AddSparsePrecisionModel(R);
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -333,11 +336,11 @@ void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_t
 	try
 	{
 		GlmmGS::Controls controls(*relative_tolerance, *absolute_tolerance, *maxiter);
-		the_api.Fit(controls);
+		GlmmGSAPI::theApi.Fit(controls);
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -345,11 +348,11 @@ void GlmmGSRAPI_GetFixedEffectsSize(int * size)
 {
 	try
 	{
-		*size = the_api.GetFixedEffectsSize();
+		*size = GlmmGSAPI::theApi.GlmmGS().FixedEffectsCoefficients().Size();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -357,11 +360,16 @@ void GlmmGSRAPI_GetFixedEffectsEstimates(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetFixedEffectsEstimates(WeakVector<double>(values, *size));
+		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().FixedEffectsCoefficients();
+		const int n = *size;
+		if (n != estimates.Size())
+			throw GlmmGSAPI::Exceptions::InvalidSizeException();
+		for (int i = 0; i < n; ++i)
+			values[i] = estimates(i).Value();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -369,11 +377,16 @@ void GlmmGSRAPI_GetFixedEffectsErrors(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetFixedEffectsErrors(WeakVector<double>(values, *size));
+		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().FixedEffectsCoefficients();
+		const int n = *size;
+		if (n != estimates.Size())
+			throw GlmmGSAPI::Exceptions::InvalidSizeException();
+		for (int i = 0; i < n; ++i)
+			values[i] = sqrt(estimates(i).Variance());
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -381,11 +394,11 @@ void GlmmGSRAPI_GetRandomEffectsSize(int * size)
 {
 	try
 	{
-		*size = the_api.GetRandomEffectsSize();
+		*size = GlmmGSAPI::theApi.GlmmGS().RandomEffectsCoefficients().Size();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -393,11 +406,16 @@ void GlmmGSRAPI_GetRandomEffectsEstimates(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetRandomEffectsEstimates(WeakVector<double>(values, *size));
+		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().RandomEffectsCoefficients();
+		const int n = *size;
+		if (n != estimates.Size())
+			throw GlmmGSAPI::Exceptions::InvalidSizeException();
+		for (int i = 0; i < n; ++i)
+			values[i] = estimates(i).Value();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -405,11 +423,16 @@ void GlmmGSRAPI_GetRandomEffectsErrors(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetRandomEffectsErrors(WeakVector<double>(values, *size));
+		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().RandomEffectsCoefficients();
+		const int n = *size;
+		if (n != estimates.Size())
+			throw GlmmGSAPI::Exceptions::InvalidSizeException();
+		for (int i = 0; i < n; ++i)
+			values[i] = sqrt(estimates(i).Variance());
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -417,11 +440,11 @@ void GlmmGSRAPI_GetCovarianceComponentsSize(int * size)
 {
 	try
 	{
-		*size = the_api.GetCovarianceComponentsSize();
+		*size = GlmmGSAPI::theApi.GlmmGS().CovarianceComponents().Size();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -429,11 +452,16 @@ void GlmmGSRAPI_GetCovarianceComponentsEstimates(double * values, const int * si
 {
 	try
 	{
-		the_api.GetCovarianceComponentsEstimates(WeakVector<double>(values, *size));
+		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().CovarianceComponents();
+		const int n = *size;
+		if (n != estimates.Size())
+			throw GlmmGSAPI::Exceptions::InvalidSizeException();
+		for (int i = 0; i < n; ++i)
+			values[i] = estimates(i).Value();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -441,11 +469,16 @@ void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size)
 {
 	try
 	{
-		the_api.GetCovarianceComponentsErrors(WeakVector<double>(values, *size));
+		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().CovarianceComponents();
+		const int n = *size;
+		if (n != estimates.Size())
+			throw GlmmGSAPI::Exceptions::InvalidSizeException();
+		for (int i = 0; i < n; ++i)
+			values[i] = sqrt(estimates(i).Variance());
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }
 
@@ -453,10 +486,10 @@ void GlmmGSRAPI_GetIterations(int * iterations)
 {
 	try
 	{
-		*iterations = the_api.GetIterations();
+		*iterations = GlmmGSAPI::theApi.GlmmGS().Iterations();
 	}
 	catch (Exception & e)
 	{
-		the_api.SetLastError(e);
+		GlmmGSAPI::theApi.SetLastError(e);
 	}
 }

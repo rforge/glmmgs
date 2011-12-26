@@ -11,9 +11,10 @@ glmmGSAPI.GetLastError = function()
 	# Get error message
 	size = nchar(error.buffer[1]);
 	out = .C("GlmmGSRAPI_GetLastError", error.buffer[1], size, PACKAGE = "glmmGS");
+	msg = out[[1]];
 	
 	# Trim trailing spaces
-	msg = sub(" +$", "", out[[1]]);
+	#msg = sub(" +$", "", out[[1]]);
 	
 	# Check error
 	if (msg != "")
@@ -24,6 +25,12 @@ glmmGSAPI.GetLastError = function()
 glmmGSAPI.SetOutputFile = function(filename)
 {
 	.C("GlmmGSRAPI_SetOutputFile", as.character(filename), PACKAGE = "glmmGS");
+}
+
+# Clean-up glmmGSAPI
+glmmGSAPI.Tidy = function()
+{
+	.C("GlmmGSRAPI_Tidy", PACKAGE = "glmmGS");
 }
 
 # Begin glmmGSAPI
@@ -40,18 +47,12 @@ glmmGSAPI.End = function()
 	glmmGSAPI.GetLastError();
 }
 
-# End glmmGSAPI
-glmmGSAPI.ForceEnd = function()
-{
-	.C("GlmmGSRAPI_ForceEnd", PACKAGE = "glmmGS");
-}
-
 # Begin response
 glmmGSAPI.BeginResponse = function(family)
 {
 	if (is.character(family) == FALSE)
 		stop("Invalid type");
-	if (length(family) != 1)
+	if (length(family) != 1L)
 		stop("Invalid size");
 	size = as.integer(nchar(family[1]));
 	.C("GlmmGSRAPI_BeginResponse", family[1], size, PACKAGE = "glmmGS");

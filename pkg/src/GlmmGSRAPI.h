@@ -4,15 +4,15 @@
 extern "C"
 {
 	// Debug
-	void GlmmGSRAPI_SetOutputFile(const char ** buffer);
+	void GlmmGSRAPI_SetOutputFile(const char ** filename);
 
 	// Error
 	void GlmmGSRAPI_GetLastError(char ** buffer, const int * size);
 
 	// Sections
+	void GlmmGSRAPI_Tidy();
 	void GlmmGSRAPI_Begin();
 	void GlmmGSRAPI_End();
-	void GlmmGSRAPI_ForceEnd();
 	void GlmmGSRAPI_BeginResponse(const char ** family, const int * length);
 	void GlmmGSRAPI_EndResponse();
 	void GlmmGSRAPI_BeginFixedEffects();

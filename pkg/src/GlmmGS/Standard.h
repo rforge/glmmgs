@@ -6,7 +6,7 @@
 #include "../Utilities/IO/IO.h"
 #include "../Utilities/LinearAlgebra/LinearAlgebra.h"
 #include "../Utilities/Math/Math.h"
-#include "../Utilities/Statistics/StatisticFunctions.h"
+#include "../Utilities/Statistics/Functions.h"
 #include "../Utilities/LDL/LDL.h"
 #include "../Utilities/NewTypes/NewTypes.h"
 
@@ -18,6 +18,7 @@ namespace GlmmGS
 	using namespace Utilities::LinearAlgebra;
 	using namespace Utilities::Math;
 	using namespace Utilities::Statistics;
+	using namespace Utilities::LDL;
 }
 
 #endif

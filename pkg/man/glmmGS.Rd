@@ -63,15 +63,16 @@
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
 	If a fixed intercept is specified (either a global intercept or 
-	a stratified intercept), then each stratified random intercept is constrained to have a zero mean. 
-	If both global and stratified fixed intercepts are specified, then their fitted values 
-	are determined up to a random constant. This is because the Gauss-Seidel algorithm displays
-	best convergence properties	by updating each fixed intercept component-wise
-	without imposing any constraints, such as setting the value of the intercept associated 
-	with the first level of a factor equal to zero. (Notice that the same does not hold for
-	random intercepts, where removing the overall mean is necessary to boost converge.) 
-	A simple post-processing of the fitted value can be used to adjust the offset 
-	of the estimated fixed intercepts.
+	a stratified intercept), then the stratified random intercepts are constrained to have 
+	a zero mean. If both global and stratified fixed intercepts are specified, then 
+	their fitted values	are determined up to a random constant. 
+	This is because the Gauss-Seidel algorithm displays	best convergence properties	
+	by updating each fixed intercept component-wise	without imposing any constraints, 
+	such as setting the value of the intercept associated with the first level of a factor 
+	equal to zero. (Notice that the same does not hold for
+	random intercepts, where removing the overall mean is necessary to boost 
+	the convergence.) A simple post-processing of the fitted values can be performed 
+	to adjust the offset of the estimated fixed intercepts.
 }
 \value{
 	%%  ~Describe the value returned
@@ -153,9 +154,9 @@
 	# - 1 million observations, 
 	# - 7 'dense' fixed effect covariates,
 	# - stratified random effects with 2000 strata (levels)
-	nobs <- 1000000;
-	ndays <- 7;
-	nPostCodes <- 2000;
+	nobs <- 1000000L;
+	ndays <- 7L;
+	nPostCodes <- 2000L;
 
 	# Generate data
 	counts <- as.integer(runif(nobs, 1, 10));

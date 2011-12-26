@@ -23,7 +23,6 @@
 		of non-zero elements in columns 1, \ldots, j - 1.
 	}
 }
-
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
 	The list returned by this function defines a column-sparse matrix. The data structure

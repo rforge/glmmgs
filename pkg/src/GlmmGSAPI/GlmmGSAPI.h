@@ -14,10 +14,7 @@ namespace GlmmGSAPI
 		static const int error_buffer_size = 1024;
 		Buffer last_error;
 		Stack<Pointer<Section> > sections;
-		Vector<GlmmGS::Estimate> fixed_effects_estimates; // Fixed-effects coefficients estimates
-		Vector<GlmmGS::Estimate> random_effects_estimates; // Random-effects coefficients estimates
-		Vector<GlmmGS::Estimate> covariance_components_estimates; // Variance component estimates
-		int iterations;
+		GlmmGS::GlmmGS glmmGS;
 
 	public:
 		Pointer<GlmmGS::Responses::IResponse> response;
@@ -36,9 +33,9 @@ namespace GlmmGSAPI
 		void GetLastError(char * buffer, int size);
 
 		// Sections
+		void Tidy();
 		void Begin();
 		void End();
-		void ForceEnd();
 		void BeginResponse(WeakString<const char> family);
 		void EndResponse();
 		void BeginFixedEffects();
@@ -68,19 +65,17 @@ namespace GlmmGSAPI
 		void Fit(GlmmGS::Controls controls);
 
 		// Results
-		int GetFixedEffectsSize() const;
-		void GetFixedEffectsEstimates(WeakVector<double> values) const;
-		void GetFixedEffectsErrors(WeakVector<double> values) const;
-		int GetRandomEffectsSize() const;
-		void GetRandomEffectsEstimates(WeakVector<double> values) const;
-		void GetRandomEffectsErrors(WeakVector<double> values) const;
-		int GetCovarianceComponentsSize() const;
-		void GetCovarianceComponentsEstimates(WeakVector<double> values) const;
-		void GetCovarianceComponentsErrors(WeakVector<double> values) const;
-		int GetIterations() const;
+		const GlmmGS::GlmmGS & GlmmGS() const;
 	};
 
-	extern GlmmGSAPI the_api;
+	// Results
+	inline
+	const GlmmGS::GlmmGS & GlmmGSAPI::GlmmGS() const
+	{
+		return this->glmmGS;
+	}
+
+	extern GlmmGSAPI theApi;
 }
 
 #endif

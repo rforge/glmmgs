@@ -407,15 +407,17 @@ glmmGS = function(formula, family, data = NULL, covariance.models = NULL, contro
 	response = formula[2];
 	predictor = formula[3];
 
-	# Initialize state-machine
-	glmmGSAPI.ForceEnd();
+	# Clean-up state machine
+	glmmGSAPI.Tidy();
+	
+	# Initialize state machine
 	glmmGSAPI.Begin();
 	
 	# Add response
 	glmmGS.AddResponse(response, family, data, env);
 	
 	# Initialize position counter
-	pos = 1;
+	pos = 1L;
 	
 	# Add offset
 	offset = glmmGSParser.GetOffset(predictor, pos);
@@ -427,7 +429,7 @@ glmmGS = function(formula, family, data = NULL, covariance.models = NULL, contro
 	}
 	
 	# Add predictor blocks
-	while (pos != -1)
+	while (pos != -1L)
 	{
 		# Add block
 		block = glmmGSParser.GetNextBlock(predictor, pos);

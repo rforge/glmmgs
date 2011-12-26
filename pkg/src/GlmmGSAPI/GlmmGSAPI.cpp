@@ -4,16 +4,15 @@
 #include "FixedEffects/FixedEffectsSection.h"
 #include "RandomEffects/RandomEffectsSection.h"
 #include "Exceptions/Exceptions.h"
-#include "../GlmmGS/Estimate.h"
 
 namespace GlmmGSAPI
 {
 	// The application
-	GlmmGSAPI the_api;
+	GlmmGSAPI theApi;
 
 	// GlmmGSAPI
 	GlmmGSAPI::GlmmGSAPI()
-		: last_error(error_buffer_size), iterations(-1), fixed_intercept(false)
+		: last_error(error_buffer_size), fixed_intercept(false)
 	{
 	}
 
@@ -32,36 +31,12 @@ namespace GlmmGSAPI
 		{
 			int length = Min(size - 1, this->last_error.Length());
 			memcpy(buffer, this->last_error.Pointer(), length);
-			buffer[length]= 0;
+			buffer[length] = 0;
 			this->last_error.Empty();
 		}
 	}
 
-	void GlmmGSAPI::Begin()
-	{
-		if (this->sections.IsEmpty() == false)
-			throw Exception("Invalid call: Begin");
-		this->ForceEnd(); // This should not be necessary, but it is better to
-						  // clean up twice rather than none
-		this->sections.Push(Pointer<Section>(new(bl) Section(*this)));
-	}
-
-	void GlmmGSAPI::End()
-	{
-		this->sections.Pop();
-		if (this->sections.IsEmpty() == false)
-			throw Exception("Invalid call: End");
-
-		// Reset
-		this->last_error.Empty();
-		this->response.Reset();
-		this->offset.Reset();
-		this->fixed_effects.Free();
-		this->random_effects.Free();
-		this->fixed_intercept = false;
-	}
-
-	void GlmmGSAPI::ForceEnd()
+	void GlmmGSAPI::Tidy()
 	{
 		// Reset
 		this->sections.Free();
@@ -71,6 +46,29 @@ namespace GlmmGSAPI
 		this->fixed_effects.Free();
 		this->random_effects.Free();
 		this->fixed_intercept = false;
+	}
+
+	void GlmmGSAPI::Begin()
+	{
+		if (this->sections.IsEmpty() == false)
+			throw Exception("Invalid call: Begin");
+
+		// Tide-up
+		this->Tidy();
+
+		// Begin
+		this->sections.Push(Pointer<Section>(new(bl) Section(*this)));
+	}
+
+	void GlmmGSAPI::End()
+	{
+		// End
+		this->sections.Pop();
+		if (this->sections.IsEmpty() == false)
+			throw Exception("Invalid call: End");
+
+		// Tide-up
+		this->Tidy();
 	}
 
 	void GlmmGSAPI::BeginResponse(WeakString<const char> family)
@@ -191,89 +189,7 @@ namespace GlmmGSAPI
 		if (this->offset.IsNull())
 			this->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset());
 
-		// Reset results
-		this->fixed_effects_estimates = Vector<GlmmGS::Estimate>();
-		this->random_effects_estimates = Vector<GlmmGS::Estimate>();
-		this->covariance_components_estimates = Vector<GlmmGS::Estimate>();
-		this->iterations = -1;
-
 		// Fit the model
-		GlmmGS::GlmmGS glmmGS;
-		glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
-
-		// Set results
-		this->fixed_effects_estimates = glmmGS.FixedEffectsCoefficients();
-		this->random_effects_estimates = glmmGS.RandomEffectsCoefficients();
-		this->covariance_components_estimates = glmmGS.CovarianceComponents();
-		this->iterations = glmmGS.Iterations();
-	}
-
-	// Results
-	int GlmmGSAPI::GetFixedEffectsSize() const
-	{
-		return this->fixed_effects_estimates.Size();
-	}
-
-	void GlmmGSAPI::GetFixedEffectsEstimates(WeakVector<double> values) const
-	{
-		if (values.Size() != this->fixed_effects_estimates.Size())
-			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->fixed_effects_estimates.Size(); ++i)
-			values(i) = this->fixed_effects_estimates(i).Value();
-	}
-
-	void GlmmGSAPI::GetFixedEffectsErrors(WeakVector<double> values) const
-	{
-		if (values.Size() != this->fixed_effects_estimates.Size())
-			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->fixed_effects_estimates.Size(); ++i)
-			values(i) = sqrt(this->fixed_effects_estimates(i).Variance());
-	}
-
-	int GlmmGSAPI::GetRandomEffectsSize() const
-	{
-		return this->random_effects_estimates.Size();
-	}
-
-	void GlmmGSAPI::GetRandomEffectsEstimates(WeakVector<double> values) const
-	{
-		if (values.Size() != this->random_effects_estimates.Size())
-			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->random_effects_estimates.Size(); ++i)
-			values(i) = this->random_effects_estimates(i).Value();
-	}
-
-	void GlmmGSAPI::GetRandomEffectsErrors(WeakVector<double> values) const
-	{
-		if (values.Size() != this->random_effects_estimates.Size())
-			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->random_effects_estimates.Size(); ++i)
-			values(i) = sqrt(this->random_effects_estimates(i).Variance());
-	}
-
-	int GlmmGSAPI::GetCovarianceComponentsSize() const
-	{
-		return this->covariance_components_estimates.Size();
-	}
-
-	void GlmmGSAPI::GetCovarianceComponentsEstimates(WeakVector<double> values) const
-	{
-		if (values.Size() != this->covariance_components_estimates.Size())
-			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->covariance_components_estimates.Size(); ++i)
-			values(i) = this->covariance_components_estimates(i).Value();
-	}
-
-	void GlmmGSAPI::GetCovarianceComponentsErrors(WeakVector<double> values) const
-	{
-		if (values.Size() != this->covariance_components_estimates.Size())
-			throw Exceptions::InvalidSizeException();
-		for (int i = 0; i < this->covariance_components_estimates.Size(); ++i)
-			values(i) = sqrt(this->covariance_components_estimates(i).Variance());
-	}
-
-	int GlmmGSAPI::GetIterations() const
-	{
-		return this->iterations;
+		this->glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
 	}
 }
