@@ -71,7 +71,7 @@ void *(*amd_calloc) (size_t, size_t) = NULL ;
  * If -DNPRINT is defined at compile-time, stdio.h is not included.  Printing
  * can then be enabled at run-time by setting amd_printf to a non-NULL function.
  */
-
+#define NPRINT // Michele Morara, Dec 27, 2011 - Disable printing for silent R-compilation (no warnings)
 #ifndef NPRINT
 #ifdef MATLAB_MEX_FILE
 int (*amd_printf) (const char *, ...) = mexPrintf ;
