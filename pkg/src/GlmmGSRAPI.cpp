@@ -8,14 +8,6 @@
 using namespace Utilities;
 using namespace Utilities::Exceptions;
 
-void GlmmGSRAPI_SetOutputFile(const char ** filename)
-{
-	const char * fname = *filename;
-	if (Utilities::IO::stream != stdout)
-		fclose(Utilities::IO::stream);
-	Utilities::IO::stream = fopen(fname, "wt");
-}
-
 void GlmmGSRAPI_GetLastError(char ** buffer, const int * size)
 {
 	if (*buffer != NULL && *size > 0)

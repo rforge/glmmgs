@@ -25,6 +25,17 @@ namespace Utilities
 			dst(i) = src(i);
 	}
 
+	// Copy matrices
+	template <class TYPE>
+	void Copy(Matrix<TYPE> & dst, const Matrix<TYPE> & src)
+	{
+		_ASSERT_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows() &&
+				dst.NumberOfColumns() == src.NumberOfColumns());
+		for (int i = 0; i < dst.NumberOfRows(); ++i)
+			for (int j = 0; j < dst.NumberOfColumns(); ++j)
+				dst(i, j) = src(i, j);
+	}
+
 	// Min
 	template <class TYPE>
 	TYPE Min(const Vector<TYPE> & v)

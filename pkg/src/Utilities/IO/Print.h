@@ -3,7 +3,6 @@
 
 #ifdef _STANDALONE
 #include <stdio.h>
-#include "Stream.h"
 #else
 #include "R_ext/Print.h"
 #endif
@@ -21,15 +20,15 @@ namespace Utilities
 		inline
 		void Print(const char * format)
 		{
-			fprintf(stream, format);
-			fflush(stream);
+			fprintf(stdout, format);
+			fflush(stdout);
 		}
 
 		template <class TYPE> inline
 		void Print(const char * format, TYPE value)
 		{
-			fprintf(stream, format, value);
-			fflush(stream);
+			fprintf(stdout, format, value);
+			fflush(stdout);
 		}
 #else
 		inline

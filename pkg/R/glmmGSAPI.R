@@ -21,12 +21,6 @@ glmmGSAPI.GetLastError = function()
 		stop(msg);
 }
 
-# Debug function: only to be used to debug the application
-glmmGSAPI.SetOutputFile = function(filename)
-{
-	.C("GlmmGSRAPI_SetOutputFile", as.character(filename), PACKAGE = "glmmGS");
-}
-
 # Clean-up glmmGSAPI
 glmmGSAPI.Tidy = function()
 {

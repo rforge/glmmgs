@@ -3,9 +3,6 @@
 
 extern "C"
 {
-	// Debug
-	void GlmmGSRAPI_SetOutputFile(const char ** filename);
-
 	// Error
 	void GlmmGSRAPI_GetLastError(char ** buffer, const int * size);
 

@@ -86,7 +86,7 @@ namespace Utilities
 	template <class TYPE> inline
 	int Matrix<TYPE>::NumberOfColumns() const
 	{
-		return this->nrows;
+		return this->ncols;
 	}
 
 	// Assignment
