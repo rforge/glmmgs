@@ -81,29 +81,29 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: EndStratifiedBlock");
 	}
 
-	void Section::AddResponse(WeakVector<const int>)
+	void Section::AddResponse(Vector<const int>)
 	{
 		throw Exception("Invalid call: AddResponse");
 	}
 
-	void Section::AddCounts(WeakVector<const int>)
+	void Section::AddCounts(Vector<const int>)
 	{
 		throw Exception("Invalid call: AddCounts");
 	}
 
-	void Section::AddOffset(WeakVector<const int> values)
+	void Section::AddOffset(Vector<const int> values)
 	{
 		if (this->api.offset.IsNull() == false)
 			throw Exception("Multiple offsets");
-		typedef GlmmGS::Offsets::WeakVectorOffset<const int>  T;
+		typedef GlmmGS::Offsets::VectorOffset<const int>  T;
 		this->api.offset.Reset(new(bl) T(values));
 	}
 
-	void Section::AddOffset(WeakVector<const double> values)
+	void Section::AddOffset(Vector<const double> values)
 	{
 		if (this->api.offset.IsNull() == false)
 			throw Exception("Multiple offsets");
-		typedef GlmmGS::Offsets::WeakVectorOffset<const double>  T;
+		typedef GlmmGS::Offsets::VectorOffset<const double>  T;
 		this->api.offset.Reset(new(bl) T(values));
 	}
 
@@ -112,12 +112,12 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: AddIntercept");
 	}
 
-	void Section::AddCovariate(WeakVector<const int>)
+	void Section::AddCovariate(Vector<const int>)
 	{
 		throw Exception("Invalid call: AddCovariate");
 	}
 
-	void Section::AddCovariate(WeakVector<const double>)
+	void Section::AddCovariate(Vector<const double>)
 	{
 		throw Exception("Invalid call: AddCovariate");
 	}
@@ -127,7 +127,7 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: AddIdentityCovarianceModel");
 	}
 
-	void Section::AddPrecisionModel(WeakMatrix<const double>)
+	void Section::AddPrecisionModel(Matrix<const double>)
 	{
 		throw Exception("Invalid call: AddPrecisionModel");
 	}

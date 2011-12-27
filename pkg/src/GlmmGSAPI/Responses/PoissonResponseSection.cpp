@@ -16,9 +16,9 @@ namespace GlmmGSAPI
 		{
 		}
 
-		void PoissonResponseSection::AddResponse(WeakVector<const int> values)
+		void PoissonResponseSection::AddResponse(Vector<const int> values)
 		{
-			this->values.Reset(new(bl) WeakVector<const int>(values));
+			this->values.Reset(new(bl) Vector<const int>(values));
 		}
 
 		void PoissonResponseSection::EndResponse()

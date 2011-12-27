@@ -15,7 +15,7 @@ namespace GlmmGS
 					// Helpers
 
 					// Weighted square norm of vector
-					double Square(WeakMatrix<const double> m, const Vector<double> & x)
+					double Square(Matrix<const double> m, const Vector<double> & x)
 					{
 						_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 						const int size = x.Size();
@@ -51,7 +51,7 @@ namespace GlmmGS
 					}
 
 					// Matrix-vector product
-					double MatrixProduct(int k, WeakMatrix<const double> m, const Vector<double> & x)
+					double MatrixProduct(int k, Matrix<const double> m, const Vector<double> & x)
 					{
 						const int size = m.NumberOfRows();
 						double sum = 0.0;
@@ -61,10 +61,10 @@ namespace GlmmGS
 					}
 
 					// Construction
-					PrecisionModel::PrecisionModel(WeakMatrix<const double> R)
+					PrecisionModel::PrecisionModel(Matrix<const double> R)
 						: ICovarianceModel(1), R(R)
 					{
-						this->theta = 1.0;
+						Set(this->theta, 1.0);
 					}
 
 					PrecisionModel::~PrecisionModel()

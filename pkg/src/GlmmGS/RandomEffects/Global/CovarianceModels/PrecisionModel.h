@@ -18,14 +18,14 @@ namespace GlmmGS
 				{
 				private:
 					// Fields
-					WeakMatrix<const double> precision;
+					Matrix<const double> precision;
 
 					// Implementation
 					Pointer<Working::Global::CovarianceModels::ICovarianceModel> CreateWorking() const;
 
 				public:
 					// Construction
-					PrecisionModel(WeakMatrix<const double> precision);
+					PrecisionModel(Matrix<const double> precision);
 					~PrecisionModel();
 				};
 			}

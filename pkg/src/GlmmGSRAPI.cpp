@@ -176,7 +176,7 @@ void GlmmGSRAPI_AddResponseInt(const int * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddResponse(WeakVector<const int>(values, * size));
+		GlmmGSAPI::theApi.AddResponse(Vector<const int>(External<const int>(values), *size));
 	}
 	catch (Exception & e)
 	{
@@ -188,7 +188,7 @@ void GlmmGSRAPI_AddCountsInt(const int * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddCounts(WeakVector<const int>(values, *size));
+		GlmmGSAPI::theApi.AddCounts(Vector<const int>(External<const int>(values), *size));
 	}
 	catch (Exception & e)
 	{
@@ -201,7 +201,7 @@ void GlmmGSRAPI_AddOffsetImpl(const TYPE * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddOffset(WeakVector<const TYPE>(values, *size));
+		GlmmGSAPI::theApi.AddOffset(Vector<const TYPE>(External<const TYPE>(values), *size));
 	}
 	catch (Exception & e)
 	{
@@ -236,7 +236,7 @@ void GlmmGSRAPI_AddCovariateImpl(const TYPE * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddCovariate(WeakVector<const TYPE>(values, *size));
+		GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values), *size));
 	}
 	catch (Exception & e)
 	{
@@ -262,7 +262,7 @@ void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dimensions)
 		const int nrows = dimensions[0];
 		const int ncols = dimensions[1];
 		for (int j = 0; j < ncols; ++j)
-			GlmmGSAPI::theApi.AddCovariate(WeakVector<const TYPE>(values + j * nrows, nrows));
+			GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values + j * nrows), nrows));
 	}
 	catch (Exception & e)
 	{
@@ -299,7 +299,7 @@ void GlmmGSRAPI_AddPrecisionModel(const double * values, const int * nrows, cons
 		if (*nrows != *ncols)
 			throw Utilities::Exceptions::Exception("Precision matrix must be square");
 		// TODO: check matrix is symmetric
-		GlmmGSAPI::theApi.AddPrecisionModel(WeakMatrix<const double>(values, *nrows, *ncols));
+		GlmmGSAPI::theApi.AddPrecisionModel(Matrix<const double>(External<const double>(values), *nrows, *ncols));
 	}
 	catch (Exception & e)
 	{
@@ -316,9 +316,9 @@ void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indic
 		const int nz = counts[n]; // Total number of non-zero elements
 
 		// It is safe to use const_cast since we embed the const pointers inside constant objects
-		const NewTypes::Vector<double> vvalues(NewTypes::External<double>(const_cast<double *>(values)), nz);
-		const NewTypes::Vector<int> vindices(NewTypes::External<int>(const_cast<int *>(indices)), nz);
-		const NewTypes::Vector<int> vcounts(NewTypes::External<int>(const_cast<int *>(counts)), n + 1);
+		const Vector<double> vvalues(External<double>(const_cast<double *>(values)), nz);
+		const Vector<int> vindices(External<int>(const_cast<int *>(indices)), nz);
+		const Vector<int> vcounts(External<int>(const_cast<int *>(counts)), n + 1);
 
 		// Sparse matrix
 		const LDL::SparseMatrix<double> R(vvalues, vindices, vcounts);

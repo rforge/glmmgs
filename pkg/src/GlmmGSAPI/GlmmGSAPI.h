@@ -19,8 +19,8 @@ namespace GlmmGSAPI
 	public:
 		Pointer<GlmmGS::Responses::IResponse> response;
 		Pointer<GlmmGS::Offsets::IOffset> offset;
-		Vector<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
-		Vector<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
+		VectorBuilder<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
+		VectorBuilder<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
 		bool fixed_intercept;
 
 	public:
@@ -48,17 +48,17 @@ namespace GlmmGSAPI
 		void EndStratifiedBlock();
 
 		// Variables
-		void AddResponse(WeakVector<const int> values);
-		void AddCounts(WeakVector<const int> values);
-		void AddOffset(WeakVector<const int> values);
-		void AddOffset(WeakVector<const double> values);
+		void AddResponse(Vector<const int> values);
+		void AddCounts(Vector<const int> values);
+		void AddOffset(Vector<const int> values);
+		void AddOffset(Vector<const double> values);
 		void AddIntercept();
-		void AddCovariate(WeakVector<const int> values);
-		void AddCovariate(WeakVector<const double> values);
+		void AddCovariate(Vector<const int> values);
+		void AddCovariate(Vector<const double> values);
 
 		// Covariance models
 		void AddIdentityCovarianceModel();
-		void AddPrecisionModel(WeakMatrix<const double> precision);
+		void AddPrecisionModel(Matrix<const double> precision);
 		void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
 
 		// Fit

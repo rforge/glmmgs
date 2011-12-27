@@ -17,7 +17,7 @@
 // Offsets
 #include "../GlmmGS/Offsets/IOffset.h"
 #include "../GlmmGS/Offsets/ZeroOffset.h"
-#include "../GlmmGS/Offsets/WeakVectorOffset.h"
+#include "../GlmmGS/Offsets/VectorOffset.h"
 
 // Fixed effects
 #include "../GlmmGS/FixedEffects/IBlock.h"
@@ -46,7 +46,7 @@
 // Variables
 #include "../GlmmGS/Variables/IVariable.h"
 #include "../GlmmGS/Variables/Intercept.h"
-#include "../GlmmGS/Variables/WeakVectorVariable.h"
+#include "../GlmmGS/Variables/VectorVariable.h"
 
 // GlmmGS
 #include "../GlmmGS/GlmmGS.h"

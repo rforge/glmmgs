@@ -8,7 +8,6 @@
 #include "../Utilities/Math/Math.h"
 #include "../Utilities/Statistics/Functions.h"
 #include "../Utilities/LDL/LDL.h"
-#include "../Utilities/NewTypes/NewTypes.h"
 
 namespace GlmmGS
 {

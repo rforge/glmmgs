@@ -27,20 +27,20 @@ namespace GlmmGS
 		this->offset = offset;
 
 		// Set working fixed-effects
-		this->fixed_effects.Size(x.Size());
+		this->fixed_effects = Vector<Pointer<FixedEffects::Working::IBlock> >(x.Size());
 		for (int block = 0; block < x.Size(); ++block)
 			this->fixed_effects(block) = x(block)->CreateWorking();
 
 		// Set working random-effects working coefficients
-		this->random_effects.Size(z.Size());
+		this->random_effects = Vector<Pointer<RandomEffects::Working::IBlock> >(z.Size());
 		for (int block = 0; block < z.Size(); ++block)
 			this->random_effects(block) = z(block)->CreateWorking();
 
 		// Initialize working weights and values
 		const int nrecords = y->NumberOfObservations();
-		this->eta.Size(nrecords);
-		this->working_weights.Size(nrecords);
-		this->working_values.Size(nrecords);
+		this->eta = Vector<double>(nrecords);
+		this->working_weights = Vector<double>(nrecords);
+		this->working_values = Vector<double>(nrecords);
 		this->EvaluateWorkingWeightsAndValues();
 
 		// Set controls

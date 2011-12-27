@@ -80,7 +80,7 @@ namespace Utilities
 	template <class TYPE> inline
 	Pointer<TYPE>::~Pointer()
 	{
-		if (ReferenceCounter::RemoveReference() == 0)
+		if (ReferenceCounter::Decrement() == 0)
 			delete this->ptr;
 	}
 
@@ -93,7 +93,7 @@ namespace Utilities
 	template <class TYPE>
 	void Pointer<TYPE>::Reset()
 	{
-		if (ReferenceCounter::RemoveReference() == 0)
+		if (ReferenceCounter::Decrement() == 0)
 			delete this->ptr;
 		this->ptr = NULL;
 	}
@@ -102,7 +102,7 @@ namespace Utilities
 	template <class OTHER>
 	void Pointer<TYPE>::Reset(OTHER * ptr)
 	{
-		if (ReferenceCounter::RemoveReference() == 0)
+		if (ReferenceCounter::Decrement() == 0)
 			delete this->ptr;
 		this->ptr = ptr;
 		ReferenceCounter::Reset(ptr);
@@ -113,10 +113,10 @@ namespace Utilities
 	{
 		if (this->ptr != src.ptr)
 		{
-			if (ReferenceCounter::RemoveReference() == 0)
+			if (ReferenceCounter::Decrement() == 0)
 				delete this->ptr;
 			this->ptr = src.ptr;
-			ReferenceCounter::AddReference(src);
+			ReferenceCounter::Increment(src);
 		}
 		return *this;
 	}
@@ -127,10 +127,10 @@ namespace Utilities
 	{
 		if (this->ptr != src.ptr)
 		{
-			if (ReferenceCounter::RemoveReference() == 0)
+			if (ReferenceCounter::Decrement() == 0)
 				delete this->ptr;
 			this->ptr = src.ptr;
-			ReferenceCounter::AddReference(src);
+			ReferenceCounter::Increment(src);
 		}
 		return *this;
 	}

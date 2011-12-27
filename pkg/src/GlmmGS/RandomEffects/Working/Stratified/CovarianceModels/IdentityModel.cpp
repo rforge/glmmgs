@@ -16,7 +16,7 @@ namespace GlmmGS
 					IdentityModel::IdentityModel(int nvars, int nlevels)
 						: ICovarianceModel(nvars), nvars(nvars), nlevels(nlevels)
 					{
-						this->theta = 1.0;
+						Set(this->theta, 1.0);
 					}
 
 					IdentityModel::~IdentityModel()

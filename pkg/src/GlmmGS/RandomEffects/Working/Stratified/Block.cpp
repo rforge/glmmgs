@@ -23,7 +23,7 @@ namespace GlmmGS
 					  covariance_model(covariance_model), booster(booster)
 				{
 					for (int i = 0; i < this->variables.Size(); ++i)
-						this->beta(i).Size(this->factor.NumberOfLevels());
+						this->beta(i) = Vector<double>(this->factor.NumberOfLevels());
 				}
 
 				Vector<Estimate> Block::Coefficients() const

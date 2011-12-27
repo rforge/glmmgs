@@ -127,7 +127,6 @@ namespace Utilities
 		{
 			int n = v.Size();
 			Matrix<double> A(n, n);
-			A = 0.0;
 			for (int i = 0; i < n; ++i)
 				A(i, i) = v(i);
 			return A;

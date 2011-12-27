@@ -131,22 +131,22 @@ namespace GlmmGSAPI
 		this->sections.Pop();
 	}
 
-	void GlmmGSAPI::AddResponse(WeakVector<const int> values)
+	void GlmmGSAPI::AddResponse(Vector<const int> values)
 	{
 		this->sections.Top()->AddResponse(values);
 	}
 
-	void GlmmGSAPI::AddCounts(WeakVector<const int> values)
+	void GlmmGSAPI::AddCounts(Vector<const int> values)
 	{
 		this->sections.Top()->AddCounts(values);
 	}
 	
-	void GlmmGSAPI::AddOffset(WeakVector<const int> values)
+	void GlmmGSAPI::AddOffset(Vector<const int> values)
 	{
 		this->sections.Top()->AddOffset(values);
 	}
 
-	void GlmmGSAPI::AddOffset(WeakVector<const double> values)
+	void GlmmGSAPI::AddOffset(Vector<const double> values)
 	{
 		this->sections.Top()->AddOffset(values);
 	}
@@ -156,12 +156,12 @@ namespace GlmmGSAPI
 		this->sections.Top()->AddIntercept();
 	}
 
-	void GlmmGSAPI::AddCovariate(WeakVector<const int> values)
+	void GlmmGSAPI::AddCovariate(Vector<const int> values)
 	{
 		this->sections.Top()->AddCovariate(values);
 	}
 	
-	void GlmmGSAPI::AddCovariate(WeakVector<const double> values)
+	void GlmmGSAPI::AddCovariate(Vector<const double> values)
 	{
 		this->sections.Top()->AddCovariate(values);
 	}
@@ -172,7 +172,7 @@ namespace GlmmGSAPI
 		this->sections.Top()->AddIdentityCovarianceModel();
 	}
 
-	void GlmmGSAPI::AddPrecisionModel(WeakMatrix<const double> precision)
+	void GlmmGSAPI::AddPrecisionModel(Matrix<const double> precision)
 	{
 		this->sections.Top()->AddPrecisionModel(precision);
 	}
@@ -190,6 +190,6 @@ namespace GlmmGSAPI
 			this->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset());
 
 		// Fit the model
-		this->glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
+		this->glmmGS.Fit(this->response, this->offset, this->fixed_effects.ToVector(), this->random_effects.ToVector(), controls);
 	}
 }

@@ -1,6 +1,5 @@
 #include "../Utilities.h"
 #include "../Exceptions/Exceptions.h"
-#include "../NewTypes/NewTypes.h"
 #include "SparseCholeskyDecomposition.h"
 #include "SparseMatrix.h"
 
@@ -11,8 +10,6 @@ namespace Utilities
 {
 	namespace LDL
 	{
-		using namespace Utilities::NewTypes;
-
 		SparseCholeskyDecomposition::SparseCholeskyDecomposition()
 		{
 		}
@@ -24,8 +21,8 @@ namespace Utilities
 			const int ncols = upper.NumberOfColumns();
 
 			// Allocate permutations
-			this->permutation = NewTypes::Vector<int>(ncols);
-			this->permutation_inverse = NewTypes::Vector<int>(ncols);
+			this->permutation = Vector<int>(ncols);
+			this->permutation_inverse = Vector<int>(ncols);
 
 			// Find permutation
 			int amd_retval = amd_order(ncols,
@@ -39,7 +36,7 @@ namespace Utilities
 				throw Exceptions::NumericException("AMD failed");
 
 			// Symbolic decomposition
-			NewTypes::Vector<int> lp(ncols + 1);
+			Vector<int> lp(ncols + 1);
 			Array<int> parent(ncols);
 			Array<int> lnz(ncols);
 			Array<int> flag(ncols);
@@ -55,9 +52,9 @@ namespace Utilities
 
 			// Numeric decomposition
 			const int lsize = lp(ncols);
-			NewTypes::Vector<double> lx(lsize);
-			NewTypes::Vector<int> li(lsize);
-			NewTypes::Vector<double> d(ncols);
+			Vector<double> lx(lsize);
+			Vector<int> li(lsize);
+			Vector<double> d(ncols);
 			Array<double> y(ncols);
 			Array<int> pattern(ncols);
 
@@ -82,14 +79,14 @@ namespace Utilities
 			this->diagonal = d;
 		}
 
-		NewTypes::Vector<double> SparseCholeskyDecomposition::Solve(const NewTypes::Vector<double> b) const
+		Vector<double> SparseCholeskyDecomposition::Solve(const Vector<double> b) const
 		{
 			_VALIDATE_ARGUMENT(b.Size() == this->lower.NumberOfColumns());
 
 			const int n = this->diagonal.Size();
 
 			// Permute b
-			NewTypes::Vector<double> x(n);
+			Vector<double> x(n);
 			for (int j = 0; j < n ; ++j)
 				x(j) = b(this->permutation(j));
 
@@ -114,7 +111,7 @@ namespace Utilities
 			}
 
 			// Permute solution
-			NewTypes::Vector<double> y(n);
+			Vector<double> y(n);
 			for (int j = 0; j < n ; ++j)
 				y(this->permutation(j)) = x(j);
 
@@ -126,7 +123,7 @@ namespace Utilities
 		{
 			const int n = this->diagonal.Size();
 			TriangularMatrix<double> y(n);
-			NewTypes::Vector<double> x(n);
+			Vector<double> x(n);
 			for (int i = 0; i < n; ++i)
 			{
 				// Prepare RHS vector

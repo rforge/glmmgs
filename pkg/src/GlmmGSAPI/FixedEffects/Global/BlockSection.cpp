@@ -25,22 +25,22 @@ namespace GlmmGSAPI
 				this->variables.Add(Pointer<T>(new(bl) T));
 			}
 
-			void BlockSection::AddCovariate(WeakVector<const int> values)
+			void BlockSection::AddCovariate(Vector<const int> values)
 			{
-				typedef GlmmGS::Variables::WeakVectorVariable<const int> T;
+				typedef GlmmGS::Variables::VectorVariable<const int> T;
 				this->variables.Add(Pointer<T>(new(bl) T(values)));
 			}
 
-			void BlockSection::AddCovariate(WeakVector<const double> values)
+			void BlockSection::AddCovariate(Vector<const double> values)
 			{
-				typedef GlmmGS::Variables::WeakVectorVariable<const double> T;
+				typedef GlmmGS::Variables::VectorVariable<const double> T;
 				this->variables.Add(Pointer<T>(new(bl) T(values)));
 			}
 
 			void BlockSection::EndBlock()
 			{
 				typedef GlmmGS::FixedEffects::Global::Block T;
-				this->api.fixed_effects.Add(Pointer<T>(new(bl) T(this->variables)));
+				this->api.fixed_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector())));
 			}
 		}
 	}

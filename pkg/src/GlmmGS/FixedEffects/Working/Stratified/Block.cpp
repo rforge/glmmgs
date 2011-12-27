@@ -17,7 +17,7 @@ namespace GlmmGS
 					: variables(variables), factor(factor), beta(variables.Size())
 				{
 					for (int i = 0; i < this->variables.Size(); ++i)
-						this->beta(i).Size(this->factor.NumberOfLevels());
+						this->beta(i) = Vector<double>(this->factor.NumberOfLevels());
 				}
 
 				Block::~Block()

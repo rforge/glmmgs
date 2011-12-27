@@ -1,163 +1,117 @@
 #ifndef UTILITIES_VECTOR_H
 #define UTILITIES_VECTOR_H
 
-#include "Container.h"
 #include "Exceptions/Assertions.h"
+#include "New.h"
+#include "ReferenceCounter.h"
+#include "External.h"
 
 namespace Utilities
 {
 	// Vector
-	template <class TYPE> 
-	class Vector : public Container<TYPE>
+	template <class TYPE>
+	class Vector
 	{
+		template <class OTHER> friend class Cast;
+
 	private:
 		// Fields
+		TYPE * ptr;
+		ReferenceCounter counter;
 		int size;
 
 	public:
 		// Construction
-		Vector();
-		explicit Vector(int size);
+		Vector();	// Default
+		explicit Vector(int size);	// Size
+		Vector(TYPE * ptr, const ReferenceCounter & counter, int size); // From another ref-counted pointer
+		Vector(External<TYPE> ptr, int size); // From an external pointer
+		~Vector();
 
-		// Attributes
+		// Properties
 		int Size() const;
 
-		// Element access
-		TYPE & operator ()(int index);
-		TYPE & Element(int index);
-		const TYPE & operator ()(int index) const;
-		const TYPE & Element(int index) const;
-		
 		// Assignment
-		const Vector<TYPE> & operator =(const TYPE & x);
+		const Vector<TYPE> & operator =(const Vector<TYPE> & src);
 
-		// Memory
-		void Size(int size);
-		void Resize(int size);
-		void Free();
-		void FreeExtra();
-
-		// Manipulation
-		void Add(const TYPE & x);
-		void Remove();
-		void RemoveAll();
+		// Element access
+		TYPE & operator ()(int i);
+		const TYPE & operator ()(int i) const;
 	};
+
+
+	// Definition
 
 	// Construction
 	template <class TYPE> inline
 	Vector<TYPE>::Vector()
-		: size(0)
+		: ptr(NULL), size(0)
 	{
 	}
 
 	template <class TYPE> inline
 	Vector<TYPE>::Vector(int size)
-		: Container<TYPE>(size), size(size)
+		: ptr(NewAllocator<TYPE>::New(size)), counter(ptr), size(size)
 	{
 	}
 
-	// Attributes
+	template <class TYPE> inline
+	Vector<TYPE>::Vector(TYPE * ptr, const ReferenceCounter & counter, int size)
+		: ptr(ptr), counter(counter), size(size)
+	{
+	}
+
+	template <class TYPE> inline
+	Vector<TYPE>::Vector(External<TYPE> ptr, int size)
+		: ptr(ptr), counter(NULL), size(size)
+	{
+	}
+
+	template <class TYPE> inline
+	Vector<TYPE>::~Vector()
+	{
+		if (this->counter.Decrement() == 0)
+			NewAllocator<TYPE>::Delete(this->ptr);
+	}
+
+	// Properties
 	template <class TYPE> inline
 	int Vector<TYPE>::Size() const
 	{
 		return this->size;
 	}
 
-	// Element access
-	template <class TYPE> inline
-	TYPE & Vector<TYPE>::operator ()(int index)
-	{
-		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
-		return this->ptr[index];
-	}
-
-	template <class TYPE> inline
-	TYPE & Vector<TYPE>::Element(int index)
-	{
-		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
-		return this->ptr[index];
-	}
-
-	template <class TYPE> inline
-	const TYPE & Vector<TYPE>::operator ()(int index) const
-	{
-		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
-		return this->ptr[index];
-	}
-
-	template <class TYPE> inline
-	const TYPE & Vector<TYPE>::Element(int index) const
-	{
-		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
-		return this->ptr[index];
-	}
-	
 	// Assignment
 	template <class TYPE>
-	const Vector<TYPE> & Vector<TYPE>::operator =(const TYPE & x)
+	const Vector<TYPE> & Vector<TYPE>::operator =(const Vector<TYPE> & src)
 	{
-		for (int i = 0; i < this->size; ++i)
-			this->ptr[i] = x;
+		if (this->ptr != src.ptr)
+		{
+			// Copy references
+			if (this->counter.Decrement() == 0)
+				NewAllocator<TYPE>::Delete(this->ptr);
+			this->counter.Increment(src.counter);
+
+			// Copy members
+			this->ptr = src.ptr;
+			this->size = src.size;
+		}
 		return *this;
 	}
 
-	// Memory
-	template <class TYPE>
-	void Vector<TYPE>::Size(int size)
+	// Element access
+	template <class TYPE> inline
+	TYPE & Vector<TYPE>::operator ()(int i)
 	{
-		Container<TYPE>::Allocate(size);
-		this->size = size;
+		_ASSERT_ARGUMENT(i >= 0 && i < this->size);
+		return this->ptr[i];
 	}
 
-	template <class TYPE>
-	void Vector<TYPE>::Resize(int size)
+	template <class TYPE> inline
+	const TYPE & Vector<TYPE>::operator ()(int i) const
 	{
-		Container<TYPE>::Reallocate(size);
-		this->size = size;
-	}
-	
-	template <class TYPE>
-	void Vector<TYPE>::Free()
-	{
-		Container<TYPE>::Free();
-		this->size = 0;
-	}
-
-	template <class TYPE>
-	void Vector<TYPE>::FreeExtra()
-	{
-		Container<TYPE>::Reallocate(this->size);
-	}
-
-	// Manipulation
-	template <class TYPE>
-	void Vector<TYPE>::Add(const TYPE & x)
-	{
-		if (this->size == this->capacity)
-		{
-			TYPE y = x; // Copy in case x points to an element of the vector
-			Container<TYPE>::Grow();
-			this->ptr[this->size] = y;
-			++this->size;
-		}
-		else
-		{
-			this->ptr[this->size] = x;
-			++this->size;
-		}
-	}
-
-	template <class TYPE>
-	void Vector<TYPE>::Remove()
-	{
-		if (this->size > 0)
-			--this->size;
-	}
-
-	template <class TYPE>
-	void Vector<TYPE>::RemoveAll()
-	{
-		this->size = 0;
+		_ASSERT_ARGUMENT(i >= 0 && i < this->size);
+		return this->ptr[i];
 	}
 }
 

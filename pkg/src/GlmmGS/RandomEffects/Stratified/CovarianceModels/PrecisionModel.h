@@ -19,14 +19,14 @@ namespace GlmmGS
 				private:
 					// Fields
 					int nvars;
-					WeakMatrix<const double> precision;
+					Matrix<const double> precision;
 
 					// Implementation
 					Pointer<Working::Stratified::CovarianceModels::ICovarianceModel> CreateWorking() const;
 
 				public:
 					// Construction
-					PrecisionModel(int nvars, WeakMatrix<const double> precision);
+					PrecisionModel(int nvars, Matrix<const double> precision);
 					~PrecisionModel();
 				};
 			}

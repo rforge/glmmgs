@@ -17,7 +17,7 @@ namespace GlmmGS
 		// Methods
 		void ZeroOffset::InitializePredictor(Vector<double> & eta) const
 		{
-			eta = 0.0;
+			Set(eta, 0.0);
 		}
 	}
 }

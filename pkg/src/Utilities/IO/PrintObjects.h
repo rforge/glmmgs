@@ -3,7 +3,6 @@
 
 #include "../Vector.h"
 #include "../TriangularMatrix.h"
-#include "../WeakMatrix.h"
 #include "Print.h"
 
 namespace Utilities
@@ -13,7 +12,7 @@ namespace Utilities
 		// Declaration
 		template <class TYPE> void Print(const char * format, const Vector<TYPE> & values);
 		template <class TYPE> void Print(const char * format, const Vector<Vector<TYPE> > & values);
-		template <class TYPE> void Print(const char * format, const WeakMatrix<TYPE> matrix);
+		template <class TYPE> void Print(const char * format, const Matrix<TYPE> matrix);
 		template <class TYPE> void Print(const char * format, const TriangularMatrix<TYPE> & matrix);
 
 		// Definition
@@ -34,9 +33,9 @@ namespace Utilities
 				Print(format, values(j));
 		}
 
-		// Print WeakMatrix
+		// Print Matrix
 		template <class TYPE>
-		void Print(const char * format, const WeakMatrix<TYPE> matrix)
+		void Print(const char * format, const Matrix<TYPE> matrix)
 		{
 			for (int i = 0; i < matrix.NumberOfRows(); ++i)
 			{

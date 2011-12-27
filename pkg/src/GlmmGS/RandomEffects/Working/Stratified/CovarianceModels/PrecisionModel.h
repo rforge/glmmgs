@@ -21,7 +21,7 @@ namespace GlmmGS
 					private:
 						// Fields
 						int nvars;
-						WeakMatrix<const double> R;
+						Matrix<const double> R;
 						CholeskyDecomposition beta_precision_chol;
 
 						// Implementation
@@ -32,7 +32,7 @@ namespace GlmmGS
 
 					public:
 						// Construction
-						PrecisionModel(int nvars, WeakMatrix<const double> R);
+						PrecisionModel(int nvars, Matrix<const double> R);
 						~PrecisionModel();
 					};
 				}

@@ -491,7 +491,7 @@ namespace Utilities
 			)
 			{
 				int j, p ;
-				if (n < 0 || !Ap || !Ai || Ap [0] != 0)
+				if (n < 0 || !Ap /*|| !Ai*/ || Ap [0] != 0)
 				{
 					return (0) ;	    /* n must be >= 0, and Ap and Ai must be present */
 				}

@@ -13,7 +13,7 @@ namespace GlmmGS
 			// Friends
 			friend class Intercept;
 			friend class StratifiedIntercept;
-			template <class TYPE> friend class WeakVectorVariable;
+			template <class TYPE> friend class VectorVariable;
 			friend double ScalarProduct(Pointer<IVariable> variable, const Vector<double> & values);
 			friend double ScalarProduct(Pointer<IVariable> variable1, const Vector<double> & weights, Pointer<IVariable> variable2);
 			friend Utilities::Vector<double> ScalarProduct(Pointer<IVariable> variable, const Vector<double> & values, WeakFactor factor);
@@ -23,14 +23,14 @@ namespace GlmmGS
 			// Operations
 			virtual double ScalarProduct(const Vector<double> & values) const = 0;
 			virtual double ScalarProduct(const Vector<double> & weights, Pointer<IVariable> variable) const = 0;
-			virtual double ScalarProduct(const Vector<double> & weights, WeakVector<const int> values) const = 0;
-			virtual double ScalarProduct(const Vector<double> & weights, WeakVector<const double> values) const = 0;
+			virtual double ScalarProduct(const Vector<double> & weights, Vector<const int> values) const = 0;
+			virtual double ScalarProduct(const Vector<double> & weights, Vector<const double> values) const = 0;
 
 			// Stratified Operations
 			virtual Vector<double> ScalarProduct(const Vector<double> & values, WeakFactor factor) const = 0;
 			virtual Vector<double> ScalarProduct(const Vector<double> & weights, Pointer<IVariable> variable, WeakFactor factor) const = 0;
-			virtual Vector<double> ScalarProduct(const Vector<double> & weights, WeakVector<const int> values, WeakFactor factor) const = 0;
-			virtual Vector<double> ScalarProduct(const Vector<double> & weights, WeakVector<const double> values, WeakFactor factor) const = 0;
+			virtual Vector<double> ScalarProduct(const Vector<double> & weights, Vector<const int> values, WeakFactor factor) const = 0;
+			virtual Vector<double> ScalarProduct(const Vector<double> & weights, Vector<const double> values, WeakFactor factor) const = 0;
 
 		protected:
 			// Construction

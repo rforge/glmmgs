@@ -14,7 +14,7 @@ namespace GlmmGS
 				namespace CovarianceModels
 				{
 					// Weighted square norm of vector
-					double Square(WeakMatrix<const double> m, const Vector<double> & x);
+					double Square(Matrix<const double> m, const Vector<double> & x);
 					double Square(const LDL::SparseMatrix<double> & R, const Vector<double> & x);
 
 					// Trace of diagonal blocks
@@ -24,7 +24,7 @@ namespace GlmmGS
 					double BlockSquareTrace(int row, int col, int nlevels, const Matrix<double> & a);
 
 					// Matrix product
-					double MatrixProduct(int k, WeakMatrix<const double> m, const Vector<double> & x);
+					double MatrixProduct(int k, Matrix<const double> m, const Vector<double> & x);
 
 					// Transposed-matrix product
 					double TMatrixProduct(int k, const LDL::SparseMatrix<double> & R, const Vector<double> & x);

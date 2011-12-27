@@ -6,7 +6,7 @@ namespace GlmmGS
 	namespace Responses
 	{
 		// BinomialResponse
-		PoissonResponse::PoissonResponse(WeakVector<const int> response) :
+		PoissonResponse::PoissonResponse(Vector<const int> response) :
 			response(response)
 		{
 		}

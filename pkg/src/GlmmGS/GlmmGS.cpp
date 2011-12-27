@@ -16,7 +16,7 @@ namespace GlmmGS
 			size += x(i).Size();
 
 		// Copy vectors
-		y.Size(size);
+		y = Vector<Estimate>(size);
 		for (int index = 0, i = 0; i < x.Size(); ++i)
 			for (int j = 0; j < x(i).Size(); ++j, ++index)
 				y(index) = x(i)(j);

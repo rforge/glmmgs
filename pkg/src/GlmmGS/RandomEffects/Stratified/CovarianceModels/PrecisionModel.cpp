@@ -12,7 +12,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				PrecisionModel::PrecisionModel(int nvars, WeakMatrix<const double> precision)
+				PrecisionModel::PrecisionModel(int nvars, Matrix<const double> precision)
 					: nvars(nvars), precision(precision)
 				{
 				}

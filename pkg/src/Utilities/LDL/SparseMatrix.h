@@ -1,7 +1,6 @@
 #ifndef UTILITIES_LDL_SPARSEMATRIX_H
 #define UTILITIES_LDL_SPARSEMATRIX_H
 
-#include "../NewTypes/NewTypes.h"
 #include "Internal/ldl.h"
 
 namespace Utilities
@@ -14,23 +13,23 @@ namespace Utilities
 		{
 		private:
 			// Fields
-			NewTypes::Vector<TYPE> values;
-			NewTypes::Vector<int> indices;
-			NewTypes::Vector<int> counts;
+			Vector<TYPE> values;
+			Vector<int> indices;
+			Vector<int> counts;
 
 		public:
 			// Construction
 			SparseMatrix();
-			SparseMatrix(NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts);
+			SparseMatrix(Vector<TYPE> values, Vector<int> indices, Vector<int> counts);
 
 			// Properties
 			int NumberOfColumns() const;
 			TYPE Value(int index) const;
 			int Index(int index) const;
 			int Count(int col) const;
-			const NewTypes::Vector<TYPE> Values() const;
-			const NewTypes::Vector<int> Indices() const;
-			const NewTypes::Vector<int> Counts() const;
+			const Vector<TYPE> Values() const;
+			const Vector<int> Indices() const;
+			const Vector<int> Counts() const;
 		};
 
 		// Construction
@@ -40,7 +39,7 @@ namespace Utilities
 		}
 
 		template <class TYPE>
-		SparseMatrix<TYPE>::SparseMatrix(NewTypes::Vector<TYPE> values, NewTypes::Vector<int> indices, NewTypes::Vector<int> counts)
+		SparseMatrix<TYPE>::SparseMatrix(Vector<TYPE> values, Vector<int> indices, Vector<int> counts)
 			: values(values), indices(indices), counts(counts)
 		{
 #ifdef _DEBUG
@@ -48,8 +47,8 @@ namespace Utilities
 			_ASSERT(values.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid values size"));
 			_ASSERT(indices.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid indices size"));
 			_ASSERT(Internal::LDL_valid_matrix(ncols,
-					NewTypes::Cast<const NewTypes::Array<int> >(counts),
-					NewTypes::Cast<const NewTypes::Array<int> >(indices)) == 1,
+					Cast<const Array<int> >(counts),
+					Cast<const Array<int> >(indices)) == 1,
 					Utilities::Exceptions::Exception("SparseMatrix: invalid matrix"));
 #endif
 		}
@@ -80,19 +79,19 @@ namespace Utilities
 		}
 
 		template <class TYPE> inline
-		const NewTypes::Vector<TYPE> SparseMatrix<TYPE>::Values() const
+		const Vector<TYPE> SparseMatrix<TYPE>::Values() const
 		{
 			return this->values;
 		}
 
 		template <class TYPE> inline
-		const NewTypes::Vector<int> SparseMatrix<TYPE>::Indices() const
+		const Vector<int> SparseMatrix<TYPE>::Indices() const
 		{
 			return this->indices;
 		}
 
 		template <class TYPE> inline
-		const NewTypes::Vector<int> SparseMatrix<TYPE>::Counts() const
+		const Vector<int> SparseMatrix<TYPE>::Counts() const
 		{
 			return this->counts;
 		}

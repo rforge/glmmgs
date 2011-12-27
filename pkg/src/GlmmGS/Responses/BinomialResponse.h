@@ -13,12 +13,12 @@ namespace GlmmGS
 		{
 		private:
 			// Fields
-			WeakVector<const int> response;
-			WeakVector<const int> counts;
+			Vector<const int> response;
+			Vector<const int> counts;
 
 		public:
 			// Construction
-			BinomialResponse(WeakVector<const int> response, WeakVector<const int> counts);
+			BinomialResponse(Vector<const int> response, Vector<const int> counts);
 			~BinomialResponse();
 
 			// Properties

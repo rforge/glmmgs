@@ -3,8 +3,6 @@
 
 // Weak types
 #include "WeakString.h"
-#include "WeakVector.h"
-#include "WeakMatrix.h"
 #include "WeakFactor.h"
 
 // Swap, Min, Max
@@ -17,14 +15,20 @@
 #include "New.h"
 
 // Types
+#include "External.h"
 #include "Pointer.h"
+#include "Array.h"
 #include "Buffer.h"
 #include "Stack.h"
 #include "Vector.h"
+#include "VectorBuilder.h"
 #include "Matrix.h"
 #include "TriangularMatrix.h"
 
-// Min, Max (vector version), IsSorted
-#include "VectorAlgorithms.h"
+// Cast
+#include "CastArray.h"
+
+// Functions
+#include "Functions.h"
 
 #endif

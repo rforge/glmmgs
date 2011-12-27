@@ -19,7 +19,7 @@ namespace Utilities
 		void CholeskyDecomposition::Decompose(const TriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
-			this->lower.Size(n);
+			this->lower = TriangularMatrix<double>(n);
 			
 			// Computes lower triangular Matrix such that L * Transpose(L) = A
 			for (int i = 0; i < n; ++i)

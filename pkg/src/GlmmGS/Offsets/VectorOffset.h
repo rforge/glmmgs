@@ -7,17 +7,17 @@ namespace GlmmGS
 {
 	namespace Offsets
 	{
-		// WeakVectorOffset
+		// VectorOffset
 		template <class TYPE>
-		class WeakVectorOffset : public IOffset
+		class VectorOffset : public IOffset
 		{
 		private:
-			WeakVector<TYPE> values;
+			Vector<TYPE> values;
 
 		public:
 			// Construction
-			WeakVectorOffset(WeakVector<TYPE> values);
-			~WeakVectorOffset();
+			VectorOffset(Vector<TYPE> values);
+			~VectorOffset();
 
 			// Methods
 			void InitializePredictor(Vector<double> & eta) const;
@@ -25,19 +25,19 @@ namespace GlmmGS
 
 		// Construction
 		template <class TYPE>
-		WeakVectorOffset<TYPE>::WeakVectorOffset(WeakVector<TYPE> values)
+		VectorOffset<TYPE>::VectorOffset(Vector<TYPE> values)
 			: values(values)
 		{
 		}
 
 		template <class TYPE>
-		WeakVectorOffset<TYPE>::~WeakVectorOffset()
+		VectorOffset<TYPE>::~VectorOffset()
 		{
 		}
 
 		// Methods
 		template <class TYPE>
-		void WeakVectorOffset<TYPE>::InitializePredictor(Vector<double> & eta) const
+		void VectorOffset<TYPE>::InitializePredictor(Vector<double> & eta) const
 		{
 			_ASSERT_ARGUMENT(eta.Size() == this->values.Size());
 			for (int i = 0; i < this->values.Size(); ++i)

@@ -16,17 +16,17 @@ namespace GlmmGS
 			void UpdatePredictor(Vector<double> & eta, double beta) const;
 			double ScalarProduct(const Vector<double> & values) const;
 			double ScalarProduct(const Vector<double> & weights, Pointer<IVariable> variable) const;
-			double ScalarProduct(const Vector<double> & weights, WeakVector<const int> values) const;
-			double ScalarProduct(const Vector<double> & weights, WeakVector<const double> values) const;
-			template <class OTHER> double ScalarProductImpl(const Vector<double> & weights, WeakVector<const OTHER> values) const;
+			double ScalarProduct(const Vector<double> & weights, Vector<const int> values) const;
+			double ScalarProduct(const Vector<double> & weights, Vector<const double> values) const;
+			template <class OTHER> double ScalarProductImpl(const Vector<double> & weights, Vector<const OTHER> values) const;
 
 			// Stratified Operations
 			void UpdatePredictor(Vector<double> & eta, const Vector<double> & beta, WeakFactor factor) const;
 			Vector<double> ScalarProduct(const Vector<double> & values, WeakFactor factor) const;
 			Vector<double> ScalarProduct(const Vector<double> & weights, Pointer<IVariable> variable, WeakFactor factor) const;
-			Vector<double> ScalarProduct(const Vector<double> & weights, WeakVector<const int> values, WeakFactor factor) const;
-			Vector<double> ScalarProduct(const Vector<double> & weights, WeakVector<const double> values, WeakFactor factor) const;
-			template <class OTHER> Vector<double> ScalarProductImpl(const Vector<double> & weights, WeakVector<const OTHER> values, WeakFactor factor) const;
+			Vector<double> ScalarProduct(const Vector<double> & weights, Vector<const int> values, WeakFactor factor) const;
+			Vector<double> ScalarProduct(const Vector<double> & weights, Vector<const double> values, WeakFactor factor) const;
+			template <class OTHER> Vector<double> ScalarProductImpl(const Vector<double> & weights, Vector<const OTHER> values, WeakFactor factor) const;
 
 		public:
 			// Construction
@@ -43,19 +43,19 @@ namespace GlmmGS
 		}
 
 		inline
-		double Intercept::ScalarProduct(const Vector<double> & weights, WeakVector<const int> values) const
+		double Intercept::ScalarProduct(const Vector<double> & weights, Vector<const int> values) const
 		{
 			return this->ScalarProductImpl(weights, values);
 		}
 
 		inline
-		double Intercept::ScalarProduct(const Vector<double> & weights, WeakVector<const double> values) const
+		double Intercept::ScalarProduct(const Vector<double> & weights, Vector<const double> values) const
 		{
 			return this->ScalarProductImpl(weights, values);
 		}
 
 		template <class OTHER>
-		double Intercept::ScalarProductImpl(const Vector<double> & weights, WeakVector<const OTHER> values) const
+		double Intercept::ScalarProductImpl(const Vector<double> & weights, Vector<const OTHER> values) const
 		{
 			_ASSERT_ARGUMENT(weights.Size() == values.Size());
 			const int n = values.Size();
@@ -74,19 +74,19 @@ namespace GlmmGS
 		}
 
 		inline
-		Vector<double> Intercept::ScalarProduct(const Vector<double> & weights, WeakVector<const int> values, WeakFactor factor) const
+		Vector<double> Intercept::ScalarProduct(const Vector<double> & weights, Vector<const int> values, WeakFactor factor) const
 		{
 			return this->ScalarProductImpl(weights, values, factor);
 		}
 
 		inline
-		Vector<double> Intercept::ScalarProduct(const Vector<double> & weights, WeakVector<const double> values, WeakFactor factor) const
+		Vector<double> Intercept::ScalarProduct(const Vector<double> & weights, Vector<const double> values, WeakFactor factor) const
 		{
 			return this->ScalarProductImpl(weights, values, factor);
 		}
 	
 		template <class OTHER>
-		Vector<double> Intercept::ScalarProductImpl(const Vector<double> & weights, WeakVector<const OTHER> values, WeakFactor factor) const
+		Vector<double> Intercept::ScalarProductImpl(const Vector<double> & weights, Vector<const OTHER> values, WeakFactor factor) const
 		{
 			_ASSERT_ARGUMENT(weights.Size() == values.Size() && factor.Size() == values.Size());
 			const int n = values.Size();

@@ -1,4 +1,5 @@
 #include "Comparer.h"
+#include "Algorithms.h"
 #include "Vector.h"
 #include "Exceptions/Assertions.h"
 #include <math.h>

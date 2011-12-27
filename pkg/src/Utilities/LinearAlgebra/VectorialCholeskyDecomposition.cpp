@@ -69,7 +69,7 @@ namespace Utilities
 				for (int k = i - 1; k >= 0; --k)
 					for (int l = 0; l < L; ++l)
 						sum(l) -= this->lower(i, k)(l) * x(k)(l);
-				x(i).Size(L);
+				x(i) = Vector<double>(L);
 				for (int l = 0; l < L; ++l)
 					x(i)(l) = sum(l) / diag(l);
 			}
@@ -102,11 +102,11 @@ namespace Utilities
 					const int L = diag.Size();
 					Vector<double> sum(L);
 					if (i == j)
-						sum = 1.0;
+						Set(sum, 1.0);
 					for (int k = i - 1; k >= j; --k)
 						for (int l = 0; l < L; ++l)
 							sum(l) -= this->lower(i, k)(l) * X(k, j)(l);
-					X(i, j).Size(L);
+					X(i, j) = Vector<double>(L);
 					for (int l = 0; l < L; ++l)
 						X(i, j)(l) = sum(l) / diag(l);
 				}

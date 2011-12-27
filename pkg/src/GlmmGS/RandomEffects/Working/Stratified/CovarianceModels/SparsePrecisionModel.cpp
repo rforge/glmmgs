@@ -17,7 +17,7 @@ namespace GlmmGS
 					SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R)
 						: ICovarianceModel(nvars), nvars(nvars), R(R)
 					{
-						this->theta = 1.0;
+						Set(this->theta, 1.0);
 					}
 
 					SparsePrecisionModel::~SparsePrecisionModel()
@@ -31,17 +31,17 @@ namespace GlmmGS
 						const int nlevels = this->R.NumberOfColumns();
 						const int size = this->nvars * nlevels;
 						Vector<double> variance(size);
-						NewTypes::Vector<double> b(size);
+						Vector<double> b(size);
 						for (int j = 0, jk = 0; j < this->nvars; ++j)
 						{
 							for (int k = 0; k < nlevels; ++k, ++jk)
 							{
 								// Prepare b
-								NewTypes::Set(b, 0.0);
+								Set(b, 0.0);
 								b(jk) = 1.0;
 
 								// Solve T_j x = b
-								NewTypes::Vector<double> x = this->beta_precision_chol.Solve(b);
+								Vector<double> x = this->beta_precision_chol.Solve(b);
 
 								// Calculate standard-error
 								variance(jk) = x(jk);
@@ -63,9 +63,9 @@ namespace GlmmGS
 						const int ncols = nlevels * this->nvars;
 
 						// Data structures of the sparse matrix
-						NewTypes::Vector<double> values(count);
-						NewTypes::Vector<int> indices(count);
-						NewTypes::Vector<int> counts(ncols + 1);
+						Vector<double> values(count);
+						Vector<int> indices(count);
+						Vector<int> counts(ncols + 1);
 
 						// Set vector of counts
 						counts(0) = 0;
@@ -139,14 +139,14 @@ namespace GlmmGS
 						const int nlevels = this->R.NumberOfColumns();
 						const int size = this->nvars * nlevels;
 						Matrix<double> a(size, size);
-						NewTypes::Vector<double> b(size);
+						Vector<double> b(size);
 						for (int j = 0, jk = 0; j < this->nvars; ++j)
 						{
 							const int offset = j * nlevels;
 							for (int k = 0; k < nlevels; ++k, ++jk)
 							{
 								// Prepare b
-								NewTypes::Set(b, 0.0);
+								Set(b, 0.0);
 								const int p2 = this->R.Count(k + 1);
 								for (int p = this->R.Count(k); p < p2; ++p)
 								{
@@ -155,7 +155,7 @@ namespace GlmmGS
 								}
 
 								// Solve T_j x = b
-								NewTypes::Vector<double> x = this->beta_precision_chol.Solve(b);
+								Vector<double> x = this->beta_precision_chol.Solve(b);
 
 								// Store x
 								for (int i = 0; i < size; ++i)
@@ -183,7 +183,7 @@ namespace GlmmGS
 					{
 						// Add diagonal terms
 						const int nlevels = this->R.NumberOfColumns();
-						NewTypes::Vector<double> jac(nlevels * this->nvars);
+						Vector<double> jac(nlevels * this->nvars);
 						for (int index = 0, i = 0; i < this->nvars; ++i)
 							for (int k = 0; k < nlevels; ++k, ++index)
 							{
@@ -193,13 +193,13 @@ namespace GlmmGS
 							}
 
 						// Solve
-						NewTypes::Vector<double> h_tmp = this->beta_precision_chol.Solve(jac);
+						Vector<double> h_tmp = this->beta_precision_chol.Solve(jac);
 
 						// Copy update. TODO: Change return type to NewType::Vector
 						Vector<Vector<double> > h(this->nvars);
 						for (int index = 0, i = 0; i < this->nvars; ++i)
 						{
-							h(i).Size(nlevels);
+							h(i) = Vector<double>(nlevels);
 							for (int k = 0; k < nlevels; ++k, ++index)
 								h(i)(k) = h_tmp(index);
 						}

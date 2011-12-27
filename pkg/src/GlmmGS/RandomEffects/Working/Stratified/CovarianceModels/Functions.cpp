@@ -11,7 +11,7 @@ namespace GlmmGS
 				namespace CovarianceModels
 				{
 					// Weighted square norm of vector
-					double Square(WeakMatrix<const double> m, const Vector<double> & x)
+					double Square(Matrix<const double> m, const Vector<double> & x)
 					{
 						_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 						const int size = x.Size();
@@ -76,7 +76,7 @@ namespace GlmmGS
 
 
 					// Matrix product
-					double MatrixProduct(int k, WeakMatrix<const double> m, const Vector<double> & x)
+					double MatrixProduct(int k, Matrix<const double> m, const Vector<double> & x)
 					{
 						const int size = m.NumberOfRows();
 						double sum = 0.0;

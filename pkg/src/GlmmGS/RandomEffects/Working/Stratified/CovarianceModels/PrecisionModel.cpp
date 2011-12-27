@@ -14,10 +14,10 @@ namespace GlmmGS
 				namespace CovarianceModels
 				{
 					// Construction
-					PrecisionModel::PrecisionModel(int nvars, WeakMatrix<const double> R)
+					PrecisionModel::PrecisionModel(int nvars, Matrix<const double> R)
 						: ICovarianceModel(nvars), nvars(nvars), R(R)
 					{
-						this->theta = 1.0;
+						Set(this->theta, 1.0);
 					}
 
 					PrecisionModel::~PrecisionModel()
@@ -37,7 +37,7 @@ namespace GlmmGS
 							for (int k = 0; k < nlevels; ++k, ++jk)
 							{
 								// Set b
-								b = 0.0;
+								Set(b, 0.0);
 								b(jk) = 1.0;
 
 								// Solve T_j x = b
@@ -93,7 +93,7 @@ namespace GlmmGS
 							for (int k = 0; k < nlevels; ++k, ++ik)
 							{
 								// Prepare b
-								b = 0.0;
+								Set(b, 0.0);
 								const int offset = i * nlevels;
 								for (int l = 0; l < nlevels; ++l)
 									b(offset + l) = this->R(l, k);
@@ -137,7 +137,7 @@ namespace GlmmGS
 						Vector<Vector<double> > h(this->nvars);
 						for (int index = 0, i = 0; i < this->nvars; ++i)
 						{
-							h(i).Size(nlevels);
+							h(i) = Vector<double>(nlevels);
 							for (int k = 0; k < nlevels; ++k, ++index)
 								h(i)(k) = h_tmp(index);
 						}

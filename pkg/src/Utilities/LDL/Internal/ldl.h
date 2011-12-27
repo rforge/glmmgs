@@ -1,7 +1,7 @@
 #ifndef UTILITIES_LDL_INTERNAL_LDL_H
 #define UTILITIES_LDL_INTERNAL_LDL_H
 
-#include "../../NewTypes/Array.h"
+#include "../../Array.h"
 
 /* ========================================================================== */
 /* === ldl.h:  include file for the LDL package ============================= */
@@ -30,7 +30,7 @@ namespace Utilities
 	{
 		namespace Internal
 		{
-			using namespace Utilities::NewTypes;
+			using namespace Utilities;
 
 			void LDL_symbolic(int n,
 					const Array<int> Ap,

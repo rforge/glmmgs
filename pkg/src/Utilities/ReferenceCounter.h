@@ -14,48 +14,49 @@ namespace Utilities
 		const ReferenceCounter & operator =(const ReferenceCounter &);
 
 		// Fields
-		int * counter;
+		int * count;
 
 	public:
-		// Attributes
-		int Count() const;
-
 		// Construction
 		ReferenceCounter();
 		explicit ReferenceCounter(void * ptr);
-		ReferenceCounter(const ReferenceCounter & refCounter); // Add reference
+		ReferenceCounter(const ReferenceCounter & counter);
+
+		// Attributes
+		int Count() const;
 		
 		// Methods
 		void Reset(void * ptr);
-		void AddReference(const ReferenceCounter & refCounter);
-		int RemoveReference();
+		void Increment(const ReferenceCounter & counter);
+		int Decrement();
 	};
 
-	// Definition
-	inline
-	int ReferenceCounter::Count() const
-	{
-		return this->counter ? *this->counter : 0;
-	}
-	
+	// Construction
 	inline
 	ReferenceCounter::ReferenceCounter()
-		: counter(NULL)
+		: count(NULL)
 	{
 	}
 
 	inline
 	ReferenceCounter::ReferenceCounter(void * ptr)
-		: counter(ptr != NULL ? new(bl) int(1) : NULL)
+		: count(ptr != NULL ? new(bl) int(1) : NULL)
 	{
 	}
 
 	inline
 	ReferenceCounter::ReferenceCounter(const ReferenceCounter & refCounter)
-		: counter(refCounter.counter)
+		: count(refCounter.count)
 	{
-		if (this->counter != NULL)
-			++(*this->counter);
+		if (this->count != NULL)
+			++(*this->count);
+	}
+
+	// Attributes
+	inline
+	int ReferenceCounter::Count() const
+	{
+		return this->count ? *this->count : 0;
 	}
 }
 

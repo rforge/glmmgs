@@ -16,14 +16,14 @@ namespace GlmmGSAPI
 		{
 		}
 
-		void BinomialResponseSection::AddResponse(WeakVector<const int> values)
+		void BinomialResponseSection::AddResponse(Vector<const int> values)
 		{
-			this->values.Reset(new(bl) WeakVector<const int>(values));
+			this->values.Reset(new(bl) Vector<const int>(values));
 		}
 
-		void BinomialResponseSection::AddCounts(WeakVector<const int> counts)
+		void BinomialResponseSection::AddCounts(Vector<const int> counts)
 		{
-			this->counts.Reset(new(bl) WeakVector<const int>(counts));
+			this->counts.Reset(new(bl) Vector<const int>(counts));
 		}
 
 		void BinomialResponseSection::EndResponse()

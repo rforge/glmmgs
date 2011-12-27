@@ -13,12 +13,12 @@ namespace GlmmGSAPI
 		{
 		private:
 			// Fields
-			Pointer<WeakVector<const int> > values;
-			Pointer<WeakVector<const int> > counts;
+			Pointer<Vector<const int> > values;
+			Pointer<Vector<const int> > counts;
 
 			// Implementation
-			void AddResponse(WeakVector<const int> values);
-			void AddCounts(WeakVector<const int> values);
+			void AddResponse(Vector<const int> values);
+			void AddCounts(Vector<const int> values);
 			void EndResponse();
 
 		public:

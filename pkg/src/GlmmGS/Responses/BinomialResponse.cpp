@@ -6,7 +6,7 @@ namespace GlmmGS
 	namespace Responses
 	{
 		// BinomialResponse
-		BinomialResponse::BinomialResponse(WeakVector<const int> response, WeakVector<const int> counts) :
+		BinomialResponse::BinomialResponse(Vector<const int> response, Vector<const int> counts) :
 			response(response), counts(counts)
 		{
 			_VALIDATE_ARGUMENT(this->response.Size() == this->counts.Size());

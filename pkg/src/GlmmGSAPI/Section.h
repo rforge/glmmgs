@@ -34,15 +34,15 @@ namespace GlmmGSAPI
 		virtual void EndBlock();
 		virtual Pointer<Section> BeginStratifiedBlock(WeakFactor factor);
 		virtual void EndStratifiedBlock();
-		virtual void AddResponse(WeakVector<const int> values);
-		virtual void AddCounts(WeakVector<const int> values);
-		virtual void AddOffset(WeakVector<const int> values);
-		virtual void AddOffset(WeakVector<const double> values);
+		virtual void AddResponse(Vector<const int> values);
+		virtual void AddCounts(Vector<const int> values);
+		virtual void AddOffset(Vector<const int> values);
+		virtual void AddOffset(Vector<const double> values);
 		virtual void AddIntercept();
-		virtual void AddCovariate(WeakVector<const int> values);
-		virtual void AddCovariate(WeakVector<const double> values);
+		virtual void AddCovariate(Vector<const int> values);
+		virtual void AddCovariate(Vector<const double> values);
 		virtual void AddIdentityCovarianceModel();
-		virtual void AddPrecisionModel(WeakMatrix<const double> precision);
+		virtual void AddPrecisionModel(Matrix<const double> precision);
 		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
 	};
 }

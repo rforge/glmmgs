@@ -30,23 +30,23 @@ namespace GlmmGSAPI
 				this->variables.Add(Pointer<T>(new(bl) T));
 			}
 
-			void BlockSection::AddCovariate(WeakVector<const int> values)
+			void BlockSection::AddCovariate(Vector<const int> values)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				// Add covariate
-				typedef GlmmGS::Variables::WeakVectorVariable<const int> T;
+				typedef GlmmGS::Variables::VectorVariable<const int> T;
 				this->variables.Add(Pointer<T>(new(bl) T(values)));
 			}
 
-			void BlockSection::AddCovariate(WeakVector<const double> values)
+			void BlockSection::AddCovariate(Vector<const double> values)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				// Add covariate
-				typedef GlmmGS::Variables::WeakVectorVariable<const double> T;
+				typedef GlmmGS::Variables::VectorVariable<const double> T;
 				this->variables.Add(Pointer<T>(new(bl) T(values)));
 			}
 
@@ -60,7 +60,7 @@ namespace GlmmGSAPI
 				this->covariance_model.Reset(new(bl) T(this->variables.Size()));
 			}
 
-			void BlockSection::AddPrecisionModel(WeakMatrix<const double> precision)
+			void BlockSection::AddPrecisionModel(Matrix<const double> precision)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
@@ -77,7 +77,7 @@ namespace GlmmGSAPI
 
 				// Add random effect block to random effects;
 				typedef GlmmGS::RandomEffects::Global::Block T;
-				this->api.random_effects.Add(Pointer<T>(new(bl) T(this->variables, this->covariance_model)));
+				this->api.random_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(), this->covariance_model)));
 			}
 		}
 	}

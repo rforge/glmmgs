@@ -13,11 +13,11 @@ namespace GlmmGS
 		{
 		private:
 			// Fields
-			WeakVector<const int> response;
+			Vector<const int> response;
 
 		public:
 			// Construction
-			PoissonResponse(WeakVector<const int> response);
+			PoissonResponse(Vector<const int> response);
 			~PoissonResponse();
 
 			// Properties
