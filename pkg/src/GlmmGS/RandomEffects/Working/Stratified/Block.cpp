@@ -78,7 +78,7 @@ namespace GlmmGS
 					this->booster->Reparameterize(this->beta(0));
 
 					// Evaluate coefficients update
-					Vector<Vector<double> > h = this->covariance_model->CoefficientsUpdate(jacobian, this->beta);
+					Vector<Vector<double> > h = this->covariance_model->UpdateCoefficients(jacobian, this->beta);
 
 					// Re-parameterize updates
 					this->booster->Reparameterize(h(0));

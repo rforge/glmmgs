@@ -40,7 +40,7 @@ namespace GlmmGS
 						// Methods
 						virtual void Decompose(const TriangularMatrix<Vector<double> > & precision) = 0;
 						virtual int Update(const Vector<Vector<double> > & beta, const Controls & controls) = 0;
-						virtual Vector<Vector<double> > CoefficientsUpdate(const Vector<Vector<double> > & jacobian,
+						virtual Vector<Vector<double> > UpdateCoefficients(const Vector<Vector<double> > & jacobian,
 								const Vector<Vector<double> > & beta) const = 0;
 					};
 				}

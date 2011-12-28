@@ -127,7 +127,7 @@ namespace GlmmGS
 						return ICovarianceModel::Update(minus_hessian, jac, controls);
 					}
 
-					Vector<double> PrecisionModel::CoefficientsUpdate(const Vector<double> & design_jacobian, const Vector<double> & beta) const
+					Vector<double> PrecisionModel::UpdateCoefficients(const Vector<double> & design_jacobian, const Vector<double> & beta) const
 					{
 						// Add diagonal terms
 						const int size = this->R.NumberOfRows();

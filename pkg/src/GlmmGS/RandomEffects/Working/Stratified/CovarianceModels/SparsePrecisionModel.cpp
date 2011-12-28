@@ -179,7 +179,7 @@ namespace GlmmGS
 						return ICovarianceModel::Update(minus_hessian, jac, controls);
 					}
 
-					Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
+					Vector<Vector<double> > SparsePrecisionModel::UpdateCoefficients(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
 					{
 						// Add diagonal terms
 						const int nlevels = this->R.NumberOfColumns();

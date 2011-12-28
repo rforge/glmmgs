@@ -60,7 +60,7 @@ namespace GlmmGS
 					this->covariance_model->Decompose(precision);
 
 					// Evaluate coefficients update
-					Vector<double> h = covariance_model->CoefficientsUpdate(jacobian, this->beta);
+					Vector<double> h = covariance_model->UpdateCoefficients(jacobian, this->beta);
 
 					// Print
 					if (controls.Verbose())

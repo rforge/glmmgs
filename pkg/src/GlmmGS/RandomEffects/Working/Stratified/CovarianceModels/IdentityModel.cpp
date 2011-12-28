@@ -72,7 +72,7 @@ namespace GlmmGS
 						return ICovarianceModel::Update(minus_hessian, jac, controls);
 					}
 
-					Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
+					Vector<Vector<double> > IdentityModel::UpdateCoefficients(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
 					{
 						// Add diagonal terms
 						Vector<Vector<double> > jac = jacobian;
