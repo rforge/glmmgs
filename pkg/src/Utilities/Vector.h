@@ -39,7 +39,6 @@ namespace Utilities
 		const TYPE & operator ()(int i) const;
 	};
 
-
 	// Definition
 
 	// Construction

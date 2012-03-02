@@ -21,21 +21,6 @@ namespace Utilities
 		*bptr = tmp;
 	}
 
-	// Move
-	template <class TYPE>
-	void Move(TYPE & a, TYPE & b)
-	{
-		struct Bytes 
-		{
-			unsigned char x[sizeof(TYPE)];
-		};
-
-		Bytes * aptr = reinterpret_cast<Bytes *>(&a);
-		Bytes * bptr = reinterpret_cast<Bytes *>(&b);
-		*aptr = *bptr;
-		memset(reinterpret_cast<void *>(bptr), 0, sizeof(TYPE));
-	}
-
 	// Min
 	template <class TYPE> inline
 	const TYPE & Min(const TYPE &  a, const TYPE & b)

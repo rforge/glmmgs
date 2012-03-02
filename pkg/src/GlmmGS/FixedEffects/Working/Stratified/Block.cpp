@@ -54,15 +54,11 @@ namespace GlmmGS
 					TriangularMatrix<Vector<double> > precision(nvars);
 					for (int j = 0; j < nvars; ++j)
 					{
-						// Evaluate jacobian (return value optimization)
-						Vector<double> ret_jacobian = Variables::ScalarProduct(this->variables(j), values, this->factor);
-						Move(jacobian(j), ret_jacobian);
-						// Evaluate precision (return value optimization)
+						// Evaluate jacobian
+						jacobian(j) = Variables::ScalarProduct(this->variables(j), values, this->factor);
+						// Evaluate precision
 						for (int k = 0; k <= j; ++k)
-						{
-							Vector<double> ret_precision =  Variables::ScalarProduct(this->variables(j), weights, this->variables(k), this->factor);
-							Move(precision(j, k), ret_precision);
-						}
+							precision(j, k) =  Variables::ScalarProduct(this->variables(j), weights, this->variables(k), this->factor);
 					}
 					// Decompose precision
 					this->chol.Decompose(precision);

@@ -60,14 +60,12 @@ namespace GlmmGS
 					Vector<Vector<double> > jacobian(nvars);
 					for (int j = 0; j < nvars; ++j)
 					{
-						// Evaluate jacobian (return value optimization)
-						Vector<double> jacobian_j = Variables::ScalarProduct(this->variables(j), values, this->factor);
-						Move(jacobian(j), jacobian_j);
+						// Evaluate jacobian
+						jacobian(j) = Variables::ScalarProduct(this->variables(j), values, this->factor);
 						for (int k = 0; k <= j; ++k)
 						{
-							// Evaluate precision (return value optimization)
-							Vector<double> precision_jk =  Variables::ScalarProduct(this->variables(j), weights, this->variables(k), this->factor);
-							Move(precision(j, k), precision_jk);
+							// Evaluate precision
+							precision(j, k) =  Variables::ScalarProduct(this->variables(j), weights, this->variables(k), this->factor);
 						}
 					}
 

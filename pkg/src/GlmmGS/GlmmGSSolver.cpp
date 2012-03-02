@@ -110,10 +110,7 @@ namespace GlmmGS
 		const int nblocks = this->fixed_effects.Size();
 		Vector<Vector<Estimate> > estimates(nblocks);
 		for (int block = 0; block < nblocks; ++block)
-		{
-			Vector<Estimate> tmp = this->fixed_effects(block)->Coefficients();
-			Move(estimates(block), tmp);
-		}
+			estimates(block) = this->fixed_effects(block)->Coefficients();
 		return estimates;
 	}
 
@@ -122,10 +119,7 @@ namespace GlmmGS
 		const int nblocks = this->random_effects.Size();
 		Vector<Vector<Estimate> > estimates(nblocks);
 		for (int block = 0; block < nblocks; ++block)
-		{
-			Vector<Estimate> tmp = this->random_effects(block)->Coefficients();
-			Move(estimates(block), tmp);
-		}
+			estimates(block) = this->random_effects(block)->Coefficients();
 		return estimates;
 	}
 
@@ -134,10 +128,7 @@ namespace GlmmGS
 		const int nblocks = this->random_effects.Size();
 		Vector<Vector<Estimate> > estimates(nblocks);
 		for (int block = 0; block < nblocks; ++block)
-		{
-			Vector<Estimate> tmp = this->random_effects(block)->CovarianceComponents();
-			Move(estimates(block), tmp);
-		}
+			estimates(block) = this->random_effects(block)->CovarianceComponents();
 		return estimates;
 	}
 }
