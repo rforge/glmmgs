@@ -9,23 +9,20 @@ namespace GlmmGSAPI
 	namespace RandomEffects
 	{
 		// RandomEffectsSection
-		RandomEffectsSection::RandomEffectsSection(GlmmGSAPI & api)
-			: Section(api)
+		RandomEffectsSection::RandomEffectsSection(Section & section)
+			: Section(section)
 		{
-		}
 
-		RandomEffectsSection::~RandomEffectsSection()
-		{
 		}
 
 		Pointer<Section> RandomEffectsSection::BeginBlock()
 		{
-			return Pointer<Section>(new(bl) Global::BlockSection(this->api));
+			return Pointer<Section>(new(bl) Global::BlockSection(*this));
 		}
 
 		Pointer<Section> RandomEffectsSection::BeginStratifiedBlock(WeakFactor factor)
 		{
-			return Pointer<Section>(new(bl) Stratified::BlockSection(this->api, factor));
+			return Pointer<Section>(new(bl) Stratified::BlockSection(*this, factor));
 		}
 	
 		void RandomEffectsSection::EndRandomEffects()

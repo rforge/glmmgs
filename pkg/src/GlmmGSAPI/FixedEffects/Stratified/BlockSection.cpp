@@ -9,18 +9,14 @@ namespace GlmmGSAPI
 		namespace Stratified
 		{
 			// BlockSection
-			BlockSection::BlockSection(GlmmGSAPI & api, WeakFactor factor)
-				: Section(api), factor(factor)
-			{
-			}
-
-			BlockSection::~BlockSection()
+			BlockSection::BlockSection(const Section & section, WeakFactor factor)
+				: Section(section), factor(factor)
 			{
 			}
 
 			void BlockSection::AddIntercept()
 			{
-				this->api.fixed_intercept = true;
+				this->data->fixed_intercept = true;
 				typedef GlmmGS::Variables::Intercept T;
 				this->variables.Add(Pointer<T>(new(bl) T));
 			}
@@ -40,7 +36,7 @@ namespace GlmmGSAPI
 			void BlockSection::EndStratifiedBlock()
 			{
 				typedef GlmmGS::FixedEffects::Stratified::Block T;
-				this->api.fixed_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(), this->factor)));
+				this->data->fixed_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(), this->factor)));
 			}
 		}
 	}

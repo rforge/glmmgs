@@ -19,8 +19,7 @@ namespace GlmmGSAPI
 
 		public:
 			// Construction
-			RandomEffectsSection(GlmmGSAPI & api);
-			~RandomEffectsSection();
+			RandomEffectsSection(Section & section);
 		};
 	}
 }

@@ -10,13 +10,10 @@ namespace GlmmGSAPI
 		namespace Global
 		{
 			// Construction
-			BlockSection::BlockSection(GlmmGSAPI & api)
-				: Section(api)
+			BlockSection::BlockSection(const Section & section)
+				: Section(section)
 			{
-			}
 
-			BlockSection::~BlockSection()
-			{
 			}
 
 			// Implementation
@@ -77,7 +74,7 @@ namespace GlmmGSAPI
 
 				// Add random effect block to random effects;
 				typedef GlmmGS::RandomEffects::Global::Block T;
-				this->api.random_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(), this->covariance_model)));
+				this->data->random_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(), this->covariance_model)));
 			}
 		}
 	}

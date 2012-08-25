@@ -9,18 +9,15 @@ namespace GlmmGSAPI
 		namespace Global
 		{
 			// BlockSection
-			BlockSection::BlockSection(GlmmGSAPI & api) : Section(api)
+			BlockSection::BlockSection(const Section & section)
+				: Section(section)
 			{
+
 			}
 
-			BlockSection::~BlockSection()
-			{
-			}
-
-			// Implementation
 			void BlockSection::AddIntercept()
 			{
-				this->api.fixed_intercept = true;
+				this->data->fixed_intercept = true;
 				typedef GlmmGS::Variables::Intercept T;
 				this->variables.Add(Pointer<T>(new(bl) T));
 			}
@@ -40,7 +37,7 @@ namespace GlmmGSAPI
 			void BlockSection::EndBlock()
 			{
 				typedef GlmmGS::FixedEffects::Global::Block T;
-				this->api.fixed_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector())));
+				this->data->fixed_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector())));
 			}
 		}
 	}

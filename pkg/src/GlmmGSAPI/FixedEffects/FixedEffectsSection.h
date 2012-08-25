@@ -19,8 +19,7 @@ namespace GlmmGSAPI
 
 		public:
 			// Construction
-			FixedEffectsSection(GlmmGSAPI & api);
-			~FixedEffectsSection();
+			FixedEffectsSection(const Section & section);
 		};
 	}
 }

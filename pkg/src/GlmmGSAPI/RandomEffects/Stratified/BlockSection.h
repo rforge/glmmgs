@@ -31,8 +31,7 @@ namespace GlmmGSAPI
 
 			public:
 				// Construction
-				BlockSection(GlmmGSAPI & api, WeakFactor factor);
-				~BlockSection();
+				BlockSection(const Section & section, WeakFactor factor);
 			};
 		}
 	}

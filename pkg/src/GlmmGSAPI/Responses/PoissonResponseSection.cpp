@@ -7,13 +7,10 @@ namespace GlmmGSAPI
 	namespace Responses
 	{
 		// PoissonResponseSection
-		PoissonResponseSection::PoissonResponseSection(GlmmGSAPI & api)
-			: Section(api)
+		PoissonResponseSection::PoissonResponseSection(const Section & section)
+			: Section(section)
 		{
-		}
 
-		PoissonResponseSection::~PoissonResponseSection()
-		{
 		}
 
 		void PoissonResponseSection::AddResponse(Vector<const int> values)
@@ -23,7 +20,7 @@ namespace GlmmGSAPI
 
 		void PoissonResponseSection::EndResponse()
 		{
-			this->api.response.Reset(new(bl) GlmmGS::Responses::PoissonResponse(*this->values));
+			this->data->response.Reset(new(bl) GlmmGS::Responses::PoissonResponse(*this->values));
 		}
 	}
 }

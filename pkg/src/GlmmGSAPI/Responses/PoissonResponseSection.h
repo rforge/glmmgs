@@ -22,8 +22,7 @@ namespace GlmmGSAPI
 
 		public:
 			// Construction
-			PoissonResponseSection(GlmmGSAPI & api);
-			~PoissonResponseSection();
+			PoissonResponseSection(const Section & section);
 		};
 	}
 }

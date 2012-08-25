@@ -12,7 +12,7 @@ namespace GlmmGSAPI
 
 	// GlmmGSAPI
 	GlmmGSAPI::GlmmGSAPI()
-		: last_error(error_buffer_size), fixed_intercept(false)
+		: last_error(error_buffer_size)
 	{
 	}
 
@@ -41,14 +41,13 @@ namespace GlmmGSAPI
 		// Reset
 		this->sections.Free();
 		this->last_error.Empty();
-		this->response.Reset();
-		this->offset.Reset();
-		this->fixed_effects.Free();
-		this->random_effects.Free();
-		this->fixed_intercept = false;
+		this->response = Pointer<GlmmGS::Responses::IResponse>();
+		this->offset = Pointer<GlmmGS::Offsets::IOffset>();
+		this->fixed_effects = Vector<Pointer<GlmmGS::FixedEffects::IBlock> >();
+		this->random_effects = Vector<Pointer<GlmmGS::RandomEffects::IBlock> >();
 	}
 
-	void GlmmGSAPI::Begin()
+	void GlmmGSAPI::BeginModel()
 	{
 		if (this->sections.IsEmpty() == false)
 			throw Exception("Invalid call: Begin");
@@ -57,18 +56,23 @@ namespace GlmmGSAPI
 		this->Tidy();
 
 		// Begin
-		this->sections.Push(Pointer<Section>(new(bl) Section(*this)));
+		this->sections.Push(Section::Begin());
 	}
 
-	void GlmmGSAPI::End()
+	void GlmmGSAPI::EndModel()
 	{
-		// End
-		this->sections.Pop();
-		if (this->sections.IsEmpty() == false)
+		if (this->sections.Size() != 1)
 			throw Exception("Invalid call: End");
 
-		// Tide-up
-		this->Tidy();
+		// Copy variables
+		this->response = this->sections.Top()->data->response;
+		this->offset = this->sections.Top()->data->offset;
+		this->fixed_effects = this->sections.Top()->data->fixed_effects.ToVector();
+		this->random_effects = this->sections.Top()->data->random_effects.ToVector();
+
+		// End sections
+		this->sections.Top()->End();
+		this->sections.Pop();
 	}
 
 	void GlmmGSAPI::BeginResponse(WeakString<const char> family)
@@ -190,6 +194,6 @@ namespace GlmmGSAPI
 			this->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset());
 
 		// Fit the model
-		this->glmmGS.Fit(this->response, this->offset, this->fixed_effects.ToVector(), this->random_effects.ToVector(), controls);
+		this->glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
 	}
 }

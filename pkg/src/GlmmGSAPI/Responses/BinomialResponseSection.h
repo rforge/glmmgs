@@ -23,8 +23,7 @@ namespace GlmmGSAPI
 
 		public:
 			// Construction
-			BinomialResponseSection(GlmmGSAPI & api);
-			~BinomialResponseSection();
+			BinomialResponseSection(const Section & section);
 		};
 	}
 }

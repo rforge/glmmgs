@@ -10,12 +10,8 @@ namespace GlmmGSAPI
 		namespace Stratified
 		{
 			// BlockSection
-			BlockSection::BlockSection(GlmmGSAPI & api, WeakFactor factor)
-				: Section(api), factor(factor), booster(new(bl) GlmmGS::RandomEffects::Working::Stratified::Boosters::Default)
-			{
-			}
-
-			BlockSection::~BlockSection()
+			BlockSection::BlockSection(const Section & section, WeakFactor factor)
+				: Section(section), factor(factor), booster(new(bl) GlmmGS::RandomEffects::Working::Stratified::Boosters::Default)
 			{
 			}
 
@@ -24,7 +20,7 @@ namespace GlmmGSAPI
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
-				if (this->api.fixed_intercept == true)
+				if (this->data->fixed_intercept == true)
 					this->booster.Reset(new(bl) GlmmGS::RandomEffects::Working::Stratified::Boosters::RemoveMean);
 
 				// Add intercept
@@ -89,7 +85,7 @@ namespace GlmmGSAPI
 
 				// Add random effect block to random effects;
 				typedef GlmmGS::RandomEffects::Stratified::Block T;
-				this->api.random_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(),
+				this->data->random_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(),
 						this->factor, this->covariance_model, this->booster)));
 			}
 		}

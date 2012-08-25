@@ -8,8 +8,8 @@ extern "C"
 
 	// Sections
 	void GlmmGSRAPI_Tidy();
-	void GlmmGSRAPI_Begin();
-	void GlmmGSRAPI_End();
+	void GlmmGSRAPI_BeginModel();
+	void GlmmGSRAPI_EndModel();
 	void GlmmGSRAPI_BeginResponse(const char ** family, const int * length);
 	void GlmmGSRAPI_EndResponse();
 	void GlmmGSRAPI_BeginFixedEffects();

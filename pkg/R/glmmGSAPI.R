@@ -26,17 +26,17 @@ glmmGSAPI.Tidy = function()
 	.C("GlmmGSRAPI_Tidy", PACKAGE = "glmmGS");
 }
 
-# Begin glmmGSAPI
-glmmGSAPI.Begin = function()
+# Begin model definition
+glmmGSAPI.BeginModel = function()
 {
-	.C("GlmmGSRAPI_Begin", PACKAGE = "glmmGS");
+	.C("GlmmGSRAPI_BeginModel", PACKAGE = "glmmGS");
 	glmmGSAPI.GetLastError();
 }
 
-# End glmmGSAPI
-glmmGSAPI.End = function()
+# End model definition
+glmmGSAPI.EndModel = function()
 {
-	.C("GlmmGSRAPI_End", PACKAGE = "glmmGS");
+	.C("GlmmGSRAPI_EndModel", PACKAGE = "glmmGS");
 	glmmGSAPI.GetLastError();
 }
 

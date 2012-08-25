@@ -10,18 +10,19 @@ namespace GlmmGSAPI
 	class GlmmGSAPI
 	{
 	private:
-		// Fields
+		// State machine
+		Stack<Pointer<Section> > sections;
+
+		// Error variables
 		static const int error_buffer_size = 1024;
 		Buffer last_error;
-		Stack<Pointer<Section> > sections;
-		GlmmGS::GlmmGS glmmGS;
 
-	public:
+		// Simulation variables
 		Pointer<GlmmGS::Responses::IResponse> response;
 		Pointer<GlmmGS::Offsets::IOffset> offset;
-		VectorBuilder<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
-		VectorBuilder<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
-		bool fixed_intercept;
+		Vector<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
+		Vector<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
+		GlmmGS::GlmmGS glmmGS;
 
 	public:
 		// Construction
@@ -34,8 +35,8 @@ namespace GlmmGSAPI
 
 		// Sections
 		void Tidy();
-		void Begin();
-		void End();
+		void BeginModel();
+		void EndModel();
 		void BeginResponse(WeakString<const char> family);
 		void EndResponse();
 		void BeginFixedEffects();

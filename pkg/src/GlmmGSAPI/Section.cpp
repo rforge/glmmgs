@@ -9,13 +9,24 @@
 namespace GlmmGSAPI
 {
 	// Section
-	Section::Section(GlmmGSAPI & api) :
-		api(api)
+	Section::Section()
+		: data(new(bl) Data)
 	{
 	}
 
 	Section::~Section()
 	{
+
+	}
+
+	Pointer<Section> Section::Begin()
+	{
+		return Pointer<Section>(new(bl) Section);
+	}
+
+	void Section::End()
+	{
+		this->data.Reset();
 	}
 
 	Pointer<Section> Section::BeginResponse(WeakString<const char> family)
@@ -23,12 +34,12 @@ namespace GlmmGSAPI
 		if (family == "binomial")
 		{
 			typedef Responses::BinomialResponseSection T;
-			return Pointer<T>(new(bl) T(this->api));
+			return Pointer<T>(new(bl) T(*this));
 		}
 		else if (family == "poisson")
 		{
 			typedef Responses::PoissonResponseSection T;
-			return Pointer<T>(new(bl) T(this->api));
+			return Pointer<T>(new(bl) T(*this));
 		}
 		else
 			throw Exception("Non supported response family");
@@ -39,10 +50,26 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: EndResponse");
 	}
 
+	void Section::AddOffset(Vector<const int> values)
+	{
+		if (this->data->offset.IsNull() == false)
+			throw Exception("Multiple offsets");
+		typedef GlmmGS::Offsets::VectorOffset<const int>  T;
+		this->data->offset.Reset(new(bl) T(values));
+	}
+
+	void Section::AddOffset(Vector<const double> values)
+	{
+		if (this->data->offset.IsNull() == false)
+			throw Exception("Multiple offsets");
+		typedef GlmmGS::Offsets::VectorOffset<const double>  T;
+		this->data->offset.Reset(new(bl) T(values));
+	}
+
 	Pointer<Section> Section::BeginFixedEffects()
 	{
 		typedef FixedEffects::FixedEffectsSection T;
-		return Pointer<T>(new(bl) T(this->api));
+		return Pointer<T>(new(bl) T(*this));
 	}
 
 	void Section::EndFixedEffects()
@@ -53,7 +80,7 @@ namespace GlmmGSAPI
 	Pointer<Section> Section::BeginRandomEffects()
 	{
 		typedef RandomEffects::RandomEffectsSection T;
-		return Pointer<T>(new(bl) T(this->api));
+		return Pointer<T>(new(bl) T(*this));
 	}
 
 	void Section::EndRandomEffects()
@@ -89,22 +116,6 @@ namespace GlmmGSAPI
 	void Section::AddCounts(Vector<const int>)
 	{
 		throw Exception("Invalid call: AddCounts");
-	}
-
-	void Section::AddOffset(Vector<const int> values)
-	{
-		if (this->api.offset.IsNull() == false)
-			throw Exception("Multiple offsets");
-		typedef GlmmGS::Offsets::VectorOffset<const int>  T;
-		this->api.offset.Reset(new(bl) T(values));
-	}
-
-	void Section::AddOffset(Vector<const double> values)
-	{
-		if (this->api.offset.IsNull() == false)
-			throw Exception("Multiple offsets");
-		typedef GlmmGS::Offsets::VectorOffset<const double>  T;
-		this->api.offset.Reset(new(bl) T(values));
 	}
 
 	void Section::AddIntercept()

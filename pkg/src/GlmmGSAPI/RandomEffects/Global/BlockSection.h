@@ -29,8 +29,7 @@ namespace GlmmGSAPI
 
 			public:
 				// Constructor
-				BlockSection(GlmmGSAPI & api);
-				~BlockSection();
+				BlockSection(const Section & section);
 			};
 		}
 	}

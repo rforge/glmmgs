@@ -11,39 +11,62 @@ namespace GlmmGSAPI
 	// Section
 	class Section
 	{
-	// Disable assignment operator
-	const Section & operator =(const Section &);
+	private:
+		// Data structure
+		struct Data
+		{
+			// Fields
+			bool fixed_intercept;
+			Pointer<GlmmGS::Responses::IResponse> response;
+			Pointer<GlmmGS::Offsets::IOffset> offset;
+			VectorBuilder<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
+			VectorBuilder<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
 
-	protected:
-		// Fields
-		GlmmGSAPI & api;
+			// Constructor
+			Data() : fixed_intercept(false) {}
+		};
 
 	public:
+		// Data
+		Pointer<Data> data;
+
 		// Construction
-		Section(GlmmGSAPI & api);
+	private:
+		Section();
+	public:
 		virtual ~Section();
 		
-		// Methods
-		virtual Pointer<Section> BeginResponse(WeakString<const char> family);
+		// Section methods
+		static Pointer<Section> Begin();
+		void End();
+		Pointer<Section> BeginResponse(WeakString<const char> family);
+		void AddOffset(Vector<const int> values);
+		void AddOffset(Vector<const double> values);
+		Pointer<Section> BeginFixedEffects();
+		Pointer<Section> BeginRandomEffects();
+
+		// Response section methods
+		virtual void AddResponse(Vector<const int> values);
+		virtual void AddCounts(Vector<const int> values);
 		virtual void EndResponse();
-		virtual Pointer<Section> BeginFixedEffects();
-		virtual void EndFixedEffects();
-		virtual Pointer<Section> BeginRandomEffects();
-		virtual void EndRandomEffects();
+
+		// Fixed and random effect common methods
 		virtual Pointer<Section> BeginBlock();
 		virtual void EndBlock();
 		virtual Pointer<Section> BeginStratifiedBlock(WeakFactor factor);
 		virtual void EndStratifiedBlock();
-		virtual void AddResponse(Vector<const int> values);
-		virtual void AddCounts(Vector<const int> values);
-		virtual void AddOffset(Vector<const int> values);
-		virtual void AddOffset(Vector<const double> values);
 		virtual void AddIntercept();
 		virtual void AddCovariate(Vector<const int> values);
 		virtual void AddCovariate(Vector<const double> values);
+
+		// Fixed effect methods
+		virtual void EndFixedEffects();
+
+		// Random effect methods
 		virtual void AddIdentityCovarianceModel();
 		virtual void AddPrecisionModel(Matrix<const double> precision);
 		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
+		virtual void EndRandomEffects();
 	};
 }
 

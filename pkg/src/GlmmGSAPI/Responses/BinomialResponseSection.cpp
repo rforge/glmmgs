@@ -7,12 +7,8 @@ namespace GlmmGSAPI
 	namespace Responses
 	{
 		// BinomialResponseSection
-		BinomialResponseSection::BinomialResponseSection(GlmmGSAPI & api)
-			: Section(api)
-		{
-		}
-
-		BinomialResponseSection::~BinomialResponseSection()
+		BinomialResponseSection::BinomialResponseSection(const Section & section)
+			: Section(section)
 		{
 		}
 
@@ -28,7 +24,7 @@ namespace GlmmGSAPI
 
 		void BinomialResponseSection::EndResponse()
 		{
-			this->api.response.Reset(new(bl) GlmmGS::Responses::BinomialResponse(*this->values, *this->counts));
+			this->data->response.Reset(new(bl) GlmmGS::Responses::BinomialResponse(*this->values, *this->counts));
 		}
 	}
 }

@@ -20,11 +20,11 @@ void GlmmGSRAPI_Tidy()
 	GlmmGSAPI::theApi.Tidy();
 }
 
-void GlmmGSRAPI_Begin()
+void GlmmGSRAPI_BeginModel()
 {
 	try
 	{
-		GlmmGSAPI::theApi.Begin();
+		GlmmGSAPI::theApi.BeginModel();
 	}
 	catch (Exception & e)
 	{
@@ -32,11 +32,11 @@ void GlmmGSRAPI_Begin()
 	}
 }
 
-void GlmmGSRAPI_End()
+void GlmmGSRAPI_EndModel()
 {
 	try
 	{
-		GlmmGSAPI::theApi.End();
+		GlmmGSAPI::theApi.EndModel();
 	}
 	catch (Exception & e)
 	{

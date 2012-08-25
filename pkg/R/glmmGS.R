@@ -143,7 +143,7 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	predictors$ranef <- glmmGS.CreateFactors(predictors$ranef, data)
 	
 	# Initialize API
-	glmmGSAPI.Begin()
+	glmmGSAPI.BeginModel()
 	
 	# Add response
 	glmmGSAPI.BeginResponse(family$family)
@@ -216,11 +216,11 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 		glmmGSAPI.EndRandomEffects()		
 	}
 	
+	# End model definition
+	glmmGSAPI.EndModel()
+	
 	# Fit model
 	results <- glmmGS.Fit(control)
-	
-	# Terminate API
-	glmmGSAPI.End()
 	
 	# Return results
 	return(results)
