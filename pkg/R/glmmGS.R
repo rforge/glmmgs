@@ -186,6 +186,10 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 				glmmGS.AddPredictors(block$vars, data)
 				glmmGSAPI.EndStratifiedBlock()			
 			}
+			else
+			{
+				stop("Unsupported block type")
+			}
 		}
 		glmmGSAPI.EndFixedEffects()
 	}
@@ -211,6 +215,10 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 				glmmGS.AddPredictors(block$vars, data)
 				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
 				glmmGSAPI.EndStratifiedBlock()			
+			}
+			else
+			{
+				stop("Unsupported block type")
 			}
 		}
 		glmmGSAPI.EndRandomEffects()		
