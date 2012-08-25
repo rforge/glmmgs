@@ -21,22 +21,27 @@
 \arguments{
 	\item{formula}{
 		a formula object providing a symbolic description of the model to be fitted.
-		The formula object must be of the type \emph{response ~ linear-predictor}. 
-		Discrete responses must be integer vectors. For a binomial
-		response, the response must be defined as \code{response / size}, , with or without parenthesis,
-		and with both \code{response} and \code{size} begin integer vectors.
-		The linear predictor comprises fixed effects and random effects.
-		Fixed and random effects must be grouped in blocks 
-		(the blocks of the Gauss-Seidel algorithm, see Reference) 
-		specified by pairs of parentheses. Blocks of covariates can be stratified by a grouping
-		variable, defined by either a factor or an object coercible to a factor.
-		The covariance model inside the random effect block is specified by using the symbol 
-		\code{~} followed by the variable name of a previously defined \code{\link{glmmGS.CovarianceModel}}.
+		The formula object must have the format \emph{response ~ predictor}. 
+		Discrete responses must be defined by integer vectors. For a binomial
+		family, the \emph{response} is specified by the pair \code{(response/size)}, with or without parentheses.
+		Both \code{response} and \code{size} must be integer vectors. If \code{size} is omitted,
+		a constant \code{size} of \code{1}'s is assumed.
+		The \emph{predictor} specifies both fixed and random effect covariates. 
+		The covariates must be grouped in blocks (the blocks of the Gauss-Seidel algorithm, see Reference) 
+		specified by pairs of parentheses. The covariates in a block can be stratified by using the 
+		vertical bar symbol \code{|} followed by the name of a grouping variable, 
+		defined either by a factor or an object coercible to a factor.
+		The covariance model inside the random effect blocks are specified by using the tilde symbol 
+		\code{~} followed by the name of a \code{\link{glmmGS.CovarianceModel}} object.
 		If an offset \code{off} is present in the linear predictor, it must be specified with keyword
-		\code{offset(off)}. The intercepts must be explicitly specified using the the symbol \code{1}; 
-		implicit specification
-		of the intercept is not assumed. See Details for information on how non-identifiability 
-		introduced by multiple intercepts is handled. 
+		\code{offset(off)}. Both fixed and random intercepts must be explicitly specified 
+		using the the symbol \code{1}; implicit specification
+		of the intercept is not assumed. If \code{data} and \code{covariance.models}
+		are not missing, then variable lookup is performed only in
+		\code{data} and \code{covariance.models} (the environment 
+		of the \code{formula} object is not searched by design.) 
+		If either \code{data} or \code{covariance.model}
+		are missing, they are set equal to the environment of the \code{formula} object.  
 	}
 	\item{family}{
 		a description of the error distribution. Only two families are currently allowed:
@@ -60,17 +65,6 @@
 }
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
-	If a fixed intercept is specified (either a global intercept or 
-	a stratified intercept), then the stratified random intercepts are constrained to have 
-	a zero mean. If both global and stratified fixed intercepts are specified, then 
-	their fitted values	are determined up to a random constant. 
-	This is because the Gauss-Seidel algorithm displays	best convergence properties	
-	by updating each fixed intercept component-wise	without imposing any constraints, 
-	such as setting the value of the intercept associated with the first level of a factor 
-	equal to zero. (Notice that the same does not hold for
-	random intercepts, where removing the overall mean is necessary to boost 
-	the convergence.) A simple post-processing of the fitted values can be performed 
-	to adjust the offset of the estimated fixed intercepts.
 }
 \value{
 	%%  ~Describe the value returned
