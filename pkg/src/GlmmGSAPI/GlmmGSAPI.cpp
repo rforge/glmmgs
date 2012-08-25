@@ -41,7 +41,7 @@ namespace GlmmGSAPI
 		// Reset
 		this->sections.Free();
 		this->last_error.Empty();
-		//this->glmmGS.Reset();
+		this->glmmGS.Reset();
 	}
 
 	void GlmmGSAPI::BeginModel()
