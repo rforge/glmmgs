@@ -1,8 +1,9 @@
-#ifndef GLMMGS_RANDOMEFFECTS_GLOBAL_COVARIANCEMODEL_ICOVARIANCEMODEL_H
-#define GLMMGS_RANDOMEFFECTS_GLOBAL_COVARIANCEMODEL_ICOVARIANCEMODEL_H
+#ifndef GLMMGS_RANDOMEFFECTS_COVARIANCEMODEL_ICOVARIANCEMODEL_H
+#define GLMMGS_RANDOMEFFECTS_COVARIANCEMODEL_ICOVARIANCEMODEL_H
 
 #include "../../../Standard.h"
-#include "../../Working/Global/CovarianceModels/ICovarianceModel.h"
+#include "../../../Estimate.h"
+#include "../../../Controls.h"
 
 namespace GlmmGS
 {
@@ -15,13 +16,29 @@ namespace GlmmGS
 				// CovarianceModel
 				class ICovarianceModel
 				{
+				protected:
+					// Fields
+					Vector<double> theta;
+				private:
+					CholeskyDecomposition chol;
+
+				protected:
+					// Implementation
+					int Update(const TriangularMatrix<double> & minus_hessian,
+							const Vector<double> & jacobian, const Controls & controls);
 				public:
 					// Construction
-					ICovarianceModel();
+					ICovarianceModel(int npars);
 					virtual ~ICovarianceModel();
 
+					// Properties
+					virtual Vector<double> CoefficientsVariance() const = 0;
+					Vector<Estimate> Estimates() const;
+
 					// Methods
-					virtual Pointer<Working::Global::CovarianceModels::ICovarianceModel> CreateWorking() const = 0;
+					virtual void Decompose(const TriangularMatrix<double> & precision) = 0;
+					virtual int Update(const Vector<double> & beta, const Controls & controls) = 0;
+					virtual Vector<double> UpdateCoefficients(const Vector<double> & jacobian, const Vector<double> & beta) const = 0;
 				};
 			}
 		}

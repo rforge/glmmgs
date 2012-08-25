@@ -18,11 +18,7 @@ namespace GlmmGSAPI
 		Buffer last_error;
 
 		// Simulation variables
-		Pointer<GlmmGS::Responses::IResponse> response;
-		Pointer<GlmmGS::Offsets::IOffset> offset;
-		Vector<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
-		Vector<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
-		GlmmGS::GlmmGS glmmGS;
+		Pointer<GlmmGS::GlmmGS> glmmGS;
 
 	public:
 		// Construction
@@ -73,7 +69,7 @@ namespace GlmmGSAPI
 	inline
 	const GlmmGS::GlmmGS & GlmmGSAPI::GlmmGS() const
 	{
-		return this->glmmGS;
+		return *this->glmmGS;
 	}
 
 	extern GlmmGSAPI theApi;

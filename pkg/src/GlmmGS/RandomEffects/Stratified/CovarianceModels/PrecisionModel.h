@@ -1,8 +1,8 @@
-#ifndef GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCE_MODELS_PRECISIONMODEL_H
-#define GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCE_MODELS_PRECISIONMODEL_H
+#ifndef GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCEMODELS_PRECISIONMODEL_H
+#define GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCEMODELS_PRECISIONMODEL_H
 
 #include "../../../Standard.h"
-#include "../../Working/Stratified/CovarianceModels/ICovarianceModel.h"
+#include "../../../Estimate.h"
 #include "ICovarianceModel.h"
 
 namespace GlmmGS
@@ -19,14 +19,18 @@ namespace GlmmGS
 				private:
 					// Fields
 					int nvars;
-					Matrix<const double> precision;
+					Matrix<const double> R;
+					CholeskyDecomposition beta_precision_chol;
 
 					// Implementation
-					Pointer<Working::Stratified::CovarianceModels::ICovarianceModel> CreateWorking() const;
+					Vector<double> CoefficientsVariance() const;
+					void Decompose(const TriangularMatrix<Vector<double> > & precision);
+					int Update(const Vector<Vector<double> > & beta, const Controls & controls);
+					Vector<Vector<double> > UpdateCoefficients(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const;
 
 				public:
 					// Construction
-					PrecisionModel(int nvars, Matrix<const double> precision);
+					PrecisionModel(int nvars, Matrix<const double> R);
 					~PrecisionModel();
 				};
 			}

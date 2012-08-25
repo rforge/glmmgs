@@ -23,28 +23,28 @@ namespace GlmmGS
 	}
 
 	// GlmmGS
-	GlmmGS::GlmmGS()
+	GlmmGS::GlmmGS(const Pointer<Responses::IResponse> & response,
+			const Pointer<Offsets::IOffset> & offset,
+			const Vector<Pointer<FixedEffects::IBlock> > & fixed_effects,
+			const Vector<Pointer<RandomEffects::IBlock> > & random_effects)
+		: response(response),
+		  offset(offset),
+		  fixed_effects(fixed_effects),
+		  random_effects(random_effects),
+	  	  iterations(-1)
 	{
+
 	}
 
 	// Properties
 	// Methods
-	void GlmmGS::Fit(const Pointer<Responses::IResponse> & y,
-			const Pointer<Offsets::IOffset> & offset,
-			const Vector<Pointer<FixedEffects::IBlock> > & x,
-			const Vector<Pointer<RandomEffects::IBlock> > & z,
-			const Controls & controls)
+	void GlmmGS::Fit(const Controls & controls)
 	{
-		GlmmGSSolver solver;
-		solver.Fit(y, offset, x, z, controls);
-
-		Vector<Vector<Estimate> > beta = solver.FixedEffectsCoefficients();
-		Vector<Vector<Estimate> > b = solver.RandomEffectsCoefficients();
-		Vector<Vector<Estimate> > theta = solver.CovarianceComponents();
+		GlmmGSSolver solver(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
+		solver.Fit();
+		ToVector(this->fixed_effects_estimates, solver.FixedEffectsCoefficients());
+		ToVector(this->random_effects_estimates, solver.RandomEffectsCoefficients());
+		ToVector(this->covariance_components_estimates, solver.CovarianceComponents());
 		this->iterations = solver.Iterations();
-
-		ToVector(this->fixed_effects_estimates, beta);
-		ToVector(this->random_effects_estimates, b);
-		ToVector(this->covariance_components_estimates, theta);
 	}
 }

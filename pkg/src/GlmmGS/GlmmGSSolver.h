@@ -5,9 +5,7 @@
 #include "Responses/IResponse.h"
 #include "Offsets/IOffset.h"
 #include "FixedEffects/IBlock.h"
-#include "FixedEffects/Working/IBlock.h"
 #include "RandomEffects/IBlock.h"
-#include "RandomEffects/Working/IBlock.h"
 #include "Estimate.h"
 #include "Controls.h"
 
@@ -18,11 +16,11 @@ namespace GlmmGS
 	{
 	private:
 		// Fields
-		Controls controls;
 		Pointer<Responses::IResponse> response;
 		Pointer<Offsets::IOffset> offset;
-		Vector<Pointer<FixedEffects::Working::IBlock> > fixed_effects;
-		Vector<Pointer<RandomEffects::Working::IBlock> > random_effects;
+		Vector<Pointer<FixedEffects::IBlock> > fixed_effects;
+		Vector<Pointer<RandomEffects::IBlock> > random_effects;
+		Controls controls;
 		Vector<double> eta;
 		Vector<double> working_weights;
 		Vector<double> working_values;
@@ -34,14 +32,14 @@ namespace GlmmGS
 
 	public:
 		// Construction
-		GlmmGSSolver();
+		GlmmGSSolver(const Pointer<Responses::IResponse> & response,
+				const Pointer<Offsets::IOffset> & offset,
+				const Vector<Pointer<FixedEffects::IBlock> > & fixed_effects,
+				const Vector<Pointer<RandomEffects::IBlock> > & random_effects,
+				const Controls & controls);
 
 		// Methods
-		void Fit(const Pointer<Responses::IResponse> & y,
-				const Pointer<Offsets::IOffset> & offset,
-				const Vector<Pointer<FixedEffects::IBlock> > & x,
-				const Vector<Pointer<RandomEffects::IBlock> > & z,
-				const Controls & controls);
+		void Fit();
 
 		// Properties
 		Vector<Vector<Estimate> > FixedEffectsCoefficients() const;

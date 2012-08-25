@@ -39,9 +39,9 @@
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/SparsePrecisionModel.h"
 
 // Boosters
-#include "../GlmmGS/RandomEffects/Working/Stratified/Boosters/IBooster.h"
-#include "../GlmmGS/RandomEffects/Working/Stratified/Boosters/Default.h"
-#include "../GlmmGS/RandomEffects/Working/Stratified/Boosters/RemoveMean.h"
+#include "../GlmmGS/RandomEffects/Stratified/Boosters/IBooster.h"
+#include "../GlmmGS/RandomEffects/Stratified/Boosters/Default.h"
+#include "../GlmmGS/RandomEffects/Stratified/Boosters/RemoveMean.h"
 
 // Variables
 #include "../GlmmGS/Variables/IVariable.h"

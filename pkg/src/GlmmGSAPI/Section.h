@@ -37,8 +37,8 @@ namespace GlmmGSAPI
 		virtual ~Section();
 		
 		// Section methods
-		static Pointer<Section> Begin();
-		void End();
+		static Pointer<Section> BeginModel();
+		void EndModel();
 		Pointer<Section> BeginResponse(WeakString<const char> family);
 		void AddOffset(Vector<const int> values);
 		void AddOffset(Vector<const double> values);

@@ -19,14 +19,18 @@ namespace GlmmGSAPI
 
 	}
 
-	Pointer<Section> Section::Begin()
+	Pointer<Section> Section::BeginModel()
 	{
 		return Pointer<Section>(new(bl) Section);
 	}
 
-	void Section::End()
+	void Section::EndModel()
 	{
-		this->data.Reset();
+		// Finalize model
+
+		// If offset is NULL set it to default
+		if (this->data->offset.IsNull())
+			this->data->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset);
 	}
 
 	Pointer<Section> Section::BeginResponse(WeakString<const char> family)

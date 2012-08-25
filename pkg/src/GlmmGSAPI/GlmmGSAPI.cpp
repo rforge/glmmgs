@@ -41,37 +41,37 @@ namespace GlmmGSAPI
 		// Reset
 		this->sections.Free();
 		this->last_error.Empty();
-		this->response = Pointer<GlmmGS::Responses::IResponse>();
-		this->offset = Pointer<GlmmGS::Offsets::IOffset>();
-		this->fixed_effects = Vector<Pointer<GlmmGS::FixedEffects::IBlock> >();
-		this->random_effects = Vector<Pointer<GlmmGS::RandomEffects::IBlock> >();
+		//this->glmmGS.Reset();
 	}
 
 	void GlmmGSAPI::BeginModel()
 	{
 		if (this->sections.IsEmpty() == false)
-			throw Exception("Invalid call: Begin");
+			throw Exception("Invalid call: BeginModel");
 
 		// Tide-up
 		this->Tidy();
 
 		// Begin
-		this->sections.Push(Section::Begin());
+		this->sections.Push(Section::BeginModel());
 	}
 
 	void GlmmGSAPI::EndModel()
 	{
 		if (this->sections.Size() != 1)
-			throw Exception("Invalid call: End");
+			throw Exception("Invalid call: EndModel");
 
-		// Copy variables
-		this->response = this->sections.Top()->data->response;
-		this->offset = this->sections.Top()->data->offset;
-		this->fixed_effects = this->sections.Top()->data->fixed_effects.ToVector();
-		this->random_effects = this->sections.Top()->data->random_effects.ToVector();
+		// Finalize model
+		this->sections.Top()->EndModel();
 
-		// End sections
-		this->sections.Top()->End();
+		// Set glmmGS object
+		this->glmmGS.Reset(new(bl) GlmmGS::GlmmGS(
+				this->sections.Top()->data->response,
+				this->sections.Top()->data->offset,
+				this->sections.Top()->data->fixed_effects.ToVector(),
+				this->sections.Top()->data->random_effects.ToVector()));
+
+		// Empty sections (and clear memory)
 		this->sections.Pop();
 	}
 
@@ -190,10 +190,8 @@ namespace GlmmGSAPI
 	void GlmmGSAPI::Fit(GlmmGS::Controls controls)
 	{
 		// Set offset to ZeroOffset if no offset was specified
-		if (this->offset.IsNull())
-			this->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset());
 
 		// Fit the model
-		this->glmmGS.Fit(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
+		this->glmmGS->Fit(controls);
 	}
 }

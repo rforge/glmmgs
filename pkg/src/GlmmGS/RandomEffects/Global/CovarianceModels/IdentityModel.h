@@ -1,8 +1,8 @@
-#ifndef GLMMGS_RANDOMEFFECTS_GLOBAL_COVARIANCEMODEL_IDENTITYMODEL_H
-#define GLMMGS_RANDOMEFFECTS_GLOBAL_COVARIANCEMODEL_IDENTITYMODEL_H
+#ifndef GLMMGS_RANDOMEFFECTS_COVARIANCEMODEL_IDENTITYMODEL_H
+#define GLMMGS_RANDOMEFFECTS_COVARIANCEMODEL_IDENTITYMODEL_H
 
 #include "../../../Standard.h"
-#include "../../Working/Global/CovarianceModels/ICovarianceModel.h"
+#include "../../../Estimate.h"
 #include "ICovarianceModel.h"
 
 namespace GlmmGS
@@ -19,13 +19,17 @@ namespace GlmmGS
 				private:
 					// Fields
 					int size;
+					CholeskyDecomposition beta_precision_chol;
 
 					// Implementation
-					Pointer<Working::Global::CovarianceModels::ICovarianceModel> CreateWorking() const;
+					Vector<double> CoefficientsVariance() const;
+					void Decompose(const TriangularMatrix<double> & precision);
+					int Update(const Vector<double> & beta, const Controls & controls);
+					Vector<double> UpdateCoefficients(const Vector<double> & jacobian, const Vector<double> & beta) const;
 
 				public:
 					// Construction
-					IdentityModel(int size);
+					IdentityModel(int nvars);
 					~IdentityModel();
 				};
 			}

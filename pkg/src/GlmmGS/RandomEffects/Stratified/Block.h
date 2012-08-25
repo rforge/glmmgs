@@ -1,12 +1,12 @@
-#ifndef GLMMGS_RANDOMEFFECTS_STRATIFIED_BLOCK_H
-#define GLMMGS_RANDOMEFFECTS_STRATIFIED_BLOCK_H
+#ifndef GLMMGS_RANDOMEFFECTS_STRATIFIED_IBLOCK_H
+#define GLMMGS_RANDOMEFFECTS_STRATIFIED_IBLOCK_H
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "CovarianceModels/ICovarianceModel.h"
-#include "../Working/IBlock.h"
-#include "../Working/Stratified/Boosters/IBooster.h"
+#include "../../Estimate.h"
 #include "../IBlock.h"
+#include "Boosters/IBooster.h"
+#include "CovarianceModels/ICovarianceModel.h"
 
 namespace GlmmGS
 {
@@ -21,16 +21,21 @@ namespace GlmmGS
 				// Fields
 				Vector<Pointer<Variables::IVariable> > variables;
 				WeakFactor factor;
+				Vector<Vector<double> > beta;
 				Pointer<CovarianceModels::ICovarianceModel> covariance_model;
-				Pointer<Working::Stratified::Boosters::IBooster> booster;
+				Pointer<Boosters::IBooster> booster;
 
 				// Implementation
-				Pointer<Working::IBlock> CreateWorking() const;
+				Vector<Estimate> Coefficients() const;
+				Vector<Estimate> CovarianceComponents() const;
+				void UpdatePredictor(Vector<double> & eta) const;
+				int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 
 			public:
 				// Construction
-				Block(Vector<Pointer<Variables::IVariable> > variables, WeakFactor factor, Pointer<CovarianceModels::ICovarianceModel> covariance_model, Pointer<Working::Stratified::Boosters::IBooster> booster);
-				~Block();
+				Block(const Vector<Pointer<Variables::IVariable> > & variables, WeakFactor factor,
+						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model,
+						const Pointer<Boosters::IBooster> & booster);
 			};
 		}
 	}

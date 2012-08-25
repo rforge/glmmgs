@@ -1,50 +1,36 @@
 #include "GlmmGSSolver.h"
 #include "Responses/IResponse.h"
 #include "FixedEffects/IBlock.h"
-#include "FixedEffects/Working/IBlock.h"
 #include "RandomEffects/IBlock.h"
-#include "RandomEffects/Working/IBlock.h"
 #include "Estimate.h"
 #include "Controls.h"
 
 namespace GlmmGS
 {
 	// GlmmGSSolver
-	GlmmGSSolver::GlmmGSSolver()
+	GlmmGSSolver::GlmmGSSolver(const Pointer<Responses::IResponse> & response,
+			const Pointer<Offsets::IOffset> & offset,
+			const Vector<Pointer<FixedEffects::IBlock> > & fixed_effects,
+			const Vector<Pointer<RandomEffects::IBlock> > & random_effects,
+			const Controls & controls)
+		: response(response),
+		  offset(offset),
+		  fixed_effects(fixed_effects),
+		  random_effects(random_effects),
+		  controls(controls),
+		  iterations(-1)
 	{
+
 	}
 
-	void GlmmGSSolver::Fit(const Pointer<Responses::IResponse> & y,
-			const Pointer<Offsets::IOffset> & offset,
-			const Vector<Pointer<FixedEffects::IBlock> > & x,
-			const Vector<Pointer<RandomEffects::IBlock> > & z,
-			const Controls & controls)
+	void GlmmGSSolver::Fit()
 	{
-		// Set response
-		this->response = y;
-
-		// Set offset
-		this->offset = offset;
-
-		// Set working fixed-effects
-		this->fixed_effects = Vector<Pointer<FixedEffects::Working::IBlock> >(x.Size());
-		for (int block = 0; block < x.Size(); ++block)
-			this->fixed_effects(block) = x(block)->CreateWorking();
-
-		// Set working random-effects working coefficients
-		this->random_effects = Vector<Pointer<RandomEffects::Working::IBlock> >(z.Size());
-		for (int block = 0; block < z.Size(); ++block)
-			this->random_effects(block) = z(block)->CreateWorking();
-
 		// Initialize working weights and values
-		const int nrecords = y->NumberOfObservations();
+		const int nrecords = this->response->NumberOfObservations();
 		this->eta = Vector<double>(nrecords);
 		this->working_weights = Vector<double>(nrecords);
 		this->working_values = Vector<double>(nrecords);
 		this->EvaluateWorkingWeightsAndValues();
-
-		// Set controls
-		this->controls = controls;
 
 		// Gauss-Seidel loop
 		this->iterations = 0;

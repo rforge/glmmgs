@@ -18,7 +18,7 @@ namespace GlmmGSAPI
 				WeakFactor factor;
 				VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
 				Pointer<GlmmGS::RandomEffects::Stratified::CovarianceModels::ICovarianceModel> covariance_model;
-				Pointer<GlmmGS::RandomEffects::Working::Stratified::Boosters::IBooster> booster;
+				Pointer<GlmmGS::RandomEffects::Stratified::Boosters::IBooster> booster;
 
 				// Implementation
 				void AddIntercept();

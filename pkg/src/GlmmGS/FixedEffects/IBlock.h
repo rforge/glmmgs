@@ -2,13 +2,14 @@
 #define GLMMGS_FIXEDEFFECTS_IBLOCK_H
 
 #include "../Standard.h"
-#include "Working/IBlock.h"
+#include "../Estimate.h"
+#include "../Controls.h"
 
 namespace GlmmGS
 {
 	namespace FixedEffects
 	{
-		// IFixedEffectsBlock
+		// IBlock
 		class IBlock
 		{
 		protected:
@@ -18,7 +19,11 @@ namespace GlmmGS
 			virtual ~IBlock();
 
 			// Properties
-			virtual Pointer<Working::IBlock> CreateWorking() const = 0;
+			virtual Vector<Estimate> Coefficients() const = 0;
+
+			// Methods
+			virtual void UpdatePredictor(Vector<double> & eta) const = 0;
+			virtual int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, const Controls & controls) = 0;
 		};
 	}
 }
