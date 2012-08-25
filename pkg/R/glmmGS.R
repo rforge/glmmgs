@@ -142,9 +142,6 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	predictors$fixef <- glmmGS.CreateFactors(predictors$fixef, data)
 	predictors$ranef <- glmmGS.CreateFactors(predictors$ranef, data)
 	
-	# Clean-up API
-	glmmGSAPI.Tidy()
-	
 	# Initialize API
 	glmmGSAPI.Begin()
 	
