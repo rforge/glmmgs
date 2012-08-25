@@ -1,145 +1,108 @@
-# Trim
-glmmGSParser.Trim = function(string)
+# glmmGS parser utility funtions
+
+glmmGSParser.ParseVariables <- function(token)
 {
-	# Trim trailing white characters
-	return(gsub("(^ +)|( +$)", "", string));
+	token <- unlist(strsplit(token, "\\~"))[1]
+	token <- unlist(strsplit(token, "\\|"))[1]
+	vars <- unlist(strsplit(token, "\\+"))
+	vars
 }
 
-# Find
-glmmGSParser.Find = function(string, pattern, start)
+glmmGSParser.ParseFactor <- function(token)
 {
-	pos = -1;
-	match_len = 0;
-	positions = gregexpr(pattern, string)[[1]];
-	indices = which(positions >= start);
-	n = length(indices)
-	if (n > 0)
+	token <- unlist(strsplit(token, "\\~"))[1]
+	token <- unlist(strsplit(token, "\\|"))[2]
+	token
+}
+
+glmmGSParser.ParseCovModel <- function(token)
+{
+	token <- unlist(strsplit(token, "\\~"))[2]
+	token
+}
+
+glmmGSParser.ParseBlocks <- function(tokens)
+{
+	n = length(tokens)
+	blocks <- list()
+	for (i in 1:n)
 	{
-		for (i in 1:n)
-		{
-			match_len = attr(positions, "match.length")[indices[i]];
-			if (match_len > 0)
-			{
-				pos = positions[indices[i]];
-				break;
-			}
-		}
+		token <- tokens[i]
+		vars <- glmmGSParser.ParseVariables(token)
+		factor <- glmmGSParser.ParseFactor(token)
+		cov.model <- glmmGSParser.ParseCovModel(token)
+		blocks[[i]] <- list(vars = vars, factor = factor, cov.model = cov.model)
 	}
-
-	return(pos);
+	return(blocks)
 }
 
-# Skip
-glmmGSParser.SkipWhites = function(string, start)
+glmmGSParser.GetResponse <- function(formula, family)
 {
-	positions = gregexpr(" ", string)[[1]];
-	indices = which(positions >= start);
-	pos = start;
-	n = length(indices)
-	if (n > 0)
+	# Get predictor string
+	response <- as.character(formula[2])
+	vars <- NULL
+	if (family == "binomial")
 	{
-		for (i in 1:n)
-		{
-			if (positions[indices[i]] == pos)
-			{
-				pos = positions[indices[i]] + 1;
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-	return(pos);
-}
-
-# Match
-glmmGSParser.Match = function(string, pattern, start)
-{
-	pos = NULL;
-	positions = gregexpr(pattern, string)[[1]];
-	index = which(positions == start);
-	if (length(index) == 0)
-		stop("Wrong format");
-	pos = start + attr(positions, "match.length")[index];
-	return(pos);
-}
-
-# Get token
-glmmGSParser.GetToken = function(string, sep, start)
-{
-	text = NULL;
-	stop = NULL;
-	pos = glmmGSParser.Find(string, sep, start);
-	if (pos < 0)
-	{
-		stop = nchar(string);
+		# Remove parenthesis, if any
+		response <- sub("\\(", "", response)
+		response <- sub("\\)", "", response)
+		vars <- unlist(strsplit(response, "/"))
 	}
 	else
 	{
-		stop = pos - 1;
+		vars <- response
 	}
-	text = substr(string, start, stop);
-	return(list(text = text, pos = pos));
+	list(family = family, vars = vars)
 }
 
-# glmmGSParser.GetOffset
-glmmGSParser.GetOffset = function(predictor, pos)
+glmmGSParser.GetPredictors <- function(formula)
 {
-	pos = glmmGSParser.SkipWhites(predictor, pos);
-	token = glmmGSParser.GetToken(predictor, "\\(", pos);
-	if (token$text != "offset")
-		return(NULL)
+	# Get predictor string
+	predictors <- as.character(formula[3])
 	
-	# token$text == offset
-	pos = token$pos + 1;
-	token = glmmGSParser.GetToken(predictor, "\\)", pos);
-	offset = list(text = token$text, pos = token$pos + 1);
-	return(offset);
-}
-
-# glmmGSParser.GetNextBlock
-glmmGSParser.GetNextBlock = function(predictor, pos)
-{
-	pos = glmmGSParser.SkipWhites(predictor, pos);
-	pos = glmmGSParser.Match(predictor, "\\(", pos);
-	token = glmmGSParser.GetToken(predictor, "\\)", pos);
-	block = list(text = token$text, pos = token$pos + 1);
+	# If 'offset(', add left parenthesis
+	predictors <- sub(" offset\\(", " \\(offset\\(", predictors)
 	
-	if (glmmGSParser.Find(block, "~", 1) > 0)
+	# Split predictor string into tokens  
+	tokens <- unlist(strsplit(predictors, "\\("))
+	tokens <- unlist(strsplit(tokens, "\\)"))
+	
+	# remove white spaces
+	tokens <- gsub(" ", "", tokens)
+	
+	# Get offset, if any
+	offset <- NULL
+	i <- match("offset", tokens)
+	if (!is.na(i) && i < length(tokens) && tokens[i + 1] != "+")
 	{
-		attr(block, "effects") = "random";
-	}
-	else
-	{
-		attr(block, "effects") = "fixed";
+		# Set offset
+		offset <- tokens[i + 1]
+		# Remove offset tokens
+		tokens <- tokens[-ifelse(i + 1 < length(tokens), c(i, i + 1, i + 2), c(i, i + 1))]
 	}
 	
-	if (glmmGSParser.Find(block, "\\|", 1) > 0)
+	# Remove plus signs
+	len <- length(tokens)
+	if (len > 1L)
 	{
-		attr(block, "type") = "stratified";
+		# Check even tokens
+		half.len <- as.integer(len / 2L)
+		even <- 2L * (1:half.len)
+		# Check number of tokens is odd and if even tokens are equal to "+"
+		if ((2L * half.len == len) || (sum(ifelse(tokens[even] == "+", 0L, 1L)) > 0L)) 
+			stop("Invalid formula", call. = FALSE)
+		# Remove the "+" tokens
+		tokens <- tokens[-even]
 	}
-	else
+	blocks <- glmmGSParser.ParseBlocks(tokens)
+	
+	# Add attributes to blocks
+	for (i in 1:length(blocks))
 	{
-		attr(block, "type") = "global";
+		attr(blocks[[i]], "effects") <- ifelse(is.na(blocks[[i]]$cov.model), "fixed", "random") 
+		attr(blocks[[i]], "type") <- ifelse(is.na(blocks[[i]]$factor), "dense", "stratified") 
 	}
-
-	return(block);
+	
+	list(offset = offset, blocks = blocks)
 }
 
-glmmGSParser.ParseSeparator = function(predictor, pos)
-{
-	pos = glmmGSParser.SkipWhites(predictor, pos);
-	token = glmmGSParser.GetToken(predictor, "\\(", pos);
-	pos = token$pos;
-	text = glmmGSParser.Trim(token$text);
-	if (nchar(text) == 0)
-	{
-		pos = -1;
-	}
-	else if (text != "+")
-	{
-		stop("Wrong format");
-	}
-	return(pos);
-}

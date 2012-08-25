@@ -1,265 +1,213 @@
+# Add variables to block
+glmmGS.AddPredictors <- function(vars, data)
+{
+	for (varname in vars) 
+	{
+		if (varname == "1") 
+		{
+			glmmGSAPI.AddIntercept()
+		}
+		else 
+		{
+			glmmGSAPI.AddCovariate(get(varname, data))
+		}
+	}
+}
+
+# Add covariance model to model
+glmmGS.AddCovarianceModel = function(cov.model, covariance.models)
+{
+	cov.model <- get(cov.model, covariance.models)
+	
+	if (cov.model$type == "IdentityCovarianceModel") 
+	{
+		glmmGSAPI.AddIdentityCovarianceModel()
+	}
+	else if (cov.model$type == "PrecisionModel")
+	{
+		glmmGSAPI.AddPrecisionModel(cov.model$R)
+	}
+	else if (cov.model$type == "SparsePrecisionModel") 
+	{
+		glmmGSAPI.AddSparsePrecisionModel(cov.model$R)
+	}
+	else
+	{
+		stop("Unsupported covariance model")
+	}
+}
+
 # Fit
 glmmGS.Fit = function(control)
 {
 	# Fit model
-	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit, control$verbose);
+	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit, control$verbose)
 	
 	# Retrieve results
-	fixed.effects = glmmGSAPI.GetFixedEffectsCoefficients();
-	random.effects = glmmGSAPI.GetRandomEffectsCoefficients();
-	covariance.components = glmmGSAPI.GetCovarianceComponents();
-	iterations = glmmGSAPI.GetIterations();
+	fixed.effects = glmmGSAPI.GetFixedEffectsCoefficients()
+	random.effects = glmmGSAPI.GetRandomEffectsCoefficients()
+	covariance.components = glmmGSAPI.GetCovarianceComponents()
+	iterations = glmmGSAPI.GetIterations()
 	return(list(fixed.effects = fixed.effects,
-		random.effects = random.effects,
-		covariance.components = covariance.components,
-		iterations = iterations));
-}
-
-# Get variable
-glmmGS.GetVariable = function(name, data, env)
-{
-	x = NULL;
-	if (!is.null(data))
-		x = data[[name]];
-	if (is.null(x))
-		x = get(name, envir = env);
-	if (is.null(x))
-		stop(paste("Variable '", name, "' not found", sep = ""));
-	return(x);
-}
-
-# Add covariance model to model
-glmmGS.AddCovarianceModel = function(block, covariance.models, env)
-{
-	pos = 1;
-	pos = glmmGSParser.Find(block, "~", pos) + 1;
-	token = glmmGSParser.GetToken(block, "", pos);
-	varname = glmmGSParser.Trim(token$text);
-	covariance_model = glmmGS.GetVariable(varname, covariance.models, env);
-	
-	if (covariance_model$type == "IdentityCovarianceModel")
-	{
-		glmmGSAPI.AddIdentityCovarianceModel();
-	}
-	else if (covariance_model$type == "PrecisionModel")
-	{
-		glmmGSAPI.AddPrecisionModel(covariance_model$R);
-	}
-	else if (covariance_model$type == "SparsePrecisionModel")
-	{
-		glmmGSAPI.AddSparsePrecisionModel(covariance_model$R);
-	}
-	else
-	{
-		stop("Invalid covariance model");
-	}
-}
-
-# Add variables to block
-glmmGS.AddPredictors = function(block, data, env)
-{
-	token = glmmGSParser.GetToken(block, "(\\|)|(~)", 1);
-	block = token$text;
-	pos = 1;
-	repeat
-	{
-		pos = glmmGSParser.SkipWhites(block, pos);
-		token = glmmGSParser.GetToken(block, "\\+", pos);
-		varname = glmmGSParser.Trim(token$text);
-		if (varname == "1")
-		{
-			glmmGSAPI.AddIntercept();
-		}
-		else
-		{
-			glmmGSAPI.AddCovariate(glmmGS.GetVariable(varname, data, env));
-		}
-		if (token$pos == -1)
-			break;
-		pos = token$pos + 1;
-	}
-}
-
-# Get factor data
-glmmGS.GetFactor = function(block, data, env)
-{
-	pos = 1;
-	pos = glmmGSParser.Find(block, "\\|", pos) + 1;
-	token = glmmGSParser.GetToken(block, "~", pos);
-	varname = glmmGSParser.Trim(token$text);
-	return(glmmGS.GetVariable(varname, data, env));
-}
-
-# Add offset to model
-glmmGS.AddOffset = function(offset, data, env)
-{
-	# Get response
-	varname = glmmGSParser.Trim(offset$text);
-	offset = glmmGS.GetVariable(varname, data, env);
-	
-	# Add offset
-	glmmGSAPI.AddOffset(offset)
-}
-	
-# Add predictor block to model
-glmmGS.AddBlock = function(block, data, covariance.models, env)
-{
-	if (attr(block, "effects") == "fixed")
-	{
-		# Fixed effects
-		glmmGSAPI.BeginFixedEffects();
-		if (attr(block, "type") == "global")
-		{
-			# Global block
-			glmmGSAPI.BeginGlobalBlock();
-			glmmGS.AddPredictors(block$text, data, env);
-			glmmGSAPI.EndGlobalBlock();			
-		}
-		else if (attr(block, "type") == "stratified")
-		{
-			# Stratified block
-			glmmGSAPI.BeginStratifiedBlock(glmmGS.GetFactor(block$text, data, env));
-			glmmGS.AddPredictors(block$text, data, env);
-			glmmGSAPI.EndStratifiedBlock();			
-		}
-		else
-		{
-			stop("Invalid fixed-effects block type");
-		}
-		glmmGSAPI.EndFixedEffects();
-	}
-	else if (attr(block, "effects") == "random")
-	{
-		# Random effects
-		glmmGSAPI.BeginRandomEffects();
-		if (attr(block, "type") == "global")
-		{
-			# Global block
-			glmmGSAPI.BeginGlobalBlock();
-			glmmGS.AddPredictors(block$text, data, env);
-			glmmGS.AddCovarianceModel(block$text, covariance.models, env);
-			glmmGSAPI.EndGlobalBlock();			
-		}
-		else if (attr(block, "type") == "stratified")
-		{
-			# Stratified block
-			glmmGSAPI.BeginStratifiedBlock(glmmGS.GetFactor(block$text, data, env));
-			glmmGS.AddPredictors(block$text, data, env);
-			glmmGS.AddCovarianceModel(block$text, covariance.models, env);
-			glmmGSAPI.EndStratifiedBlock();			
-		}
-		else
-		{
-			stop("Invalid random-effects block type");
-		}
-		glmmGSAPI.EndRandomEffects();		
-	}
-	else
-	{
-		stop("Invalid 'effects' attribute");
-	}
-}
-
-# Add response to model
-glmmGS.AddResponse = function(response, family, data, env)
-{
-	# Response
-	glmmGSAPI.BeginResponse(family);
-	if (family == "binomial")
-	{
-		# Get response and counts
-		pos = 1;
-		pos = glmmGSParser.SkipWhites(response, pos);
-		pos = glmmGSParser.Match(response, "\\(", pos);
-		
-		pos = glmmGSParser.SkipWhites(response, pos);
-		token = glmmGSParser.GetToken(response, "\\|", pos);
-		pos = token$pos + 1;
-		y = glmmGS.GetVariable(glmmGSParser.Trim(token$text), data, env);
-		
-		pos = glmmGSParser.SkipWhites(response, pos);
-		token = glmmGSParser.GetToken(response, "\\)", pos);
-		pos = token$pos + 1;
-		counts = glmmGS.GetVariable(glmmGSParser.Trim(token$text), data, env);
-		
-		pos = glmmGSParser.SkipWhites(response, pos);
-		token = glmmGSParser.GetToken(response, ".", pos);
-		if (token$pos != -1)
-			stop("Invalid response formula");
-		
-		# Add response and counts
-		glmmGSAPI.AddResponse(y);
-		glmmGSAPI.AddCounts(counts);
-	}
-	else if (family == "poisson")
-	{
-		# Get response
-		varname = glmmGSParser.Trim(response);
-		y = glmmGS.GetVariable(varname, data, env);
-		
-		# Add response
-		glmmGSAPI.AddResponse(y);
-	}
-	else
-	{
-		stop("Unsupported family");
-	}
-	glmmGSAPI.EndResponse();
+					random.effects = random.effects,
+					covariance.components = covariance.components,
+					iterations = iterations))
 }
 
 # Main function
-glmmGS = function(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control())
+glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Control())
 {
-	# Gets environment of calling function
-	env = environment(formula);
-	
-	# Convert formula and family into text
-	formula = as.character(formula);
-	family = family()$family;
-	
-	# Split response and predictor string
-	response = formula[2];
-	predictor = formula[3];
-
-	# Clean-up state machine
-	glmmGSAPI.Tidy();
-	
-	# Initialize state machine
-	glmmGSAPI.Begin();
-	
-	# Add response
-	glmmGS.AddResponse(response, family, data, env);
-	
-	# Initialize position counter
-	pos = 1L;
-	
-	# Add offset
-	offset = glmmGSParser.GetOffset(predictor, pos);
-	if (is.null(offset) == FALSE)
+	# Validate and coerce formula argument
+	if (missing(formula))
 	{
-		pos = offset$pos;
-		glmmGS.AddOffset(offset, data, env);
-		pos = glmmGSParser.ParseSeparator(predictor, pos);
+		stop("\'formula\' argument missing with no default")
+	}
+	formula <- as.formula(formula)
+	
+	# Validate and coerce family argument
+	if (missing(family)) 
+	{
+		stop("\'family\' argument missing with no default")
+	}
+	else if (is.character(family))
+	{
+		family <- get(family, mode = "function", envir = parent.frame())
+	}
+	else if (is.function(family))
+	{
+		family <- family()
+	}
+	else
+	{
+		stop("Invalid \'family\' argument")
 	}
 	
-	# Add predictor blocks
-	while (pos != -1L)
+	# Vaidate family members
+	if (family$family == "binomial") 
 	{
-		# Add block
-		block = glmmGSParser.GetNextBlock(predictor, pos);
-		pos = block$pos;
-		glmmGS.AddBlock(block, data, covariance.models, env);
+		if ((family$link %in% c("logit")) == FALSE) 
+		{
+			stop("unsupported link in binomial family")
+		}
+	}
+	else if (family$family == "poisson") 
+	{
+		if ((family$link %in% c("log")) == FALSE) 
+		{
+			stop("unsupported link in poisson family")
+		}
+	}
+	else
+	{
+		print(family)
+		stop("Unsupported family")
+	}
+	
+	# Set data if missing
+	if (missing(data))
+	{
+		data <- environment(formula)
+	}
+		
+	# Set covariance.models if missing
+	if (missing(covariance.models))
+	{
+		covariance.models <- environment(formula)
+	}
+	
+	# Get response and predictor blocks
+	response <- glmmGSParser.GetResponse(formula, family$family)
+	predictors <- glmmGSParser.GetPredictors(formula)
+	
+	# Clean-up API
+	glmmGSAPI.Tidy()
+	
+	# Initialize API
+	glmmGSAPI.Begin()
+	
+	# Add response
+	glmmGSAPI.BeginResponse(family$family)
+	glmmGSAPI.AddResponse(get(response$vars[1], data))
+	if (family$family == "binomial") 
+	{
+		if (length(response$vars) == 1)
+		{
+			response.sizes <- integer(length(get(response$vars[1], data)))
+		}
+		else
+		{
+			response.sizes <- get(response$vars[2], data)
+		}
+		glmmGSAPI.AddCounts(response.sizes)
+	}
+	glmmGSAPI.EndResponse()
 
-		# Parse separator and set position to next block 
-		pos = glmmGSParser.ParseSeparator(predictor, pos);
+	# Add offset
+	if (!is.null(predictors$offset))
+		glmmGSAPI.AddOffset(get(predictors$offset, data))
+	
+	# Add ifactor variable to predictor blocks
+	for (i in 1:length(predictors$blocks))
+	{
+		block <- predictors$blocks[[i]]
+		if (attr(block, "type") == "stratified")
+		{
+			if (!is.null(block$ifactor)) stop("ifactor already defined") # For debug
+			predictors$blocks[[i]]$ifactor <- as.integer(as.factor(get(block$factor, data))) - 1L
+		}
+	}
+	for (block in predictors$blocks)
+	{
+		if (attr(block, "effects") == "fixed") 
+		{
+			# Fixed effects
+			glmmGSAPI.BeginFixedEffects()
+			if (attr(block, "type") == "dense") 
+			{
+				# Dense block
+				glmmGSAPI.BeginGlobalBlock()
+				glmmGS.AddPredictors(block$vars, data)
+				glmmGSAPI.EndGlobalBlock()			
+			}
+			else if (attr(block, "type") == "stratified")
+			{
+				# Stratified block
+				glmmGSAPI.BeginStratifiedBlock(block$ifactor)
+				glmmGS.AddPredictors(block$vars, data)
+				glmmGSAPI.EndStratifiedBlock()			
+			}
+			glmmGSAPI.EndFixedEffects()
+		}
+		else if (attr(block, "effects") == "random")
+		{
+			# Random effects
+			glmmGSAPI.BeginRandomEffects()
+			if (attr(block, "type") == "dense")
+			{
+				# Dense block
+				glmmGSAPI.BeginGlobalBlock()
+				glmmGS.AddPredictors(block$vars, data)
+				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
+				glmmGSAPI.EndGlobalBlock()			
+			}
+			else if (attr(block, "type") == "stratified")
+			{
+				# Stratified block
+				glmmGSAPI.BeginStratifiedBlock(block$ifactor)
+				glmmGS.AddPredictors(block$vars, data)
+				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
+				glmmGSAPI.EndStratifiedBlock()			
+			}
+			glmmGSAPI.EndRandomEffects()		
+		}
 	}
 	
 	# Fit model
-	results = glmmGS.Fit(control);
+	results <- glmmGS.Fit(control)
 	
-	# Terminate state-machine
-	glmmGSAPI.End();
+	# Terminate API
+	glmmGSAPI.End()
 	
 	# Return results
-	return(results);
+	return(results)
 }

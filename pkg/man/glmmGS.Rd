@@ -15,38 +15,36 @@
 	or sparse precision matrices are also allowed (see \code{\link{glmmGS.CovarianceModel}}).
 }
 \usage{
-	glmmGS(formula, family, data = NULL, covariance.models = NULL, control = glmmGS.Control())
+	glmmGS(formula, family, data, covariance.models, control = glmmGS.Control())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
 	\item{formula}{
 		a formula object providing a symbolic description of the model to be fitted.
-		The formula object must be of the type \emph{response ~ linear-predictor}. For a binomial
-		response, the response must be defined as \code{(outcome | counts)}. The linear predictor 
-		comprises fixed effects and random effects. Fixed and random effects must be grouped 
-		in blocks (the blocks of the Gauss-Seidel algorithm, see Reference) 
+		The formula object must be of the type \emph{response ~ linear-predictor}. 
+		Discrete responses must be integer vectors. For a binomial
+		response, the response must be defined as \code{response / size}, , with or without parenthesis,
+		and with both \code{response} and \code{size} begin integer vectors.
+		The linear predictor comprises fixed effects and random effects.
+		Fixed and random effects must be grouped in blocks 
+		(the blocks of the Gauss-Seidel algorithm, see Reference) 
 		specified by pairs of parentheses. Blocks of covariates can be stratified by a grouping
-		variable. The covariance model inside the random effect block is specified by using the symbol 
-		\code{~} followed by a variable-name of a previously defined \code{\link{glmmGS.CovarianceModel}}).
+		variable, defined by either a factor or an object coercible to a factor.
+		The covariance model inside the random effect block is specified by using the symbol 
+		\code{~} followed by the variable name of a previously defined \code{\link{glmmGS.CovarianceModel}}.
 		If an offset \code{off} is present in the linear predictor, it must be specified with keyword
-		\code{offset(off)} before the specification of the fixed and random effects. The intercepts should
-		always be explicitly specified by the symbol \code{1}; implicit specification
+		\code{offset(off)}. The intercepts must be explicitly specified using the the symbol \code{1}; 
+		implicit specification
 		of the intercept is not assumed. See Details for information on how non-identifiability 
 		introduced by multiple intercepts is handled. 
-		In order to minimize the memory usage, none of the variables present in the formula
-		are copied or coerced. In particular:
-		discrete outcomes must be integer vectors;
-		covariates must be vectors and/or matrices of either integer or numeric (i.e., double) type; 
-		grouping variables used to specify stratified covariates must be integer 
-		vectors containing zero-based consecutive levels.
 	}
 	\item{family}{
 		a description of the error distribution. Only two families are currently allowed:
 		\code{binomial} and \code{poisson} with a canonical link.
 	}
 	\item{data}{
-		an optional data frame, list or environment (or object coercible by as.data.frame 
-		to a data frame) containing the variables in the model. 
+		an optional data frame, list or environment (or object coercible to a data frame) 
+		containing the variables in the model. 
 		If not found in \code{data}, the variables are taken from \code{environment(formula)}, 
 		typically the environment from which \code{glmmGS} is called.
 	}
@@ -159,11 +157,10 @@
 	nPostCodes <- 2000L;
 
 	# Generate data
-	counts <- as.integer(runif(nobs, 1, 10));
+	size <- as.integer(runif(nobs, 1, 10));
 	days <- matrix(rnorm(nobs * ndays), nrow = nobs, ncol = ndays);
 	seifa <- rnorm(nobs);
 	postCodes <- as.factor(as.integer(runif(nobs, 0, nPostCodes)));
-	ipostCodes <- as.integer(postCodes) - 1L; # zero-based vector of indices
 	
 	# Generate coefficients
 	offset = runif(nobs, -1, 1);
@@ -179,7 +176,7 @@
 	eta <- eta + intercept.seifa[as.integer(postCodes)] + seifa * beta.seifa[as.integer(postCodes)];
 
 	# Generate response
-	y <- as.integer(rbinom(nobs, counts, plogis(eta)));
+	y <- as.integer(rbinom(nobs, size, plogis(eta)));
 
 	# Define identity precision model and control list
 	I <- glmmGS.CovarianceModel("identity");
@@ -188,8 +185,8 @@
 	# Fit model using Gauss-Seidel algorithm with two blocks: 
 	# - one fixed effect block: (1 + days);
 	# - one stratified random effect block with an identity  
-	#   covariance model: (1 + seifa | ipostCodes ~ I).
-	formula = (y | counts) ~ offset(offset) + (1 + days) + (1 + seifa | ipostCodes ~ I);
+	#   covariance model: (1 + seifa | postCodes ~ I).
+	formula = (y / size) ~ offset(offset) + (1 + days) + (1 + seifa | postCodes ~ I);
 	results <- glmmGS(formula = formula, family = binomial, control = control);
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

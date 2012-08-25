@@ -1,7 +1,6 @@
 # R low-level interface with GlmmAPI functions
 
 # Error buffer
-error_buffer.size = as.integer(1024);
 error.buffer = sprintf("%1024s", "");
 
 # Get error occurred in last API call
