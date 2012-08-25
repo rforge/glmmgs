@@ -1,3 +1,22 @@
+# Create factor variables
+glmmGS.CreateFactors <- function(blocks, data)
+{
+	if (length(blocks) > 0L)
+	{
+		for (i in 1:length(blocks))
+		{
+			block <- blocks[[i]]
+			if (attr(block, "type") == "stratified")
+			{
+				# Check that variable ifactor does not exists
+				if (!is.null(block$ifactor)) stop("ifactor already defined")
+				blocks[[i]]$ifactor <- as.integer(as.factor(get(block$factor, data))) - 1L
+			}
+		}
+	}
+	blocks
+}
+
 # Add variables to block
 glmmGS.AddPredictors <- function(vars, data)
 {
@@ -119,6 +138,10 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	response <- glmmGSParser.GetResponse(formula, family$family)
 	predictors <- glmmGSParser.GetPredictors(formula)
 	
+	# Add ifactor variable to stratified blocks
+	predictors$fixef <- glmmGS.CreateFactors(predictors$fixef, data)
+	predictors$ranef <- glmmGS.CreateFactors(predictors$ranef, data)
+	
 	# Clean-up API
 	glmmGSAPI.Tidy()
 	
@@ -130,7 +153,7 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGSAPI.AddResponse(get(response$vars[1], data))
 	if (family$family == "binomial") 
 	{
-		if (length(response$vars) == 1)
+		if (length(response$vars) == 1L)
 		{
 			response.sizes <- integer(length(get(response$vars[1], data)))
 		}
@@ -146,22 +169,12 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	if (!is.null(predictors$offset))
 		glmmGSAPI.AddOffset(get(predictors$offset, data))
 	
-	# Add ifactor variable to predictor blocks
-	for (i in 1:length(predictors$blocks))
+	# Fixed effects
+	if (length(predictors$fixef) > 0L)
 	{
-		block <- predictors$blocks[[i]]
-		if (attr(block, "type") == "stratified")
+		glmmGSAPI.BeginFixedEffects()
+		for (block in predictors$fixef)
 		{
-			if (!is.null(block$ifactor)) stop("ifactor already defined") # For debug
-			predictors$blocks[[i]]$ifactor <- as.integer(as.factor(get(block$factor, data))) - 1L
-		}
-	}
-	for (block in predictors$blocks)
-	{
-		if (attr(block, "effects") == "fixed") 
-		{
-			# Fixed effects
-			glmmGSAPI.BeginFixedEffects()
 			if (attr(block, "type") == "dense") 
 			{
 				# Dense block
@@ -176,12 +189,16 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 				glmmGS.AddPredictors(block$vars, data)
 				glmmGSAPI.EndStratifiedBlock()			
 			}
-			glmmGSAPI.EndFixedEffects()
 		}
-		else if (attr(block, "effects") == "random")
+		glmmGSAPI.EndFixedEffects()
+	}
+	
+	# Random effects
+	if (length(predictors$ranef) > 0L)
+	{
+		glmmGSAPI.BeginRandomEffects()
+		for (block in predictors$ranef)
 		{
-			# Random effects
-			glmmGSAPI.BeginRandomEffects()
 			if (attr(block, "type") == "dense")
 			{
 				# Dense block
@@ -198,8 +215,8 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
 				glmmGSAPI.EndStratifiedBlock()			
 			}
-			glmmGSAPI.EndRandomEffects()		
 		}
+		glmmGSAPI.EndRandomEffects()		
 	}
 	
 	# Fit model

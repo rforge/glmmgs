@@ -16,7 +16,7 @@ glmmGS.CreateSparseMatrix = function(values, indices, counts)
 	}
 	
 	# Check length of counts
-	if (length(counts) == 0)
+	if (length(counts) == 0L)
 	{
 		stop("\'counts\' must have length greater than zero");
 	}
@@ -25,20 +25,20 @@ glmmGS.CreateSparseMatrix = function(values, indices, counts)
 	ncols = length(counts) - 1L;
 	
 	# Check values of counts
-	if (counts[1] != 0)
+	if (counts[1] != 0L)
 	{
 		stop("\'counts[1]\' must be equal to zero");
 	}
 	for (j in 1:ncols)
 	{
-		if (counts[j + 1] < counts[j])
+		if (counts[j + 1L] < counts[j])
 		{
 			stop("\'counts\' must be monotonic non-descending");
 		}
 	}
 
 	# Retrieve total number of non-zero entries
-	nz = counts[ncols + 1];
+	nz = counts[ncols + 1L];
 	
 	# Check length of values and indices
 	if (length(values) != nz)
@@ -53,7 +53,7 @@ glmmGS.CreateSparseMatrix = function(values, indices, counts)
 	# Check indices
 	for (j in 1:ncols)
 	{
-		for (p in counts[j]:(counts[j + 1] - 1))
+		for (p in counts[j]:(counts[j + 1L] - 1L))
 		{
 			# Notice that p is zero-based
 			if ((indices[p + 1L] < 0L) || (indices[p + 1L] >= ncols))
@@ -102,7 +102,7 @@ glmmGS.SparseMatrix = function(...)
 			{
 				nz = which(R[, j] != 0);
 				count.total = count.total + length(nz);
-				counts[j + 1] = count.total;
+				counts[j + 1L] = count.total;
 			}
 			
 			# 2) Set values and indices

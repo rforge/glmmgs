@@ -73,12 +73,19 @@ glmmGSParser.GetPredictors <- function(formula)
 	# Get offset, if any
 	offset <- NULL
 	i <- match("offset", tokens)
-	if (!is.na(i) && i < length(tokens) && tokens[i + 1] != "+")
+	if (!is.na(i) && i < length(tokens) && tokens[i + 1L] != "+")
 	{
 		# Set offset
 		offset <- tokens[i + 1]
 		# Remove offset tokens
-		tokens <- tokens[-ifelse(i + 1 < length(tokens), c(i, i + 1, i + 2), c(i, i + 1))]
+		if (i + 1 < length(tokens))
+		{
+			tokens <- tokens[-c(i, i + 1L, i + 2L)]
+		}
+		else
+		{
+			tokens <- tokens[-c(i, i + 1L)]
+		}
 	}
 	
 	# Remove plus signs
@@ -96,13 +103,33 @@ glmmGSParser.GetPredictors <- function(formula)
 	}
 	blocks <- glmmGSParser.ParseBlocks(tokens)
 	
-	# Add attributes to blocks
-	for (i in 1:length(blocks))
+	# Set fixed and random effect blocks
+	fixef <- list()
+	ranef <- list()
+	for (block in blocks)
 	{
-		attr(blocks[[i]], "effects") <- ifelse(is.na(blocks[[i]]$cov.model), "fixed", "random") 
-		attr(blocks[[i]], "type") <- ifelse(is.na(blocks[[i]]$factor), "dense", "stratified") 
+		# Add attributes to dense or stratified blocks
+		if (is.na(block$factor))
+		{
+			block$factor <- NULL
+			attr(block, "type") <- "dense"
+		}
+		else
+		{
+			attr(block, "type") <- "stratified"
+		}
+		
+		# Assign fixef or ranef blocks
+		if (is.na(block$cov.model))
+		{
+			block$cov.model <- NULL
+			fixef[[length(fixef) + 1L]] <- block
+		}
+		else
+		{
+			ranef[[length(ranef) + 1L]] <- block
+		}
 	}
 	
-	list(offset = offset, blocks = blocks)
+	list(offset = offset, fixef = fixef, ranef = ranef)
 }
-
