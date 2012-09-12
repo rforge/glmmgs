@@ -56,9 +56,11 @@ glmmGSParser.GetPredictors <- function(formula)
 {
 	# Get predictor string
 	predictors <- as.character(formula)[3]
+	
+	# Removed blanks
 	predictors <- gsub(" ", "", predictors)
 	
-	# If parentheses around offset
+	# Put parentheses around offset
 	predictors <- sub("offset\\(", "\\(offset\\)\\(", predictors)
 	
 	# Split predictor string into tokens  
