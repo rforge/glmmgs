@@ -1,20 +1,8 @@
-# Create factor variables
-glmmGS.CreateFactors <- function(blocks, data)
+# Create factor variable
+glmmGS.CreateFactor <- function(block, data)
 {
-	if (length(blocks) > 0L)
-	{
-		for (i in 1:length(blocks))
-		{
-			block <- blocks[[i]]
-			if (attr(block, "type") == "stratified")
-			{
-				# Check that variable ifactor does not exists
-				if (!is.null(block$ifactor)) stop("ifactor already defined")
-				blocks[[i]]$ifactor <- as.integer(as.factor(get(block$factor, data))) - 1L
-			}
-		}
-	}
-	blocks
+	g <- get(block$factor, data)
+	as.integer(as.factor(g)) - 1L
 }
 
 # Add variables to block
@@ -127,7 +115,7 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	{
 		data <- environment(formula)
 	}
-		
+
 	# Set covariance.models if missing
 	if (missing(covariance.models))
 	{
@@ -138,9 +126,8 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	response <- glmmGSParser.GetResponse(formula, family$family)
 	predictors <- glmmGSParser.GetPredictors(formula)
 	
-	# Add ifactor variable to stratified blocks
-	predictors$fixef <- glmmGS.CreateFactors(predictors$fixef, data)
-	predictors$ranef <- glmmGS.CreateFactors(predictors$ranef, data)
+	# Initialize ifactor local list
+	ifactors <- list()
 	
 	# Initialize API
 	glmmGSAPI.BeginModel()
@@ -181,10 +168,14 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 			}
 			else if (attr(block, "type") == "stratified")
 			{
+				# Create ifactor and store it in the temp variable list
+				index <- length(ifactors) + 1L
+				ifactors[[index]] <- glmmGS.CreateFactor(block, data)
+				
 				# Stratified block
-				glmmGSAPI.BeginStratifiedBlock(block$ifactor)
+				glmmGSAPI.BeginStratifiedBlock(ifactors[[index]])
 				glmmGS.AddPredictors(block$vars, data)
-				glmmGSAPI.EndStratifiedBlock()			
+				glmmGSAPI.EndStratifiedBlock()
 			}
 			else
 			{
@@ -210,11 +201,15 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 			}
 			else if (attr(block, "type") == "stratified")
 			{
+				# Create ifactor and store it in the temp variable list
+				index <- length(ifactors) + 1L
+				ifactors[[index]] <- glmmGS.CreateFactor(block, data)
+			
 				# Stratified block
-				glmmGSAPI.BeginStratifiedBlock(block$ifactor)
+				glmmGSAPI.BeginStratifiedBlock(ifactors[[index]])
 				glmmGS.AddPredictors(block$vars, data)
 				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
-				glmmGSAPI.EndStratifiedBlock()			
+				glmmGSAPI.EndStratifiedBlock()
 			}
 			else
 			{
@@ -228,8 +223,5 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGSAPI.EndModel()
 	
 	# Fit model
-	results <- glmmGS.Fit(control)
-	
-	# Return results
-	return(results)
+	glmmGS.Fit(control)
 }

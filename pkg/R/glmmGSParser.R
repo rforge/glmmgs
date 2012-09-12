@@ -1,39 +1,36 @@
 # glmmGS parser utility funtions
 
-glmmGSParser.ParseVariables <- function(token)
+glmmGSParser.GetVariables <- function(token)
 {
 	token <- unlist(strsplit(token, "\\~"))[1]
 	token <- unlist(strsplit(token, "\\|"))[1]
-	vars <- unlist(strsplit(token, "\\+"))
-	vars
+	unlist(strsplit(token, "\\+"))
 }
 
-glmmGSParser.ParseFactor <- function(token)
+glmmGSParser.GetFactor <- function(token)
 {
 	token <- unlist(strsplit(token, "\\~"))[1]
-	token <- unlist(strsplit(token, "\\|"))[2]
-	token
+	unlist(strsplit(token, "\\|"))[2]
 }
 
-glmmGSParser.ParseCovModel <- function(token)
+glmmGSParser.GetCovModel <- function(token)
 {
-	token <- unlist(strsplit(token, "\\~"))[2]
-	token
+	unlist(strsplit(token, "\\~"))[2]
 }
 
-glmmGSParser.ParseBlocks <- function(tokens)
+glmmGSParser.GetBlocks <- function(tokens)
 {
 	n = length(tokens)
 	blocks <- list()
 	for (i in 1:n)
 	{
 		token <- tokens[i]
-		vars <- glmmGSParser.ParseVariables(token)
-		factor <- glmmGSParser.ParseFactor(token)
-		cov.model <- glmmGSParser.ParseCovModel(token)
+		vars <- glmmGSParser.GetVariables(token)
+		factor <- glmmGSParser.GetFactor(token)
+		cov.model <- glmmGSParser.GetCovModel(token)
 		blocks[[i]] <- list(vars = vars, factor = factor, cov.model = cov.model)
 	}
-	return(blocks)
+	blocks
 }
 
 glmmGSParser.GetResponse <- function(formula, family)
@@ -58,17 +55,15 @@ glmmGSParser.GetResponse <- function(formula, family)
 glmmGSParser.GetPredictors <- function(formula)
 {
 	# Get predictor string
-	predictors <- as.character(formula[3])
+	predictors <- as.character(formula)[3]
+	predictors <- gsub(" ", "", predictors)
 	
-	# If 'offset(', add left parenthesis
-	predictors <- sub(" offset\\(", " \\(offset\\(", predictors)
+	# If parentheses around offset
+	predictors <- sub("offset\\(", "\\(offset\\)\\(", predictors)
 	
 	# Split predictor string into tokens  
 	tokens <- unlist(strsplit(predictors, "\\("))
 	tokens <- unlist(strsplit(tokens, "\\)"))
-	
-	# remove white spaces
-	tokens <- gsub(" ", "", tokens)
 	
 	# Get offset, if any
 	offset <- NULL
@@ -76,18 +71,22 @@ glmmGSParser.GetPredictors <- function(formula)
 	if (!is.na(i) && i < length(tokens) && tokens[i + 1L] != "+")
 	{
 		# Set offset
-		offset <- tokens[i + 1]
+		offset <- tokens[i + 1L]
 		# Remove offset tokens
-		if (i + 1 < length(tokens))
+		if (i > 1L)
+		{
+			tokens <- tokens[-c(i - 1L, i, i + 1L)]
+		}
+		else if (i < length(tokens) - 1L)
 		{
 			tokens <- tokens[-c(i, i + 1L, i + 2L)]
 		}
 		else
 		{
-			tokens <- tokens[-c(i, i + 1L)]
+			stop("Invalid formula")
 		}
 	}
-	
+
 	# Remove plus signs
 	len <- length(tokens)
 	if (len > 1L)
@@ -101,7 +100,7 @@ glmmGSParser.GetPredictors <- function(formula)
 		# Remove the "+" tokens
 		tokens <- tokens[-even]
 	}
-	blocks <- glmmGSParser.ParseBlocks(tokens)
+	blocks <- glmmGSParser.GetBlocks(tokens)
 	
 	# Set fixed and random effect blocks
 	fixef <- list()
@@ -133,3 +132,4 @@ glmmGSParser.GetPredictors <- function(formula)
 	
 	list(offset = offset, fixef = fixef, ranef = ranef)
 }
+
