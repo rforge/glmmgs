@@ -24,26 +24,18 @@ namespace GlmmGS
 					this->beta(i) = Vector<double>(this->factor.NumberOfLevels());
 			}
 
-			Vector<Estimate> Block::Coefficients() const
+			// Properties
+			Vector<Vector<double> > Block::Coefficients() const
 			{
-				const int nvars = this->variables.Size();
-				const int nlevels = this->factor.NumberOfLevels();
-				Vector<Estimate> estimates(nvars * nlevels);
-				Vector<double> variance = this->covariance_model->CoefficientsVariance();
-				for (int i = 0, ik = 0; i < nvars; ++i)
-				{
-					const Vector<double> & v = this->beta(i);
-					for (int k = 0; k < v.Size(); ++k, ++ik)
-						estimates(ik) = Estimate(v(k), variance(ik));
-				}
-				return estimates;
+				return this->beta;
 			}
 
-			Vector<Estimate> Block::CovarianceComponents() const
+			Pointer<CovarianceModels::ICovarianceModel> Block::CovarianceModel() const
 			{
-				return this->covariance_model->Estimates();
+				return this->covariance_model;
 			}
 
+			// Implementation
 			void Block::UpdatePredictor(Vector<double> & eta) const
 			{
 				const int nvars = this->variables.Size();

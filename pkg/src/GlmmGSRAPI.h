@@ -41,16 +41,56 @@ extern "C"
 	void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance,
 			const int * maxiter, const int * verbose);
 
-	// Results
-	void GlmmGSRAPI_GetFixedEffectsSize(int * size);
-	void GlmmGSRAPI_GetFixedEffectsEstimates(double * values, const int * size);
-	void GlmmGSRAPI_GetFixedEffectsErrors(double * values, const int * size);
-	void GlmmGSRAPI_GetRandomEffectsSize(int * size);
-	void GlmmGSRAPI_GetRandomEffectsEstimates(double * values, const int * size);
-	void GlmmGSRAPI_GetRandomEffectsErrors(double * values, const int * size);
-	void GlmmGSRAPI_GetCovarianceComponentsSize(int * size);
-	void GlmmGSRAPI_GetCovarianceComponentsEstimates(double * values, const int * size);
-	void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size);
+	// Results - Fixed effects
+	void GlmmGSRAPI_GetFixefDenseBlock(
+			const int * block,
+			const double * beta,
+			const double * beta_cov,
+			const int * nvars);
+
+	void GlmmGSRAPI_GetFixefStratifiedBlock(
+			const int * block,
+			const double * beta,
+			const double * beta_cov,
+			const int * nvars,
+			const int * nlevels);
+
+	// Results - Random effects
+	void GlmmGSRAPI_GetRanefDenselBlockDense(
+			const int * block,
+			const double * beta,
+			const double * beta_cov,
+			const double * theta,
+			const double * theta_cov,
+			const int * nvars);
+
+	void GlmmGSRAPI_GetRanefStratifiedBlockDense(
+			const int * block,
+			const double * beta,
+			const double * beta_cov,
+			const double * theta,
+			const double * theta_cov,
+			const int * nvars,
+			const int * nlevels);
+
+	void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
+			const int * block,
+			const double * beta,
+			const double * beta_cov,
+			const double * theta,
+			const double * theta_cov,
+			const int * nvars,
+			const int * nlevels);
+
+	void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
+			const int * block,
+			const double * beta,
+			const double * beta_cov,
+			const double * theta,
+			const double * theta_cov_values, const int * theta_cov_indices, const int * theta_cov_counts, const int * theta_cov_ncols,
+			const int * nvars,
+			const int * nlevels);
+
 	void GlmmGSRAPI_GetIterations(int * iterations);
 }
 

@@ -22,20 +22,15 @@ namespace GlmmGS
 			{
 			}
 
-			Vector<Estimate> Block::Coefficients() const
+			// Properties
+			Vector<Vector<double> > Block::Coefficients() const
 			{
-				const int nvars = this->variables.Size();
-				const int nlevels = this->factor.NumberOfLevels();
-				Vector<Estimate> y(nvars * nlevels);
-				TriangularMatrix<Vector<double> > covariance = this->chol.Inverse();
-				for (int index = 0, i = 0; i < nvars; ++i)
-				{
-					const Vector<double> & betai = this->beta(i);
-					const Vector<double> & vari = covariance(i, i);
-					for (int j = 0; j < nlevels; ++j, ++index)
-						y(index) = Estimate(betai(j), vari(j));
-				}
-				return y;
+				return this->beta;
+			}
+
+			TriangularMatrix<Vector<double> > Block::Covariance() const
+			{
+				return this->chol.Inverse();
 			}
 
 			// Methods

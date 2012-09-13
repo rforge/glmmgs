@@ -337,152 +337,71 @@ void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_t
 	}
 }
 
-void GlmmGSRAPI_GetFixedEffectsSize(int * size)
+// Results - Dense fixed effects
+void GlmmGSRAPI_GetFixefDenseBlock(
+		const int * block,
+		const double * beta,
+		const double * beta_cov,
+		const int * nvars)
 {
-	try
-	{
-		*size = GlmmGSAPI::theApi.GlmmGS().FixedEffectsCoefficients().Size();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
+
 }
 
-void GlmmGSRAPI_GetFixedEffectsEstimates(double * values, const int * size)
+// Results - Stratified fixed effects
+void GlmmGSRAPI_GetFixefStratifiedBlock(
+		const int * block,
+		const double * beta,
+		const double * beta_cov,
+		const int * nvars,
+		const int * nlevels)
 {
-	try
-	{
-		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().FixedEffectsCoefficients();
-		const int n = *size;
-		if (n != estimates.Size())
-			throw GlmmGSAPI::Exceptions::InvalidSizeException();
-		for (int i = 0; i < n; ++i)
-			values[i] = estimates(i).Value();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
+
 }
 
-void GlmmGSRAPI_GetFixedEffectsErrors(double * values, const int * size)
+// Results - Random effects - Dense covariance
+void GlmmGSRAPI_GetRanefDenselBlockDense(
+		const int * block,
+		const double * beta,
+		const double * beta_cov,
+		const double * theta,
+		const double * theta_cov,
+		const int * nvars)
 {
-	try
-	{
-		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().FixedEffectsCoefficients();
-		const int n = *size;
-		if (n != estimates.Size())
-			throw GlmmGSAPI::Exceptions::InvalidSizeException();
-		for (int i = 0; i < n; ++i)
-			values[i] = sqrt(estimates(i).Variance());
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
+
 }
 
-void GlmmGSRAPI_GetRandomEffectsSize(int * size)
+void GlmmGSRAPI_GetRanefStratifiedBlockDense(
+		const int * block,
+		const double * beta,
+		const double * beta_cov,
+		const double * theta,
+		const double * theta_cov,
+		const int * nvars,
+		const int * nlevels)
 {
-	try
-	{
-		*size = GlmmGSAPI::theApi.GlmmGS().RandomEffectsCoefficients().Size();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
+
 }
 
-void GlmmGSRAPI_GetRandomEffectsEstimates(double * values, const int * size)
+void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
+		const int * block,
+		const double * beta,
+		const double * beta_cov,
+		const double * theta,
+		const double * theta_cov,
+		const int * nvars,
+		const int * nlevels)
 {
-	try
-	{
-		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().RandomEffectsCoefficients();
-		const int n = *size;
-		if (n != estimates.Size())
-			throw GlmmGSAPI::Exceptions::InvalidSizeException();
-		for (int i = 0; i < n; ++i)
-			values[i] = estimates(i).Value();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
+
 }
 
-void GlmmGSRAPI_GetRandomEffectsErrors(double * values, const int * size)
+void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
+		const int * block,
+		const double * beta,
+		const double * beta_cov,
+		const double * theta,
+		const double * theta_cov_values, const int * theta_cov_indices, const int * theta_cov_counts, const int * theta_cov_ncols,
+		const int * nvars,
+		const int * nlevels)
 {
-	try
-	{
-		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().RandomEffectsCoefficients();
-		const int n = *size;
-		if (n != estimates.Size())
-			throw GlmmGSAPI::Exceptions::InvalidSizeException();
-		for (int i = 0; i < n; ++i)
-			values[i] = sqrt(estimates(i).Variance());
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
-}
 
-void GlmmGSRAPI_GetCovarianceComponentsSize(int * size)
-{
-	try
-	{
-		*size = GlmmGSAPI::theApi.GlmmGS().CovarianceComponents().Size();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
-}
-
-void GlmmGSRAPI_GetCovarianceComponentsEstimates(double * values, const int * size)
-{
-	try
-	{
-		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().CovarianceComponents();
-		const int n = *size;
-		if (n != estimates.Size())
-			throw GlmmGSAPI::Exceptions::InvalidSizeException();
-		for (int i = 0; i < n; ++i)
-			values[i] = estimates(i).Value();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
-}
-
-void GlmmGSRAPI_GetCovarianceComponentsErrors(double * values, const int * size)
-{
-	try
-	{
-		const Vector<GlmmGS::Estimate> & estimates = GlmmGSAPI::theApi.GlmmGS().CovarianceComponents();
-		const int n = *size;
-		if (n != estimates.Size())
-			throw GlmmGSAPI::Exceptions::InvalidSizeException();
-		for (int i = 0; i < n; ++i)
-			values[i] = sqrt(estimates(i).Variance());
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
-}
-
-void GlmmGSRAPI_GetIterations(int * iterations)
-{
-	try
-	{
-		*iterations = GlmmGSAPI::theApi.GlmmGS().Iterations();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
 }

@@ -21,14 +21,14 @@ namespace GlmmGS
 			}
 
 			// Properties
-			Vector<Estimate> Block::Coefficients() const
+			Vector<double> Block::Coefficients() const
 			{
-				const int n = this->beta.Size();
-				Vector<Estimate> y(n);
-				TriangularMatrix<double> covariance = this->chol.Inverse();
-				for (int i = 0; i < n; ++i)
-					y(i) = Estimate(this->beta(i), covariance(i, i));
-				return y;
+				return this->beta;
+			}
+
+			TriangularMatrix<double> Block::Covariance() const
+			{
+				return this->chol.Inverse();
 			}
 
 			// Methods

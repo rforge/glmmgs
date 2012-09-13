@@ -42,9 +42,6 @@ namespace GlmmGS
 		void Fit();
 
 		// Properties
-		Vector<Vector<Estimate> > FixedEffectsCoefficients() const;
-		Vector<Vector<Estimate> > RandomEffectsCoefficients() const;
-		Vector<Vector<Estimate> > CovarianceComponents() const;
 		int Iterations() const;
 	};
 

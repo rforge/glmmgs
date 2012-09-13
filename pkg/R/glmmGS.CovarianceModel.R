@@ -1,36 +1,40 @@
 # Construct covariance models
-glmmGS.CovarianceModel = function(type, ...)
+glmmGS.CovarianceModel <- function(type, ...)
 {
-	V = NULL;
-	ls = list(...);
+	model <- NULL
+	ls <- list(...)
+	
 	if (type == "identity")
 	{
-		V = list(type = "IdentityCovarianceModel");
+		model <- list()
+		class(model) <- "IdentityCovarianceModel"
 	}
 	else if (type == "precision")
 	{
-		V = NULL;
-		R = ls[[1]];
-		if (is.null(R) == TRUE)
+		R <- ls[[1]]
+		if (is.null(R))
 		{
-			stop("Invalid precision matrix");
+			stop("Invalid precision matrix")
 		}
-		else if ((is.matrix(R) == TRUE) && (nrow(R) == ncol(R)))
+		else if (class(R) == "matrix" && nrow(R) == ncol(R))
 		{
-			V = list(type = "PrecisionModel", R = R);
+			model <- list(R = R);
+			class(model) <- "PrecisionModel" 
 		}
-		else if (is.null(attr(R, "sparse.matrix", TRUE)) == FALSE)
+		else if (class(R) == "glmmGS.SparseMatrix")
 		{
-			V = list(type = "SparsePrecisionModel", R = R);
+			model <- list(R = R);
+			class(model) <- "SparsePrecisionModel" 
 		}
 		else
 		{
-			stop("Invalid precision matrix");
+			stop("Invalid precision matrix")
 		}
 	}
 	else
 	{
-		stop("Unsupported covariance model");
+		stop("Unsupported covariance model")
 	}
-	return(V);
+	
+	model
 }

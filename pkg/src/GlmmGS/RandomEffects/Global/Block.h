@@ -24,8 +24,6 @@ namespace GlmmGS
 				Pointer<CovarianceModels::ICovarianceModel> covariance_model;
 
 				// Implementation
-				Vector<Estimate> Coefficients() const;
-				Vector<Estimate> CovarianceComponents() const;
 				void UpdatePredictor(Vector<double> & eta) const;
 				int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 
@@ -33,6 +31,10 @@ namespace GlmmGS
 				// Construction
 				Block(const Vector<Pointer<Variables::IVariable> > & variables,
 						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model);
+
+				// Properties
+				Vector<double> Coefficients() const;
+				Pointer<CovarianceModels::ICovarianceModel> CovarianceModel() const;
 			};
 		}
 	}

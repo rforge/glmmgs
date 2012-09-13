@@ -1,53 +1,59 @@
-# Internal function to construct sparse matrix
-glmmGS.CreateSparseMatrix = function(values, indices, counts)
+# Generic function
+glmmGS.SparseMatrix <- function(object, ...)
 {
-	# Check types
-	if ((is.integer(counts) == FALSE) || (is.vector(counts) == FALSE))
+	UseMethod("glmmGS.SparseMatrix")
+}
+
+# Construct sparse matrix from vector
+glmmGS.SparseMatrix.numeric <- function(values, indices, counts, ...)
+{
+	# Check argument
+	if (!is.double(values) || !is.vector(values))
 	{
-		stop("\'counts\' must be a vector of integers");
+		stop("\'values\' must be a vector of doubles")
 	}
-	if ((is.double(values) == FALSE) || (is.vector(values) == FALSE))
+	if (!is.integer(indices) || !is.vector(indices))
 	{
-		stop("\'values\' must be a vector of double");
+		stop("\'indices\' must be a vector of integers")
 	}
-	if ((is.integer(indices) == FALSE) || (is.vector(indices) == FALSE))
+	if (!is.integer(counts) || !is.vector(counts))
 	{
-		stop("\'indices\' must be a vector of integers");
+		stop("\'counts\' must be a vector of integers")
 	}
 	
 	# Check length of counts
 	if (length(counts) == 0L)
 	{
-		stop("\'counts\' must have length greater than zero");
+		stop("\'counts\' must have length greater than zero")
 	}
 	
 	# Set number of columns
-	ncols = length(counts) - 1L;
+	ncols <- length(counts) - 1L
 	
 	# Check values of counts
 	if (counts[1] != 0L)
 	{
-		stop("\'counts[1]\' must be equal to zero");
+		stop("\'counts[1]\' must be equal to zero")
 	}
 	for (j in 1:ncols)
 	{
 		if (counts[j + 1L] < counts[j])
 		{
-			stop("\'counts\' must be monotonic non-descending");
+			stop("\'counts\' must be monotonic non-descending")
 		}
 	}
 
 	# Retrieve total number of non-zero entries
-	nz = counts[ncols + 1L];
+	nz <- counts[ncols + 1L]
 	
 	# Check length of values and indices
 	if (length(values) != nz)
 	{
-		stop("Wrong length of \'values\'");
+		stop("Wrong length of \'values\'")
 	}
 	if (length(indices) != nz)
 	{
-		stop("Wrong length of \'indices\'");
+		stop("Wrong length of \'indices\'")
 	}
 	
 	# Check indices
@@ -63,79 +69,50 @@ glmmGS.CreateSparseMatrix = function(values, indices, counts)
 		}
 	}
 	
-	# Set return list
-	retval = list(values = values, indices = indices, counts = counts);
-	
-	# Attach "sparse" attribute to list
-	attr(retval, "sparse.matrix") = TRUE;
-	
+	# Create object
+	sparse.matrix <- list(values = values, indices = indices, counts = counts)
+	class(sparse.matrix) <- "glmmGS.SparseMatrix"
+
 	# Return
-	return(retval);
+	sparse.matrix
 }
 
 # Construct sparse matrix
-glmmGS.SparseMatrix = function(...)
+glmmGS.SparseMatrix.matrix <- function(matrix, ...)
 {
-	# Get argument list
-	ls = list(...);
+	# Validate argument
+	if (is.null(matrix) || !is.matrix(matrix) || (nrow(matrix) != ncol(matrix)))
+		stop("Invalid input")
 	
-	# Initialize return value
-	retval = NULL;
-	
-	# Parse argument list
-	if (length(ls) == 1L)
+	# Build sparse matrix
+	# 1) Count non-zero elements
+	ncols <- ncol(matrix)
+	counts <- integer(ncols + 1L)
+	count.total <- 0L
+	counts[1] <- 0L
+	for (j in 1:ncols)
 	{
-		R = ls[[1]];
-		if ((is.null(R) == TRUE) || (is.matrix(R) == FALSE) || (nrow(R) != ncol(R)))
+		nz <- which(matrix[, j] != 0)
+		count.total <- count.total + length(nz)
+		counts[j + 1L] <- count.total
+	}
+	
+	# 2) Set values and indices
+	values <- double(count.total)
+	indices <- integer(count.total)
+	index <- 0L
+	for (j in 1:ncols)
+	{
+		nz <- which(matrix[, j] != 0)
+		lnz <- length(nz)
+		if (lnz > 0L)
 		{
-			stop("Invalid matrix");
-		}
-		else
-		{
-			# Build sparse matrix
-			# 1) Count non-zero elements
-			ncols = ncol(R);
-			counts = integer(ncols + 1L);
-			count.total = 0L;
-			counts[1] = 0L;
-			for (j in 1:ncols)
-			{
-				nz = which(R[, j] != 0);
-				count.total = count.total + length(nz);
-				counts[j + 1L] = count.total;
-			}
-			
-			# 2) Set values and indices
-			values = double(count.total);
-			indices = integer(count.total);
-			index = 0L;
-			for (j in 1:ncols)
-			{
-				nz = which(R[, j] != 0);
-				lnz = length(nz);
-				values[index + 1:lnz] = R[nz, j];
-				indices[index + 1:lnz] = nz - 1L; # must be zero-based
-				index = index + lnz;
-			}
-			
-			# Create sparse matrix
-			retval = glmmGS.CreateSparseMatrix(values, indices, counts);
+			values[index + 1:lnz] <- matrix[nz, j]
+			indices[index + 1:lnz] <- nz - 1L # must be zero-based
+			index = index + lnz
 		}
 	}
-	else if (length(ls) == 3L)
-	{
-		# Retrieve data
-		values = ls[[1]];
-		indices = ls[[2]];
-		counts = ls[[3]];
-		
-		# Create sparse matrix
-		retval = glmmGS.CreateSparseMatrix(values, indices, counts);
-	}
-	else
-	{
-		stop("Invalid argument list");
-	}
 	
-	return(retval);
+	# Create sparse matrix
+	glmmGS.SparseMatrix(values, indices, counts)
 }

@@ -42,9 +42,6 @@ namespace GlmmGS
 	{
 		GlmmGSSolver solver(this->response, this->offset, this->fixed_effects, this->random_effects, controls);
 		solver.Fit();
-		ToVector(this->fixed_effects_estimates, solver.FixedEffectsCoefficients());
-		ToVector(this->random_effects_estimates, solver.RandomEffectsCoefficients());
-		ToVector(this->covariance_components_estimates, solver.CovarianceComponents());
 		this->iterations = solver.Iterations();
 	}
 }

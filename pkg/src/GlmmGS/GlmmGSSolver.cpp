@@ -89,32 +89,4 @@ namespace GlmmGS
 		// Evaluate working weights and values
 		this->response->EvaluateWorkingWeightsAndValues(this->working_weights, this->working_values, this->eta);
 	}
-
-	// Properties
-	Vector<Vector<Estimate> > GlmmGSSolver::FixedEffectsCoefficients() const
-	{
-		const int nblocks = this->fixed_effects.Size();
-		Vector<Vector<Estimate> > estimates(nblocks);
-		for (int block = 0; block < nblocks; ++block)
-			estimates(block) = this->fixed_effects(block)->Coefficients();
-		return estimates;
-	}
-
-	Vector<Vector<Estimate> > GlmmGSSolver::RandomEffectsCoefficients() const
-	{
-		const int nblocks = this->random_effects.Size();
-		Vector<Vector<Estimate> > estimates(nblocks);
-		for (int block = 0; block < nblocks; ++block)
-			estimates(block) = this->random_effects(block)->Coefficients();
-		return estimates;
-	}
-
-	Vector<Vector<Estimate> > GlmmGSSolver::CovarianceComponents() const
-	{
-		const int nblocks = this->random_effects.Size();
-		Vector<Vector<Estimate> > estimates(nblocks);
-		for (int block = 0; block < nblocks; ++block)
-			estimates(block) = this->random_effects(block)->CovarianceComponents();
-		return estimates;
-	}
 }

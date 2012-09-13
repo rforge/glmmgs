@@ -24,7 +24,6 @@ namespace GlmmGS
 				VectorialCholeskyDecomposition chol;
 
 				// Implementation
-				Vector<Estimate> Coefficients() const;
 				int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 				void UpdatePredictor(Vector<double> & eta) const;
 
@@ -32,6 +31,10 @@ namespace GlmmGS
 				// Construction
 				Block(Vector<Pointer<Variables::IVariable> > variables, WeakFactor factor);
 				~Block();
+
+				// Properties
+				Vector<Vector<double> > Coefficients() const;
+				TriangularMatrix<Vector<double> > Covariance() const;
 			};
 		}
 	}

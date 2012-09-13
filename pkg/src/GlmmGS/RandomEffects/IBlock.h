@@ -18,10 +18,6 @@ namespace GlmmGS
 		public:
 			virtual ~IBlock();
 
-			// Properties
-			virtual Vector<Estimate> Coefficients() const = 0;
-			virtual Vector<Estimate> CovarianceComponents() const = 0;
-
 			// Methods
 			virtual void UpdatePredictor(Vector<double> & eta) const = 0;
 			virtual int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls) = 0;

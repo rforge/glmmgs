@@ -25,10 +25,10 @@ glmmGSParser.GetBlocks <- function(tokens)
 	for (i in 1:n)
 	{
 		token <- tokens[i]
-		vars <- glmmGSParser.GetVariables(token)
-		factor <- glmmGSParser.GetFactor(token)
-		cov.model <- glmmGSParser.GetCovModel(token)
-		blocks[[i]] <- list(vars = vars, factor = factor, cov.model = cov.model)
+		blocks[[i]] <- glmmGSParser.Block(
+				vars = glmmGSParser.GetVariables(token), 
+				factor = glmmGSParser.GetFactor(token), 
+				cov.model = glmmGSParser.GetCovModel(token))
 	}
 	blocks
 }
@@ -36,7 +36,7 @@ glmmGSParser.GetBlocks <- function(tokens)
 glmmGSParser.GetResponse <- function(formula, family)
 {
 	# Get predictor string
-	response <- as.character(formula[2])
+	response <- as.character(formula)[2]
 	vars <- NULL
 	if (family == "binomial")
 	{
@@ -109,26 +109,19 @@ glmmGSParser.GetPredictors <- function(formula)
 	ranef <- list()
 	for (block in blocks)
 	{
-		# Add attributes to dense or stratified blocks
-		if (is.na(block$factor))
-		{
-			block$factor <- NULL
-			attr(block, "type") <- "dense"
-		}
-		else
-		{
-			attr(block, "type") <- "stratified"
-		}
-		
 		# Assign fixef or ranef blocks
-		if (is.na(block$cov.model))
+		if (attr(block, "effects") == "fixed")
 		{
 			block$cov.model <- NULL
 			fixef[[length(fixef) + 1L]] <- block
 		}
-		else
+		else if (attr(block, "effects") == "random")
 		{
 			ranef[[length(ranef) + 1L]] <- block
+		}
+		else
+		{
+			stop("Invalid \'effects\' attribute")
 		}
 	}
 	

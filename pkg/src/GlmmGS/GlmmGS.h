@@ -14,11 +14,6 @@ namespace GlmmGS
 	// GlmmGS
 	class GlmmGS
 	{
-		// Obsolete Fields - TODO remove
-		Vector<Estimate> fixed_effects_estimates;
-		Vector<Estimate> random_effects_estimates;
-		Vector<Estimate> covariance_components_estimates;
-
 		// Fields
 		Pointer<Responses::IResponse> response;
 		Pointer<Offsets::IOffset> offset;
@@ -34,32 +29,11 @@ namespace GlmmGS
 				const Vector<Pointer<RandomEffects::IBlock> > & random_effects);
 
 		// Properties
-		const Vector<Estimate> & FixedEffectsCoefficients() const;
-		const Vector<Estimate> & RandomEffectsCoefficients() const;
-		const Vector<Estimate> & CovarianceComponents() const;
 		int Iterations() const;
 
 		// Methods
 		void Fit(const Controls & controls);
 	};
-
-	inline
-	const Vector<Estimate> & GlmmGS::FixedEffectsCoefficients() const
-	{
-		return this->fixed_effects_estimates;
-	}
-
-	inline
-	const Vector<Estimate> & GlmmGS::RandomEffectsCoefficients() const
-	{
-		return this->random_effects_estimates;
-	}
-
-	inline
-	const Vector<Estimate> & GlmmGS::CovarianceComponents() const
-	{
-		return this->covariance_components_estimates;
-	}
 
 	inline
 	int GlmmGS::Iterations() const

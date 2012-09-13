@@ -26,8 +26,6 @@ namespace GlmmGS
 				Pointer<Boosters::IBooster> booster;
 
 				// Implementation
-				Vector<Estimate> Coefficients() const;
-				Vector<Estimate> CovarianceComponents() const;
 				void UpdatePredictor(Vector<double> & eta) const;
 				int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
 
@@ -36,6 +34,10 @@ namespace GlmmGS
 				Block(const Vector<Pointer<Variables::IVariable> > & variables, WeakFactor factor,
 						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model,
 						const Pointer<Boosters::IBooster> & booster);
+
+				// Properties
+				Vector<Vector<double> > Coefficients() const;
+				Pointer<CovarianceModels::ICovarianceModel> CovarianceModel() const;
 			};
 		}
 	}

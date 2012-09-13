@@ -22,19 +22,19 @@ glmmGS.AddPredictors <- function(vars, data)
 }
 
 # Add covariance model to model
-glmmGS.AddCovarianceModel = function(cov.model, covariance.models)
+glmmGS.AddCovarianceModel <- function(cov.model, covariance.models)
 {
 	cov.model <- get(cov.model, covariance.models)
 	
-	if (cov.model$type == "IdentityCovarianceModel") 
+	if (class(cov.model) == "IdentityCovarianceModel") 
 	{
 		glmmGSAPI.AddIdentityCovarianceModel()
 	}
-	else if (cov.model$type == "PrecisionModel")
+	else if (class(cov.model) == "PrecisionModel")
 	{
 		glmmGSAPI.AddPrecisionModel(cov.model$R)
 	}
-	else if (cov.model$type == "SparsePrecisionModel") 
+	else if (class(cov.model) == "SparsePrecisionModel") 
 	{
 		glmmGSAPI.AddSparsePrecisionModel(cov.model$R)
 	}
@@ -42,23 +42,6 @@ glmmGS.AddCovarianceModel = function(cov.model, covariance.models)
 	{
 		stop("Unsupported covariance model")
 	}
-}
-
-# Fit
-glmmGS.Fit = function(control)
-{
-	# Fit model
-	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit, control$verbose)
-	
-	# Retrieve results
-	fixed.effects = glmmGSAPI.GetFixedEffectsCoefficients()
-	random.effects = glmmGSAPI.GetRandomEffectsCoefficients()
-	covariance.components = glmmGSAPI.GetCovarianceComponents()
-	iterations = glmmGSAPI.GetIterations()
-	return(list(fixed.effects = fixed.effects,
-					random.effects = random.effects,
-					covariance.components = covariance.components,
-					iterations = iterations))
 }
 
 # Main function
@@ -223,5 +206,10 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGSAPI.EndModel()
 	
 	# Fit model
-	glmmGS.Fit(control)
+	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit, control$verbose)
+
+	# Get resulsts
+	glmmGS <- list()
+	class(glmmGS) <- "glmmGS"
+	glmmGS
 }
