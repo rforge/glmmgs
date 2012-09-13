@@ -9,18 +9,22 @@
 	by the \code{\link{glmmGS.CovarianceModel}} function
 }
 \usage{
-	glmmGS.SparseMatrix(\dots)
+	glmmGS.SparseMatrix(object, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-	\item{\dots}{
-		can be a dense matrix or the following arguments in order: 
-		(1) a numeric (i.e., double) vector with the non-zero elements of the matrix;
-		(2) an integer vector with the zero-based row indices of the non-zero elements of the matrix;
-		(3) an integer vector \code{counts} of length \code{ncols + 1},
-		where \code{ncols} indicates the number of columns of the matrix,
-		such that \code{counts[1] = 0}, and \code{counts[j]} equal to the total number	
-		of non-zero elements in columns 1, \ldots, j - 1.
+	\item{object}{
+		an R matrix or an R numeric vector 
+	}
+	\item{...}{
+		if \code{object} is an R numeric vector, then the following additional parameters
+		are expected: \\  
+		\code{index} an integer vector with the zero-based row indices of the 
+			non-zero elements of the matrix within each column; \\
+		\code{count} an integer vector of length \code{ncols + 1},
+			where \code{ncols} indicates the number of columns of the matrix,
+			such that \code{counts[1] = 0}, and \code{counts[j]} equal to the total number	
+			of non-zero elements in columns 1, \ldots, j - 1.
 	}
 }
 \details{
@@ -63,57 +67,61 @@
 \examples{
 
 # Create dense matrix R
-	ncols <- 100;
-	R <- diag(rep(1, ncols));
+	ncols <- 100
+	R <- diag(rep(1, ncols))
 	for (i in 2:ncols)
-		R[i - 1, i] <- R[i, i - 1] <- 0.5;
+		R[i - 1, i] <- R[i, i - 1] <- 0.5
 	
 # Create sparse matrix from dense matrix R
 
-	R.sparse <- glmmGS.SparseMatrix(R);
+	R.sparse <- glmmGS.SparseMatrix(R)
 	
 # Create sparse matrix from vectors of values, indices, and counts
 # maximizing performance (requires O(ncols^2) workspace memory) 
 
-	nz <- R != 0;
-	values <- c(R[nz]);
-	indices <- row(R)[nz] - 1L;
-	counts <- as.integer(c(0, cumsum(colSums(nz))));
-	R.sparse2 <- glmmGS.SparseMatrix(values, indices, counts);
+	nz <- R != 0
+	values <- c(R[nz])
+	indices <- row(R)[nz] - 1L
+	counts <- as.integer(c(0, cumsum(colSums(nz))))
+	R.sparse2 <- glmmGS.SparseMatrix(values, indices, counts)
 
 # Create sparse matrix from vectors of values, indices, and counts
 # allocating O(ncols) workspace memory
 	
 	# 1) Set counts
-	counts <- integer(ncols + 1L);
-	count.total <- 0L;
-	counts[1] <- 0L;
+	counts <- integer(ncols + 1L)
+	count.total <- 0L
+	counts[1] <- 0L
 	for (j in 1:ncols)
 	{
-		nz <- which(R[, j] != 0);
-		count.total <- count.total + length(nz);
-		counts[j + 1] <- count.total;
+		nz <- which(R[, j] != 0)
+		count.total <- count.total + length(nz)
+		counts[j + 1] <- count.total
 	}
 	
 	# 2) Set values and indices
-	values <- double(count.total);
-	indices <- integer(count.total);
-	index <- 0L;
+	values <- double(count.total)
+	indices <- integer(count.total)
+	index <- 0L
 	for (j in 1:ncols)
 	{
-		nz <- which(R[, j] != 0);
-		lnz <- length(nz);
-		kk <- index + 1:lnz;
-		values[kk] <- R[nz, j];
-		indices[kk] <- nz - 1L; # must be zero-based
-		index <- index + lnz;
+		nz <- which(R[, j] != 0)
+		lnz <- length(nz)
+		if (lnz > 0)
+		{
+			kk <- index + 1:lnz
+			values[kk] <- R[nz, j]
+			indices[kk] <- nz - 1L # must be zero-based
+			index <- index + lnz
+		}
 	}
 	
 	# Build sparse matrix
-	R.sparse3 <- glmmGS.SparseMatrix(values, indices, counts);
+	R.sparse3 <- glmmGS.SparseMatrix(values, indices, counts)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~kwd2 }
+% __ONLY ONE__ keyword per line

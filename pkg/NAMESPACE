@@ -1,5 +1,12 @@
+# Load glmmGS dynamic library
 useDynLib(glmmGS, .registration = TRUE)
+
+# Export functions
 export("glmmGS",
        "glmmGS.CovarianceModel",
        "glmmGS.Control",
        "glmmGS.SparseMatrix")
+
+# Dispatch S3 methods        
+S3method(glmmGS.SparseMatrix, numeric)
+S3method(glmmGS.SparseMatrix, matrix)

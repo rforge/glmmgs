@@ -59,38 +59,39 @@
 }
 \examples{
 # Set number of columns
-	ncols <- 100;
+	ncols <- 100
 
 # Identity covariance model (no need to specify matrix dimensions)
  	# Define dense-precision model
- 	I <- glmmGS.CovarianceModel("identity");
+ 	I <- glmmGS.CovarianceModel("identity")
 
 # Dense-precision model
 
 	# Dense precision matrix
-	R <- as.matrix(rnorm(ncols * ncols), nrow = ncols, ncol = ncols);
-	R <- R \%*\% t(R);
+	R <- matrix(rnorm(ncols * ncols), nrow = ncols, ncol = ncols)
+	R <- R \%*\% t(R)
 	
  	# Define dense-precision model
- 	T.dense <- glmmGS.CovarianceModel("precision", R);
+ 	T.dense <- glmmGS.CovarianceModel("precision", R)
 
 # Sparse-precision model
 
 	# Sparse precision matrix
-	R <- diag(rep(1, ncols));
+	R <- diag(rep(1, ncols))
 	for (i in 2:ncols)
 	{
-		R[i - 1, i] <- 0.5;
-		R[i, i - 1] <- 0.5;
+		R[i - 1, i] <- 0.5
+		R[i, i - 1] <- 0.5
 	}
 	
 	# Create sparse matrix from R
-	R.sparse = glmmGS.SparseMatrix(R);
+	R.sparse = glmmGS.SparseMatrix(R)
 	
  	# Define sparse-precision model
- 	T.sparse <- glmmGS.CovarianceModel("precision", R.sparse);
+ 	T.sparse <- glmmGS.CovarianceModel("precision", R.sparse)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~kwd2 }
+% __ONLY ONE__ keyword per line

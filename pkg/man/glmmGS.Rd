@@ -36,12 +36,11 @@
 		If an offset \code{off} is present in the linear predictor, it must be specified with keyword
 		\code{offset(off)}. Both fixed and random intercepts must be explicitly specified 
 		using the the symbol \code{1}; implicit specification
-		of the intercept is not assumed. If \code{data} and \code{covariance.models}
-		are not missing, then variable lookup is performed only in
-		\code{data} and \code{covariance.models} (the environment 
-		of the \code{formula} object is not searched by design.) 
-		If either \code{data} or \code{covariance.model}
-		are missing, they are set equal to the environment of the \code{formula} object.  
+		of the intercept is not assumed. If \code{data} or \code{covariance.models}
+		are specified, then variable lookup is performed only in
+		\code{data} and \code{covariance.models}. If \code{data} or \code{covariance.model}
+		are missing, then the variable lookup is performed in the environment of the 
+		\code{formula} object.  
 	}
 	\item{family}{
 		a description of the error distribution. Only two families are currently allowed:
@@ -72,28 +71,11 @@
 	%%  \item{comp1 }{Description of 'comp1'}
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
-	In the current implementation (see Note), the function returns 
-	a list of values comprised of:
-	\item{fixed.effects}{
-		a list containing the items:
-		\code{estimates}: the estimates of the fixed effect coefficients;
-		\code{standard.errors}: the standard errors of the fixed effect coefficient estimates
-		(see Note).
-	}
-	\item{random.effects}{
-		a list containing the items:
-		\code{estimates}: the estimates of the random effect coefficients;
-		\code{standard.errors}: the standard errors of the random effect coefficient estimates
-		(see Note).
-	}
-	\item{covariance.components}{
-		a list containing the items:
-		\code{estimates}: the estimates of the covariance components;
-		\code{standard.errors}: the standard errors of the covariance components.
-	}
-	\item{iterations}{
-		the number of iterations.
-	}
+	an object of type \code{glmmGS} containing: (1) the estimated fixed effects;
+	(2) the estimated random effects; (3) the diagonal blocks of the 
+	fixed effect covariance matrix according to the GS blocks
+	specified in the formula; (4) the covariance matrix of the random effects;
+	(5) the estimated working weights, predictors, and other control parameters.
 }
 
 \references{
@@ -146,44 +128,45 @@
 	# - 1 million observations, 
 	# - 7 'dense' fixed effect covariates,
 	# - stratified random effects with 2000 strata (levels)
-	nobs <- 1000000L;
-	ndays <- 7L;
-	nPostCodes <- 2000L;
+	nobs <- 1000000L
+	ndays <- 7L
+	nPostCodes <- 2000L
 
 	# Generate data
-	size <- as.integer(runif(nobs, 1, 10));
-	days <- matrix(rnorm(nobs * ndays), nrow = nobs, ncol = ndays);
-	seifa <- rnorm(nobs);
-	postCodes <- as.factor(as.integer(runif(nobs, 0, nPostCodes)));
+	size <- as.integer(runif(nobs, 1, 10))
+	days <- matrix(rnorm(nobs * ndays), nrow = nobs, ncol = ndays)
+	seifa <- rnorm(nobs)
+	postCodes <- as.factor(as.integer(runif(nobs, 0, nPostCodes)))
 	
 	# Generate coefficients
-	offset = runif(nobs, -1, 1);
-	intercept = -0.5;
-	sd.days <- 0.1;
-	beta.days <- rnorm(ndays, sd = sd.days);
-	sd.seifa <- 0.1;
-	intercept.seifa <- rnorm(nPostCodes, sd = sd.seifa);
-	beta.seifa <- rnorm(nPostCodes, sd = sd.seifa);
+	offset <- runif(nobs, -1, 1)
+	intercept <- -0.5
+	sd.days <- 0.1
+	beta.days <- rnorm(ndays, sd = sd.days)
+	sd.seifa <- 0.1
+	intercept.seifa <- rnorm(nPostCodes, sd = sd.seifa)
+	beta.seifa <- rnorm(nPostCodes, sd = sd.seifa)
 	
 	# Generate linear predictor
-	eta <- intercept + days \%*\% beta.days;
-	eta <- eta + intercept.seifa[as.integer(postCodes)] + seifa * beta.seifa[as.integer(postCodes)];
+	eta <- intercept + days \%*\% beta.days
+	eta <- eta + intercept.seifa[as.integer(postCodes)] + seifa * beta.seifa[as.integer(postCodes)]
 
 	# Generate response
-	y <- as.integer(rbinom(nobs, size, plogis(eta)));
+	y <- as.integer(rbinom(nobs, size, plogis(eta)))
 
 	# Define identity precision model and control list
-	I <- glmmGS.CovarianceModel("identity");
-	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 200);
+	I <- glmmGS.CovarianceModel("identity")
+	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 200)
 	
 	# Fit model using Gauss-Seidel algorithm with two blocks: 
 	# - one fixed effect block: (1 + days);
 	# - one stratified random effect block with an identity  
 	#   covariance model: (1 + seifa | postCodes ~ I).
-	formula = (y / size) ~ offset(offset) + (1 + days) + (1 + seifa | postCodes ~ I);
-	results <- glmmGS(formula = formula, family = binomial, control = control);
+	formula <- (y / size) ~ offset(offset) + (1 + days) + (1 + seifa | postCodes ~ I)
+	results <- glmmGS(formula = formula, family = binomial, control = control)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{Gauss}
-\keyword{Seidel}% __ONLY ONE__ keyword per line
+\keyword{Seidel}
+% __ONLY ONE__ keyword per line

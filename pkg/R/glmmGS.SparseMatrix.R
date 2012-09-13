@@ -5,8 +5,13 @@ glmmGS.SparseMatrix <- function(object, ...)
 }
 
 # Construct sparse matrix from vector
-glmmGS.SparseMatrix.numeric <- function(values, indices, counts, ...)
+glmmGS.SparseMatrix.numeric <- function(object, ...)
 {
+	values <- object
+	list <- list(...)
+	indices <- list[[1]]
+	counts <- list[[2]]
+	
 	# Check argument
 	if (!is.double(values) || !is.vector(values))
 	{
@@ -78,8 +83,10 @@ glmmGS.SparseMatrix.numeric <- function(values, indices, counts, ...)
 }
 
 # Construct sparse matrix
-glmmGS.SparseMatrix.matrix <- function(matrix, ...)
+glmmGS.SparseMatrix.matrix <- function(object, ...)
 {
+	matrix <- object
+	
 	# Validate argument
 	if (is.null(matrix) || !is.matrix(matrix) || (nrow(matrix) != ncol(matrix)))
 		stop("Invalid input")
