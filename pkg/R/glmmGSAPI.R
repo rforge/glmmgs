@@ -271,13 +271,54 @@ glmmGSAPI.Fit <- function(relative.tolerance, absolute.tolerance, maxiter, verbo
 }
 
 # Get estimated fixed-effects coefficients
-glmmGSAPI.GetFixefBlocks <- function(fixef)
+glmmGSAPI.GetFixef <- function(fixef)
 {
+	for (i in 1:length(fixef))
+	{
+		block <- fixef[[i]]$block
+		if (class(block) != "glmmGS.Block" || attr(block, "effects") != "fixed") 
+			stop("Invalid argument")
+		
+		if (attr(block, "type") == "dense")
+		{
+			nvars <- length(block$covariates)
+			beta <- double(nvars)
+			beta.cov <- double(nvars * nvars)
+			.C("GlmmGSRAPI_GetFixefDenseBlock", 
+					i,
+					beta,
+					beta.cov,
+					nvars,
+					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			
+			fixef[[i]]$beta <- beta
+			fixef[[i]]$beta.cov <- beta.cov
+		}
+		else if (attr(block, "type") == "stratified")
+		{
+			nvars <- length(block$covariates)
+			nlevels <- length(block$factor)
+			beta <- double(nvars * nlevels)
+			beta.cov <- double(nvars * nvars * nlevels)
+			.C("GlmmGSRAPI_GetFixefStratifiedBlock", 
+					i,
+					beta,
+					beta.cov,
+					nvars,
+					nlevels,
+					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			
+			fixef[[i]]$beta <- beta
+			fixef[[i]]$beta.cov <- beta.cov
+		}
+	}
+	
+	fixef
 }
 
-# Get estimated random-effects coefficients
-glmmGSAPI.GetRanefBlocks <- function(ranef)
+glmmGSAPI.GetRanef <- function(ranef, covariance.models)
 {
+	ranef
 }
 
 # Get number of iterations

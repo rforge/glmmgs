@@ -1,42 +1,33 @@
-# Create factor variable
-glmmGS.CreateFactor <- function(block, data)
-{
-	g <- get(block$factor, data)
-	as.integer(as.factor(g)) - 1L
-}
-
 # Add variables to block
-glmmGS.AddPredictors <- function(vars, data)
+glmmGS.AddCovariates <- function(covariates)
 {
-	for (varname in vars) 
+	for (var in covariates) 
 	{
-		if (varname == "1") 
+		if (var$name == "1") 
 		{
 			glmmGSAPI.AddIntercept()
 		}
 		else 
 		{
-			glmmGSAPI.AddCovariate(get(varname, data))
+			glmmGSAPI.AddCovariate(var$value)
 		}
 	}
 }
 
 # Add covariance model to model
-glmmGS.AddCovarianceModel <- function(cov.model, covariance.models)
+glmmGS.AddCovarianceModel <- function(covariance.model)
 {
-	cov.model <- get(cov.model, covariance.models)
-	
-	if (class(cov.model) == "IdentityCovarianceModel") 
+	if (class(covariance.model) == "IdentityCovarianceModel") 
 	{
 		glmmGSAPI.AddIdentityCovarianceModel()
 	}
-	else if (class(cov.model) == "PrecisionModel")
+	else if (class(covariance.model) == "PrecisionModel")
 	{
-		glmmGSAPI.AddPrecisionModel(cov.model$R)
+		glmmGSAPI.AddPrecisionModel(covariance.model$R)
 	}
-	else if (class(cov.model) == "SparsePrecisionModel") 
+	else if (class(covariance.model) == "SparsePrecisionModel") 
 	{
-		glmmGSAPI.AddSparsePrecisionModel(cov.model$R)
+		glmmGSAPI.AddSparsePrecisionModel(covariance.model$R)
 	}
 	else
 	{
@@ -106,58 +97,45 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	}
 	
 	# Get response and predictor blocks
-	response <- glmmGSParser.GetResponse(formula, family$family)
-	predictors <- glmmGSParser.GetPredictors(formula)
-	
-	# Initialize ifactor local list
-	ifactors <- list()
+	response <- glmmGS.Response(formula, family, data)
+	predictors <- glmmGS.Predictors(formula, data, covariance.models)
 	
 	# Initialize API
 	glmmGSAPI.BeginModel()
 	
 	# Add response
 	glmmGSAPI.BeginResponse(family$family)
-	glmmGSAPI.AddResponse(get(response$vars[1], data))
+	glmmGSAPI.AddResponse(response$value)
 	if (family$family == "binomial") 
-	{
-		if (length(response$vars) == 1L)
-		{
-			response.sizes <- integer(length(get(response$vars[1], data)))
-		}
-		else
-		{
-			response.sizes <- get(response$vars[2], data)
-		}
-		glmmGSAPI.AddCounts(response.sizes)
-	}
+		glmmGSAPI.AddCounts(response$size)
 	glmmGSAPI.EndResponse()
 
 	# Add offset
 	if (!is.null(predictors$offset))
-		glmmGSAPI.AddOffset(get(predictors$offset, data))
+		glmmGSAPI.AddOffset(predictors$offset$value)
 	
 	# Fixed effects
 	if (length(predictors$fixef) > 0L)
 	{
 		glmmGSAPI.BeginFixedEffects()
-		for (block in predictors$fixef)
+		for (i in 1:length(predictors$fixef))
 		{
+			# Set block
+			block <- predictors$fixef[[i]]$block
+			
+			# Add block to API
 			if (attr(block, "type") == "dense") 
 			{
 				# Dense block
 				glmmGSAPI.BeginGlobalBlock()
-				glmmGS.AddPredictors(block$vars, data)
+				glmmGS.AddCovariates(block$covariates)
 				glmmGSAPI.EndGlobalBlock()			
 			}
 			else if (attr(block, "type") == "stratified")
 			{
-				# Create ifactor and store it in the temp variable list
-				index <- length(ifactors) + 1L
-				ifactors[[index]] <- glmmGS.CreateFactor(block, data)
-				
 				# Stratified block
-				glmmGSAPI.BeginStratifiedBlock(ifactors[[index]])
-				glmmGS.AddPredictors(block$vars, data)
+				glmmGSAPI.BeginStratifiedBlock(block$factor$indices)
+				glmmGS.AddCovariates(block$covariates)
 				glmmGSAPI.EndStratifiedBlock()
 			}
 			else
@@ -172,26 +150,25 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	if (length(predictors$ranef) > 0L)
 	{
 		glmmGSAPI.BeginRandomEffects()
-		for (block in predictors$ranef)
+		for (i in 1:length(predictors$ranef))
 		{
+			# Set block
+			block <- predictors$ranef[[i]]$block
+			
 			if (attr(block, "type") == "dense")
 			{
 				# Dense block
 				glmmGSAPI.BeginGlobalBlock()
-				glmmGS.AddPredictors(block$vars, data)
-				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
+				glmmGS.AddCovariates(block$covariates)
+				glmmGS.AddCovarianceModel(block$covariance.model$value)
 				glmmGSAPI.EndGlobalBlock()			
 			}
 			else if (attr(block, "type") == "stratified")
 			{
-				# Create ifactor and store it in the temp variable list
-				index <- length(ifactors) + 1L
-				ifactors[[index]] <- glmmGS.CreateFactor(block, data)
-			
 				# Stratified block
-				glmmGSAPI.BeginStratifiedBlock(ifactors[[index]])
-				glmmGS.AddPredictors(block$vars, data)
-				glmmGS.AddCovarianceModel(block$cov.model, covariance.models)
+				glmmGSAPI.BeginStratifiedBlock(block$factor$indices)
+				glmmGS.AddCovariates(block$covariates)
+				glmmGS.AddCovarianceModel(block$covariance.model$value)
 				glmmGSAPI.EndStratifiedBlock()
 			}
 			else
@@ -208,8 +185,11 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	# Fit model
 	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit, control$verbose)
 
-	# Get resulsts
+	# Set results
+	# Avoid deep copies
 	glmmGS <- list()
-	class(glmmGS) <- "glmmGS"
-	glmmGS
+	class(glmmGS) = "glmmGS"
+	glmmGS$fixef <- glmmGSAPI.GetFixef(predictors$fixef)
+	glmmGS$ranef <- glmmGSAPI.GetRanef(predictors$ranef)
+	glmmGS$iterations <- glmmGSAPI.GetIterations()
 }
