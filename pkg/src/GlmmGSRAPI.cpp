@@ -403,5 +403,16 @@ void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
 		const int * nvars,
 		const int * nlevels)
 {
+}
 
+void GlmmGSRAPI_GetIterations(int * iterations)
+{
+	try
+	{
+		*iterations = GlmmGSAPI::theApi.GlmmGS().Iterations();
+	}
+	catch (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
 }
