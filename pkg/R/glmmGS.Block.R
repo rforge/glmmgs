@@ -17,6 +17,20 @@
 	unlist(strsplit(token, "\\~"))[2]
 }
 
+# Getter utility functions
+.GetNumberOfVariables <- function(block)
+{
+	nvars <- 0L
+	for (var in block$covariates)
+		nvars <- nvars + ifelse(is.matrix(var$value), ncol(var$value), 1L)
+	nvars
+}
+
+.GetNumberOfLevels <- function(block)
+{
+	ifelse(attr(block, "type") == "stratified", nlevels(block$factor$value), 0L)
+}
+
 # glmmGS.Block - S3 class constructor 
 glmmGS.Block <- function(token, data, covariance.models)
 {

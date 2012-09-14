@@ -281,11 +281,13 @@ glmmGSAPI.GetFixef <- function(fixef)
 		
 		if (attr(block, "type") == "dense")
 		{
-			nvars <- length(block$covariates)
+			index <- i - 1L
+			nvars <- .GetNumberOfVariables(block)
 			beta <- double(nvars)
 			beta.cov <- double(nvars * nvars)
+
 			.C("GlmmGSRAPI_GetFixefDenseBlock", 
-					i,
+					index,
 					beta,
 					beta.cov,
 					nvars,
@@ -296,12 +298,14 @@ glmmGSAPI.GetFixef <- function(fixef)
 		}
 		else if (attr(block, "type") == "stratified")
 		{
-			nvars <- length(block$covariates)
-			nlevels <- length(block$factor)
+			index <- i - 1L
+			nvars <- .GetNumberOfVariables(block)
+			nlevels <- .GetNumberOfLevels(block)
 			beta <- double(nvars * nlevels)
 			beta.cov <- double(nvars * nvars * nlevels)
+			
 			.C("GlmmGSRAPI_GetFixefStratifiedBlock", 
-					i,
+					index,
 					beta,
 					beta.cov,
 					nvars,
@@ -324,8 +328,9 @@ glmmGSAPI.GetRanef <- function(ranef, covariance.models)
 # Get number of iterations
 glmmGSAPI.GetIterations <- function()
 {
-	iterations = integer(1L)
+	iterations <- integer(1L)
 	.C("GlmmGSRAPI_GetIterations", iterations, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
-	return(iterations)
+	
+	iterations
 }

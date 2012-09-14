@@ -188,8 +188,9 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	# Set results
 	# Avoid deep copies
 	glmmGS <- list()
-	class(glmmGS) = "glmmGS"
+	class(glmmGS) <- "glmmGS"
 	glmmGS$fixef <- glmmGSAPI.GetFixef(predictors$fixef)
 	glmmGS$ranef <- glmmGSAPI.GetRanef(predictors$ranef)
 	glmmGS$iterations <- glmmGSAPI.GetIterations()
+	glmmGS
 }
