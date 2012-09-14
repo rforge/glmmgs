@@ -339,32 +339,66 @@ void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_t
 
 // Results - Dense fixed effects
 void GlmmGSRAPI_GetFixefDenseBlock(
-		const int * block,
-		const double * beta,
-		const double * beta_cov,
+		const int * index,
+		double * beta,
+		double * beta_cov,
 		const int * nvars)
 {
+	try
+	{
+		// Get fixed effects
+		typedef GlmmGS::FixedEffects::IBlock I;
+		Vector<Pointer<I> > fixef = GlmmGSAPI::theApi.GlmmGS().FixedEffects();
+		if (*index < 0 || *index >= fixef.Size())
+			throw Exception("GlmmGSRAPI_GetFixefDenseBlock: Invalid block index");
+		typedef GlmmGS::FixedEffects::Global::Block T;
+		const T & block = dynamic_cast<const T &>(*fixef(*index));
 
+		// Get estimates
+		Copy(beta, *nvars, block.Coefficients());
+		Copy(beta_cov, Math::Square(*nvars), block.Covariance());
+	}
+	catch  (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
 }
 
 // Results - Stratified fixed effects
 void GlmmGSRAPI_GetFixefStratifiedBlock(
-		const int * block,
-		const double * beta,
-		const double * beta_cov,
+		const int * index,
+		double * beta,
+		double * beta_cov,
 		const int * nvars,
 		const int * nlevels)
 {
+	try
+	{
+		// Get fixed effects
+		typedef GlmmGS::FixedEffects::IBlock I;
+		Vector<Pointer<I> > fixef = GlmmGSAPI::theApi.GlmmGS().FixedEffects();
+		if (*index < 0 || *index >= fixef.Size())
+			throw Exception("Invalid block index");
+		typedef GlmmGS::FixedEffects::Stratified::Block T;
+		const T & block = dynamic_cast<const T &>(*fixef(*index));
 
+		// Get estimates
+		Copy(beta, (*nvars) * (*nlevels), block.Coefficients());
+		Copy(beta_cov, Math::Square(*nvars) * (*nlevels), block.Covariance());
+	}
+	catch  (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
 }
 
 // Results - Random effects - Dense covariance
 void GlmmGSRAPI_GetRanefDenselBlockDense(
 		const int * block,
-		const double * beta,
-		const double * beta_cov,
-		const double * theta,
-		const double * theta_cov,
+		double * beta,
+		double * beta_cov,
+		double * theta,
+		double * theta_cov,
 		const int * nvars)
 {
 
@@ -372,10 +406,10 @@ void GlmmGSRAPI_GetRanefDenselBlockDense(
 
 void GlmmGSRAPI_GetRanefStratifiedBlockDense(
 		const int * block,
-		const double * beta,
-		const double * beta_cov,
-		const double * theta,
-		const double * theta_cov,
+		double * beta,
+		double * beta_cov,
+		double * theta,
+		double * theta_cov,
 		const int * nvars,
 		const int * nlevels)
 {
@@ -384,10 +418,10 @@ void GlmmGSRAPI_GetRanefStratifiedBlockDense(
 
 void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
 		const int * block,
-		const double * beta,
-		const double * beta_cov,
-		const double * theta,
-		const double * theta_cov,
+		double * beta,
+		double * beta_cov,
+		double * theta,
+		double * theta_cov,
 		const int * nvars,
 		const int * nlevels)
 {
@@ -396,10 +430,10 @@ void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
 
 void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
 		const int * block,
-		const double * beta,
-		const double * beta_cov,
-		const double * theta,
-		const double * theta_cov_values, const int * theta_cov_indices, const int * theta_cov_counts, const int * theta_cov_ncols,
+		double * beta,
+		double * beta_cov,
+		double * theta,
+		double * theta_cov_values, int * theta_cov_indices, int * theta_cov_counts, int * theta_cov_ncols,
 		const int * nvars,
 		const int * nlevels)
 {

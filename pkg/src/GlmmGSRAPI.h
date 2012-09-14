@@ -44,50 +44,50 @@ extern "C"
 	// Results - Fixed effects
 	void GlmmGSRAPI_GetFixefDenseBlock(
 			const int * block,
-			const double * beta,
-			const double * beta_cov,
+			double * beta,
+			double * beta_cov,
 			const int * nvars);
 
 	void GlmmGSRAPI_GetFixefStratifiedBlock(
 			const int * block,
-			const double * beta,
-			const double * beta_cov,
+			double * beta,
+			double * beta_cov,
 			const int * nvars,
 			const int * nlevels);
 
 	// Results - Random effects
 	void GlmmGSRAPI_GetRanefDenselBlockDense(
 			const int * block,
-			const double * beta,
-			const double * beta_cov,
-			const double * theta,
-			const double * theta_cov,
+			double * beta,
+			double * beta_cov,
+			double * theta,
+			double * theta_cov,
 			const int * nvars);
 
 	void GlmmGSRAPI_GetRanefStratifiedBlockDense(
 			const int * block,
-			const double * beta,
-			const double * beta_cov,
-			const double * theta,
-			const double * theta_cov,
+			double * beta,
+			double * beta_cov,
+			double * theta,
+			double * theta_cov,
 			const int * nvars,
 			const int * nlevels);
 
 	void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
 			const int * block,
-			const double * beta,
-			const double * beta_cov,
-			const double * theta,
-			const double * theta_cov,
+			double * beta,
+			double * beta_cov,
+			double * theta,
+			double * theta_cov,
 			const int * nvars,
 			const int * nlevels);
 
 	void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
 			const int * block,
-			const double * beta,
-			const double * beta_cov,
-			const double * theta,
-			const double * theta_cov_values, const int * theta_cov_indices, const int * theta_cov_counts, const int * theta_cov_ncols,
+			double * beta,
+			double * beta_cov,
+			double * theta,
+			double * theta_cov_values, int * theta_cov_indices, int * theta_cov_counts, int * theta_cov_ncols,
 			const int * nvars,
 			const int * nlevels);
 

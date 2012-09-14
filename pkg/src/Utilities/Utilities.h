@@ -29,6 +29,8 @@
 #include "CastArray.h"
 
 // Functions
-#include "Functions.h"
+#include "VectorialAlgorithms.h"
+#include "Size.h"
+#include "Copy.h"
 
 #endif

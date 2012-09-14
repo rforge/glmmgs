@@ -1,5 +1,5 @@
-#ifndef UTILITIES_FUNCTIONS_H
-#define UTILITIES_FUNCTIONS_H
+#ifndef UTILITIES_VECTORIALALGORITHMS_H
+#define UTILITIES_VECTORIALALGORITHMS_H
 
 #include "Exceptions/Assertions.h"
 #include "Vector.h"
@@ -7,35 +7,6 @@
 
 namespace Utilities
 {
-	// Vector assignment to a constant
-	template <class TYPE>
-	void Set(Vector<TYPE> & dst, const TYPE & x)
-	{
-		const int n = dst.Size();
-		for (int i = 0; i < n; ++i)
-			dst(i) = x;
-	}
-
-	// Copy vectors
-	template <class TYPE>
-	void Copy(Vector<TYPE> & dst, const Vector<TYPE> & src)
-	{
-		_ASSERT_ARGUMENT(dst.Size() == src.Size());
-		for (int i = 0; i < dst.Size(); ++i)
-			dst(i) = src(i);
-	}
-
-	// Copy matrices
-	template <class TYPE>
-	void Copy(Matrix<TYPE> & dst, const Matrix<TYPE> & src)
-	{
-		_ASSERT_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows() &&
-				dst.NumberOfColumns() == src.NumberOfColumns());
-		for (int i = 0; i < dst.NumberOfRows(); ++i)
-			for (int j = 0; j < dst.NumberOfColumns(); ++j)
-				dst(i, j) = src(i, j);
-	}
-
 	// Min
 	template <class TYPE>
 	TYPE Min(const Vector<TYPE> & v)
