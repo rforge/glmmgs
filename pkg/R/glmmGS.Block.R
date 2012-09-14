@@ -53,8 +53,9 @@ glmmGS.Block <- function(token, data, covariance.models)
 		block$factor <- list()
 		block$factor$name <- factor.name
 		value <- factor(get(factor.name, data))
-		block$factor$value <- value 
-		block$factor$indices <- as.integer(value) - 1L
+		block$factor$value <- value
+		indices <- as.integer(value) - 1L
+		block$factor$indices <- indices 
 	}
 	
 	# Set covariance model
