@@ -10,3 +10,5 @@ export("glmmGS",
 # Dispatch S3 methods        
 S3method(glmmGS.SparseMatrix, numeric)
 S3method(glmmGS.SparseMatrix, matrix)
+S3method(coef, glmmGS)
+S3method(vcov, glmmGS)
