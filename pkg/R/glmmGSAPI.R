@@ -8,9 +8,9 @@ glmmGSAPI.GetLastError <- function()
 {
 
 	# Get error message
-	size = nchar(error.buffer[1])
-	out = .C("GlmmGSRAPI_GetLastError", error.buffer[1], size, PACKAGE = "glmmGS")
-	msg = out[[1]]
+	size = nchar(error.buffer[1L])
+	out = .C("GlmmGSRAPI_GetLastError", error.buffer[1L], size, PACKAGE = "glmmGS")
+	msg = out[[1L]]
 	
 	# Trim trailing spaces
 	#msg = sub(" +$", "", out[[1]])
@@ -283,37 +283,37 @@ glmmGSAPI.GetFixef <- function(fixef)
 		{
 			index <- i - 1L
 			nvars <- .GetNumberOfVariables(block)
-			beta <- double(nvars)
-			beta.cov <- double(nvars * nvars)
+			coef <- double(nvars)
+			vcov <- matrix(0, nvars, nvars)
 
 			.C("GlmmGSRAPI_GetFixefDenseBlock", 
 					index,
-					beta,
-					beta.cov,
+					coef,
+					vcov,
 					nvars,
 					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			
-			fixef[[i]]$beta <- beta
-			fixef[[i]]$beta.cov <- beta.cov
+			fixef[[i]]$coef <- coef
+			fixef[[i]]$vcov <- vcov
 		}
 		else if (attr(block, "type") == "stratified")
 		{
 			index <- i - 1L
 			nvars <- .GetNumberOfVariables(block)
 			nlevels <- .GetNumberOfLevels(block)
-			beta <- double(nvars * nlevels)
-			beta.cov <- double(nvars * nvars * nlevels)
+			coef <- double(nvars * nlevels)
+			vcov <- array(0, dim = c(nlevels, nvars, nvars))
 			
 			.C("GlmmGSRAPI_GetFixefStratifiedBlock", 
 					index,
-					beta,
-					beta.cov,
+					coef,
+					vcov,
 					nvars,
 					nlevels,
 					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			
-			fixef[[i]]$beta <- beta
-			fixef[[i]]$beta.cov <- beta.cov
+			fixef[[i]]$coef <- coef
+			fixef[[i]]$vcov <- vcov
 		}
 	}
 	

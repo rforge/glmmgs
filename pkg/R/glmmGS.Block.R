@@ -1,20 +1,20 @@
 # Parsing utility funtions
 .GetVariables <- function(token)
 {
-	token <- unlist(strsplit(token, "\\~"))[1]
-	token <- unlist(strsplit(token, "\\|"))[1]
+	token <- unlist(strsplit(token, "\\~"))[1L]
+	token <- unlist(strsplit(token, "\\|"))[1L]
 	unlist(strsplit(token, "\\+"))
 }
 
 .GetFactor <- function(token)
 {
-	token <- unlist(strsplit(token, "\\~"))[1]
-	unlist(strsplit(token, "\\|"))[2]
+	token <- unlist(strsplit(token, "\\~"))[1L]
+	unlist(strsplit(token, "\\|"))[2L]
 }
 
 .GetCovarianceModel <- function(token)
 {
-	unlist(strsplit(token, "\\~"))[2]
+	unlist(strsplit(token, "\\~"))[2L]
 }
 
 # Getter utility functions
@@ -44,10 +44,11 @@ glmmGS.Block <- function(token, data, covariance.models)
 	# Initialize block
 	block <- list()
 	class(block) <- "glmmGS.Block"
+	block$name <- token
 	
 	# Set covariates
 	block$covariates <- list()
-	for (i in 1:length(variable.names))
+	for (i in 1L:length(variable.names))
 	{
 		varname <- variable.names[i]
 		# Avoid deep copies

@@ -9,8 +9,8 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 {
 	values <- object
 	list <- list(...)
-	indices <- list[[1]]
-	counts <- list[[2]]
+	indices <- list[[1L]]
+	counts <- list[[2L]]
 	
 	# Check argument
 	if (!is.double(values) || !is.vector(values))
@@ -36,11 +36,11 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 	ncols <- length(counts) - 1L
 	
 	# Check values of counts
-	if (counts[1] != 0L)
+	if (counts[1L] != 0L)
 	{
 		stop("\'counts[1]\' must be equal to zero")
 	}
-	for (j in 1:ncols)
+	for (j in 1L:ncols)
 	{
 		if (counts[j + 1L] < counts[j])
 		{
@@ -62,7 +62,7 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 	}
 	
 	# Check indices
-	for (j in 1:ncols)
+	for (j in 1L:ncols)
 	{
 		for (p in counts[j]:(counts[j + 1L] - 1L))
 		{
@@ -75,10 +75,11 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 	}
 	
 	# Create object
-	sparse.matrix <- list(values = values, indices = indices, counts = counts)
+	sparse.matrix <- list()
 	class(sparse.matrix) <- "glmmGS.SparseMatrix"
-
-	# Return
+	sparse.matrix$values <- values
+	sparse.matrix$indices <- indices
+	sparse.matrix$counts <- counts
 	sparse.matrix
 }
 
@@ -96,8 +97,8 @@ glmmGS.SparseMatrix.matrix <- function(object, ...)
 	ncols <- ncol(matrix)
 	counts <- integer(ncols + 1L)
 	count.total <- 0L
-	counts[1] <- 0L
-	for (j in 1:ncols)
+	counts[1L] <- 0L
+	for (j in 1L:ncols)
 	{
 		nz <- which(matrix[, j] != 0)
 		count.total <- count.total + length(nz)
@@ -108,14 +109,14 @@ glmmGS.SparseMatrix.matrix <- function(object, ...)
 	values <- double(count.total)
 	indices <- integer(count.total)
 	index <- 0L
-	for (j in 1:ncols)
+	for (j in 1L:ncols)
 	{
 		nz <- which(matrix[, j] != 0)
 		lnz <- length(nz)
 		if (lnz > 0L)
 		{
-			values[index + 1:lnz] <- matrix[nz, j]
-			indices[index + 1:lnz] <- nz - 1L # must be zero-based
+			values[index + 1L:lnz] <- matrix[nz, j]
+			indices[index + 1L:lnz] <- nz - 1L # must be zero-based
 			index = index + lnz
 		}
 	}

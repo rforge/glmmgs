@@ -14,7 +14,7 @@ glmmGS.Predictors <- function(formula, data, covariance.models)
 
 	# Get tokens	
 	# Get predictor string
-	string <- as.character(formula)[3]
+	string <- as.character(formula)[3L]
 	
 	# Removed blanks
 	string <- gsub(" ", "", string)

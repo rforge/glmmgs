@@ -12,7 +12,7 @@ glmmGS.Response <- function(formula, family, data)
 	class(response) <- "glmmGS.Response"
 	
 	# Get response string
-	string <- as.character(formula)[2]
+	string <- as.character(formula)[2L]
 	
 	# Removed blanks
 	string <- gsub(" ", "", string)
@@ -32,7 +32,7 @@ glmmGS.Response <- function(formula, family, data)
 		varnames <- unlist(strsplit(tokens, "/"))
 		
 		# Set name and value
-		if (length(varnames) == 0)
+		if (length(varnames) == 0L)
 			stop("Invalid response formula")
 		response$name <- varnames[1L]
 		value <- get(varnames[1L], data)
