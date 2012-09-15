@@ -11,4 +11,7 @@ export("glmmGS",
 S3method(glmmGS.SparseMatrix, numeric)
 S3method(glmmGS.SparseMatrix, matrix)
 S3method(coef, glmmGS)
+S3method(fixef, glmmGS)
+S3method(ranef, glmmGS)
 S3method(vcov, glmmGS)
+S3method(print, glmmGS)

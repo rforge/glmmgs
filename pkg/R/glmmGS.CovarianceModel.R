@@ -4,27 +4,24 @@ glmmGS.CovarianceModel <- function(type, ...)
 	model <- NULL
 	ls <- list(...)
 	
+	model <- list()
+	
 	if (type == "identity")
 	{
-		model <- list()
-		class(model) <- "IdentityCovarianceModel"
+		class(model) <- "glmmGS.IdentityCovarianceModel"
 	}
 	else if (type == "precision")
 	{
 		R <- ls[[1]]
-		if (is.null(R))
+		if (class(R) == "matrix" && nrow(R) == ncol(R))
 		{
-			stop("Invalid precision matrix")
-		}
-		else if (class(R) == "matrix" && nrow(R) == ncol(R))
-		{
-			model <- list(R = R);
-			class(model) <- "PrecisionModel" 
+			class(model) <- "glmmGS.PrecisionModel" 
+			model$R <- R;
 		}
 		else if (class(R) == "glmmGS.SparseMatrix")
 		{
-			model <- list(R = R);
-			class(model) <- "SparsePrecisionModel" 
+			class(model) <- "glmmGS.SparsePrecisionModel" 
+			model$R <- R;
 		}
 		else
 		{

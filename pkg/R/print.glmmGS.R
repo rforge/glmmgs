@@ -1,3 +1,0 @@
-print.glmmGS <- function(object, ...)
-{
-}

@@ -17,15 +17,15 @@ glmmGS.AddCovariates <- function(covariates)
 # Add covariance model to model
 glmmGS.AddCovarianceModel <- function(covariance.model)
 {
-	if (class(covariance.model) == "IdentityCovarianceModel") 
+	if (class(covariance.model) == "glmmGS.IdentityCovarianceModel") 
 	{
 		glmmGSAPI.AddIdentityCovarianceModel()
 	}
-	else if (class(covariance.model) == "PrecisionModel")
+	else if (class(covariance.model) == "glmmGS.PrecisionModel")
 	{
 		glmmGSAPI.AddPrecisionModel(covariance.model$R)
 	}
-	else if (class(covariance.model) == "SparsePrecisionModel") 
+	else if (class(covariance.model) == "glmmGS.SparsePrecisionModel") 
 	{
 		glmmGSAPI.AddSparsePrecisionModel(covariance.model$R)
 	}

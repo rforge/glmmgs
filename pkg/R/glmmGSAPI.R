@@ -273,55 +273,134 @@ glmmGSAPI.Fit <- function(relative.tolerance, absolute.tolerance, maxiter, verbo
 # Get estimated fixed-effects coefficients
 glmmGSAPI.GetFixef <- function(fixef)
 {
-	for (i in 1:length(fixef))
+	n <- length(fixef)
+	if (n > 0L)
 	{
-		block <- fixef[[i]]$block
-		if (class(block) != "glmmGS.Block" || attr(block, "effects") != "fixed") 
-			stop("Invalid argument")
-		
-		if (attr(block, "type") == "dense")
+		for (i in 1L:n)
 		{
-			index <- i - 1L
-			nvars <- .GetNumberOfVariables(block)
-			coef <- double(nvars)
-			vcov <- matrix(0, nvars, nvars)
-
-			.C("GlmmGSRAPI_GetFixefDenseBlock", 
-					index,
-					coef,
-					vcov,
-					nvars,
-					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			block <- fixef[[i]]$block
+			if (class(block) != "glmmGS.Block" || attr(block, "effects") != "fixed") 
+				stop("Invalid argument")
+			
+			coef <- list()
+			
+			if (attr(block, "type") == "dense")
+			{
+				index <- i - 1L
+				nvars <- .GetNumberOfVariables(block)
+				estm <- double(nvars)
+				vcov <- matrix(0, nvars, nvars)
+	
+				.C("GlmmGSRAPI_GetFixefDenseBlock", 
+						index,
+						estm,
+						vcov,
+						nvars,
+						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				
+				coef$estm <- estm
+				coef$vcov <- vcov
+			}
+			else if (attr(block, "type") == "stratified")
+			{
+				index <- i - 1L
+				nvars <- .GetNumberOfVariables(block)
+				nlevels <- .GetNumberOfLevels(block)
+				estm <- double(nvars * nlevels)
+				vcov <- array(0, dim = c(nlevels, nvars, nvars))
+				
+				.C("GlmmGSRAPI_GetFixefStratifiedBlock", 
+						index,
+						estm,
+						vcov,
+						nvars,
+						nlevels,
+						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				
+				coef$estm <- estm
+				coef$vcov <- vcov
+			}
 			
 			fixef[[i]]$coef <- coef
-			fixef[[i]]$vcov <- vcov
-		}
-		else if (attr(block, "type") == "stratified")
-		{
-			index <- i - 1L
-			nvars <- .GetNumberOfVariables(block)
-			nlevels <- .GetNumberOfLevels(block)
-			coef <- double(nvars * nlevels)
-			vcov <- array(0, dim = c(nlevels, nvars, nvars))
-			
-			.C("GlmmGSRAPI_GetFixefStratifiedBlock", 
-					index,
-					coef,
-					vcov,
-					nvars,
-					nlevels,
-					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
-			
-			fixef[[i]]$coef <- coef
-			fixef[[i]]$vcov <- vcov
 		}
 	}
 	
 	fixef
 }
 
-glmmGSAPI.GetRanef <- function(ranef, covariance.models)
+glmmGSAPI.GetRanef <- function(ranef)
 {
+	n <- length(ranef)
+	
+	if (n > 0L)
+	{
+		for (i in 1L:length(ranef))
+		{
+			block <- ranef[[i]]$block
+			if (class(block) != "glmmGS.Block" || attr(block, "effects") != "random") 
+				stop("Invalid argument")
+			
+			coef <- list()
+			vcomp <- list()
+			
+			if (attr(block, "type") == "dense")
+			{
+				index <- i - 1L
+				
+				nvars <- .GetNumberOfVariables(block)
+				estm <- double(nvars)
+				.C("GlmmGSRAPI_GetRanefDenseBlock", 
+						index,
+						estm,
+						nvars,
+						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				coef$estm <- estm
+				
+				size <- .GetNumberOfVarianceComponents(block)
+				estm <- double(size)
+				vcov <- matrix(0, size, size)
+				.C("GlmmGSRAPI_GetVCompDenseBlock", 
+						index,
+						estm,
+						vcov,
+						size,
+						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				vcomp$estm <- estm
+				vcomp$vcov <- vcov
+			}
+			else if (attr(block, "type") == "stratified")
+			{
+				index <- i - 1L
+				
+				nvars <- .GetNumberOfVariables(block)
+				nlevels <- .GetNumberOfLevels(block)
+				estm <- double(nvars * nlevels)
+				.C("GlmmGSRAPI_GetRanefStratifiedBlock", 
+						index,
+						estm,
+						nvars,
+						nlevels,
+						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				coef$estm <- estm
+				
+				size <- .GetNumberOfVarianceComponents(block)
+				estm <- double(size)
+				vcov <- matrix(0, size, size)
+				.C("GlmmGSRAPI_GetVCompStratifiedBlock", 
+						index,
+						estm,
+						vcov,
+						size,
+						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				vcomp$estm <- estm
+				vcomp$vcov <- vcov
+			}
+			
+			ranef[[i]]$coef <- coef
+			ranef[[i]]$vcomp <- vcomp
+		}
+	}
+	
 	ranef
 }
 

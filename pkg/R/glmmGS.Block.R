@@ -31,6 +31,36 @@
 	ifelse(attr(block, "type") == "stratified", nlevels(block$factor$value), 0L)
 }
 
+.GetNumberOfVarianceComponents <- function(block)
+{
+	size <- 0L
+	if (attr(block, "effects") == "random")
+	{
+		covariance.model <- block$covariance.model$value
+		
+		if (attr(block, "type") == "dense")
+		{
+			if (class(covariance.model) %in% c(
+				"glmmGS.IdentityCovarianceModel",
+				"glmmGS.PrecisionModel"))
+			{
+				size <- 1L
+			}
+			
+		}
+		else if (attr(block, "type") == "stratified")
+		{
+			if (class(covariance.model) %in% c(
+					"glmmGS.IdentityCovarianceModel",
+					"glmmGS.PrecisionModel",
+					"glmmGS.SparsePrecisionModel"))
+			{
+				size <- .GetNumberOfVariables(block)
+			}
+		}
+	}
+}
+
 # glmmGS.Block - S3 class constructor 
 glmmGS.Block <- function(token, data, covariance.models)
 {
