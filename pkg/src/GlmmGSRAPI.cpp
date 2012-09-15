@@ -340,7 +340,7 @@ void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_t
 // Results - Dense fixed effects
 void GlmmGSRAPI_GetFixefDenseBlock(
 		const int * index,
-		double * coef,
+		double * estm,
 		double * vcov,
 		const int * nvars)
 {
@@ -350,12 +350,12 @@ void GlmmGSRAPI_GetFixefDenseBlock(
 		typedef GlmmGS::FixedEffects::IBlock I;
 		Vector<Pointer<I> > fixef = GlmmGSAPI::theApi.GlmmGS().FixedEffects();
 		if (*index < 0 || *index >= fixef.Size())
-			throw Exception("GlmmGSRAPI_GetFixefDenseBlock: Invalid block index");
+			throw Exception("Invalid block index");
 		typedef GlmmGS::FixedEffects::Global::Block T;
 		const T & block = dynamic_cast<const T &>(*fixef(*index));
 
 		// Get estimates
-		Copy(coef, *nvars, block.Coefficients());
+		Copy(estm, *nvars, block.Coefficients());
 		Copy(vcov, Math::Square(*nvars), block.Covariance());
 	}
 	catch  (Exception & e)
@@ -367,7 +367,7 @@ void GlmmGSRAPI_GetFixefDenseBlock(
 // Results - Stratified fixed effects
 void GlmmGSRAPI_GetFixefStratifiedBlock(
 		const int * index,
-		double * coef,
+		double * estm,
 		double * vcov,
 		const int * nvars,
 		const int * nlevels)
@@ -383,7 +383,7 @@ void GlmmGSRAPI_GetFixefStratifiedBlock(
 		const T & block = dynamic_cast<const T &>(*fixef(*index));
 
 		// Get estimates
-		Copy(coef, (*nvars) * (*nlevels), block.Coefficients());
+		Copy(estm, (*nvars) * (*nlevels), block.Coefficients());
 		Copy(vcov, Math::Square(*nvars) * (*nlevels), block.Covariance());
 	}
 	catch  (Exception & e)
@@ -393,51 +393,105 @@ void GlmmGSRAPI_GetFixefStratifiedBlock(
 }
 
 // Results - Random effects
-void GlmmGSRAPI_GetRanefDenselBlockDense(
+void GlmmGSRAPI_GetRanefDenseBlock(
 		const int * index,
-		double * coef,
-		double * vcov,
-		double * theta,
-		double * theta_vcov,
+		double * estm,
 		const int * nvars)
 {
+	try
+	{
+		// Get random effects
+		typedef GlmmGS::RandomEffects::IBlock I;
+		Vector<Pointer<I> > ranef = GlmmGSAPI::theApi.GlmmGS().RandomEffects();
+		if (*index < 0 || *index >= ranef.Size())
+			throw Exception("Invalid block index");
+		typedef GlmmGS::RandomEffects::Global::Block T;
+		const T & block = dynamic_cast<const T &>(*ranef(*index));
 
+		// Get estimates
+		Copy(estm, *nvars, block.Coefficients());
+	}
+	catch  (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
 }
 
-void GlmmGSRAPI_GetRanefStratifiedBlockDense(
-		const int * block,
-		double * coef,
+void GlmmGSRAPI_GetVCompDenseBlock(
+		const int * index,
+		double * estm,
 		double * vcov,
-		double * theta,
-		double * theta_vcov,
+		const int * size)
+{
+	try
+	{
+		// Get random effects
+		typedef GlmmGS::RandomEffects::IBlock I;
+		Vector<Pointer<I> > ranef = GlmmGSAPI::theApi.GlmmGS().RandomEffects();
+		if (*index < 0 || *index >= ranef.Size())
+			throw Exception("Invalid block index");
+		typedef GlmmGS::RandomEffects::Global::Block T;
+		const T & block = dynamic_cast<const T &>(*ranef(*index));
+
+		// Get estimates
+		Copy(estm, (*size), block.CovarianceModel()->Components());
+		Copy(vcov, Math::Square(*size), block.CovarianceModel()->Covariance());
+	}
+	catch  (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
+}
+
+void GlmmGSRAPI_GetRanefStratifiedBlock(
+		const int * index,
+		double * estm,
 		const int * nvars,
 		const int * nlevels)
 {
+	try
+	{
+		// Get random effects
+		typedef GlmmGS::RandomEffects::IBlock I;
+		Vector<Pointer<I> > ranef = GlmmGSAPI::theApi.GlmmGS().RandomEffects();
+		if (*index < 0 || *index >= ranef.Size())
+			throw Exception("Invalid block index");
+		typedef GlmmGS::RandomEffects::Stratified::Block T;
+		const T & block = dynamic_cast<const T &>(*ranef(*index));
 
+		// Get estimates
+		Copy(estm, (*nvars) * (*nlevels), block.Coefficients());
+	}
+	catch  (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
 }
 
-void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
-		const int * block,
-		double * coef,
+void GlmmGSRAPI_GetVCompStratifiedBlock(
+		const int * index,
+		double * estm,
 		double * vcov,
-		double * theta,
-		double * theta_vcov,
-		const int * nvars,
-		const int * nlevels)
+		const int * size)
 {
+	try
+	{
+		// Get random effects
+		typedef GlmmGS::RandomEffects::IBlock I;
+		Vector<Pointer<I> > ranef = GlmmGSAPI::theApi.GlmmGS().RandomEffects();
+		if (*index < 0 || *index >= ranef.Size())
+			throw Exception("Invalid block index");
+		typedef GlmmGS::RandomEffects::Stratified::Block T;
+		const T & block = dynamic_cast<const T &>(*ranef(*index));
 
-}
-
-void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
-		const int * block,
-		double * coef,
-		double * vcov_values, int * vcov_indices, int * vcov_counts, int * vcov_ncols,
-		double * theta,
-		double * theta_vcov,
-		const int * nvars,
-		const int * nlevels)
-{
-
+		// Get estimates
+		Copy(estm, (*size), block.CovarianceModel()->Components());
+		Copy(vcov, Math::Square(*size), block.CovarianceModel()->Covariance());
+	}
+	catch  (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
 }
 
 void GlmmGSRAPI_GetIterations(int * iterations)

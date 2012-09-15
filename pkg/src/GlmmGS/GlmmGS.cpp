@@ -7,21 +7,6 @@
 
 namespace GlmmGS
 {
-	// Helper function. TODO: move
-	void ToVector(Vector<Estimate> & y, const Vector<Vector<Estimate> > & x)
-	{
-		// Calculate size
-		int size = 0;
-		for (int i = 0; i < x.Size(); ++i)
-			size += x(i).Size();
-
-		// Copy vectors
-		y = Vector<Estimate>(size);
-		for (int index = 0, i = 0; i < x.Size(); ++i)
-			for (int j = 0; j < x(i).Size(); ++j, ++index)
-				y(index) = x(i)(j);
-	}
-
 	// GlmmGS
 	GlmmGS::GlmmGS(const Pointer<Responses::IResponse> & response,
 			const Pointer<Offsets::IOffset> & offset,

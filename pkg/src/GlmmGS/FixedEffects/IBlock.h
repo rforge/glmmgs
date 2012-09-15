@@ -2,7 +2,6 @@
 #define GLMMGS_FIXEDEFFECTS_IBLOCK_H
 
 #include "../Standard.h"
-#include "../Estimate.h"
 #include "../Controls.h"
 
 namespace GlmmGS

@@ -50,46 +50,34 @@ extern "C"
 
 	void GlmmGSRAPI_GetFixefStratifiedBlock(
 			const int * index,
-			double * coef,
+			double * estm,
 			double * vcov,
 			const int * nvars,
 			const int * nlevels);
 
 	// Results - Random effects
-	void GlmmGSRAPI_GetRanefDenselBlockDense(
+	void GlmmGSRAPI_GetRanefDenseBlock(
 			const int * index,
-			double * coef,
-			double * vcov,
-			double * theta,
-			double * theta_vcov,
+			double * estm,
 			const int * nvars);
 
-	void GlmmGSRAPI_GetRanefStratifiedBlockDense(
-			const int * block,
-			double * coef,
+	void GlmmGSRAPI_GetVCompDenseBlock(
+			const int * index,
+			double * estm,
 			double * vcov,
-			double * theta,
-			double * theta_vcov,
+			const int * size);
+
+	void GlmmGSRAPI_GetRanefStratifiedBlock(
+			const int * index,
+			double * estm,
 			const int * nvars,
 			const int * nlevels);
 
-	void GlmmGSRAPI_GetRanefStratifiedBlockStratified(
-			const int * block,
-			double * coef,
+	void GlmmGSRAPI_GetVCompStratifiedBlock(
+			const int * index,
+			double * estm,
 			double * vcov,
-			double * theta,
-			double * theta_vcov,
-			const int * nvars,
-			const int * nlevels);
-
-	void GlmmGSRAPI_GetRanefStratifiedBlockSparse(
-			const int * block,
-			double * coef,
-			double * vcov_values, int * vcov_indices, int * vcov_counts, int * vcov_ncols,
-			double * theta,
-			double * theta_vcov,
-			const int * nvars,
-			const int * nlevels);
+			const int * size);
 
 	void GlmmGSRAPI_GetIterations(int * iterations);
 }

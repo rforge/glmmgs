@@ -4,7 +4,6 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
 #include "CovarianceModels/ICovarianceModel.h"
-#include "../../Estimate.h"
 #include "../../Controls.h"
 #include "../IBlock.h"
 
@@ -33,7 +32,7 @@ namespace GlmmGS
 						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model);
 
 				// Properties
-				Vector<double> Coefficients() const;
+				const Vector<double> & Coefficients() const;
 				Pointer<CovarianceModels::ICovarianceModel> CovarianceModel() const;
 			};
 		}

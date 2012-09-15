@@ -2,7 +2,6 @@
 #define GLMMGS_RANDOMEFFECTS_COVARIANCEMODEL_ICOVARIANCEMODEL_H
 
 #include "../../../Standard.h"
-#include "../../../Estimate.h"
 #include "../../../Controls.h"
 
 namespace GlmmGS
@@ -19,10 +18,9 @@ namespace GlmmGS
 				protected:
 					// Fields
 					Vector<double> theta;
-				private:
 					CholeskyDecomposition chol;
+					CholeskyDecomposition beta_precision_chol;
 
-				protected:
 					// Implementation
 					int Update(const TriangularMatrix<double> & minus_hessian,
 							const Vector<double> & jacobian, const Controls & controls);
@@ -32,8 +30,9 @@ namespace GlmmGS
 					virtual ~ICovarianceModel();
 
 					// Properties
-					virtual Vector<double> CoefficientsVariance() const = 0;
-					Vector<Estimate> Estimates() const;
+					const Vector<double> & Components() const;
+					TriangularMatrix<double> Covariance() const;
+					TriangularMatrix<double> CoefficientCovariance() const;
 
 					// Methods
 					virtual void Decompose(const TriangularMatrix<double> & precision) = 0;

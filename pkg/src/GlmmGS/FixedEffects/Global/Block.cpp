@@ -1,6 +1,5 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Estimate.h"
 #include "../../Controls.h"
 #include "Block.h"
 
@@ -21,7 +20,7 @@ namespace GlmmGS
 			}
 
 			// Properties
-			Vector<double> Block::Coefficients() const
+			const Vector<double> & Block::Coefficients() const
 			{
 				return this->beta;
 			}

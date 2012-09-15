@@ -6,7 +6,6 @@
 #include "Offsets/IOffset.h"
 #include "FixedEffects/IBlock.h"
 #include "RandomEffects/IBlock.h"
-#include "Estimate.h"
 #include "Controls.h"
 
 namespace GlmmGS

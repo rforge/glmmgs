@@ -7,7 +7,6 @@
 #include "FixedEffects/IBlock.h"
 #include "RandomEffects/IBlock.h"
 #include "Controls.h"
-#include "Estimate.h"
 
 namespace GlmmGS
 {
@@ -31,7 +30,7 @@ namespace GlmmGS
 
 		// Properties
 		Vector<Pointer<FixedEffects::IBlock> > FixedEffects() const;
-		Vector<Pointer<RandomEffects::IBlock> > RandomEffect() const;
+		Vector<Pointer<RandomEffects::IBlock> > RandomEffects() const;
 		int Iterations() const;
 
 		// Methods
@@ -45,7 +44,7 @@ namespace GlmmGS
 	}
 
 	inline
-	Vector<Pointer<RandomEffects::IBlock> > GlmmGS::RandomEffect() const
+	Vector<Pointer<RandomEffects::IBlock> > GlmmGS::RandomEffects() const
 	{
 		return this->random_effects;
 	}

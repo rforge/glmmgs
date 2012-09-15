@@ -7,7 +7,6 @@
 
 // Types
 #include "../GlmmGS/Controls.h"
-#include "../GlmmGS/Estimate.h"
 
 // Response
 #include "../GlmmGS/Responses/IResponse.h"

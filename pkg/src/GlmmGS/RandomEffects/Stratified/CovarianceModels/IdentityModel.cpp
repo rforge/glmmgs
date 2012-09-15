@@ -1,5 +1,4 @@
 #include "../../../Standard.h"
-#include "../../../Estimate.h"
 #include "IdentityModel.h"
 
 namespace GlmmGS
@@ -21,21 +20,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Properties
-				Vector<double> IdentityModel::CoefficientsVariance() const
-				{
-					const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
-
-					// Calculate standard-errors
-					const int size = this->nvars * this->nlevels;
-					Vector<double> variance(size);
-					for (int j = 0, jk = 0; j < this->nvars; ++j)
-						for (int k = 0; k < nlevels; ++k, ++jk)
-							variance(jk) = covariance(j, j)(k);
-					return variance;
-				}
-
-				// Methods
+				// Implementation
 				void IdentityModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Add diagonal to precision

@@ -1,5 +1,4 @@
 #include "../../../Standard.h"
-#include "../../../Estimate.h"
 #include "IdentityModel.h"
 
 namespace GlmmGS
@@ -19,13 +18,6 @@ namespace GlmmGS
 
 				IdentityModel::~IdentityModel()
 				{
-				}
-
-				// Properties
-				Vector<double> IdentityModel::CoefficientsVariance() const
-				{
-					const TriangularMatrix<double> covariance = this->beta_precision_chol.Inverse();
-					return LinearAlgebra::Diagonal(covariance);
 				}
 
 				// Methods

@@ -3,7 +3,6 @@
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Estimate.h"
 #include "../../Controls.h"
 #include "../IBlock.h"
 
@@ -33,7 +32,7 @@ namespace GlmmGS
 				~Block();
 
 				// Properties
-				Vector<Vector<double> > Coefficients() const;
+				const Vector<Vector<double> > & Coefficients() const;
 				TriangularMatrix<Vector<double> > Covariance() const;
 			};
 		}

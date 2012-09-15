@@ -1,5 +1,4 @@
 #include "../../../Standard.h"
-#include "../../../Estimate.h"
 #include "SparsePrecisionModel.h"
 #include "Functions.h"
 
@@ -22,33 +21,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Properties
-				Vector<double> SparsePrecisionModel::CoefficientsVariance() const
-				{
-					// Calculate standard-errors
-					const int nlevels = this->R.NumberOfColumns();
-					const int size = this->nvars * nlevels;
-					Vector<double> variance(size);
-					Vector<double> b(size);
-					for (int j = 0, jk = 0; j < this->nvars; ++j)
-					{
-						for (int k = 0; k < nlevels; ++k, ++jk)
-						{
-							// Prepare b
-							Set(b, 0.0);
-							b(jk) = 1.0;
-
-							// Solve T_j x = b
-							Vector<double> x = this->beta_precision_chol.Solve(b);
-
-							// Calculate standard-error
-							variance(jk) = x(jk);
-						}
-					}
-					return variance;
-				}
-
-				// Methods
+				// Implementation
 				void SparsePrecisionModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Build an upper diagonal sparse-matrix equal to the design-precision plus the random-effects-precision

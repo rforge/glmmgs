@@ -3,7 +3,6 @@
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Estimate.h"
 #include "../IBlock.h"
 #include "Boosters/IBooster.h"
 #include "CovarianceModels/ICovarianceModel.h"
@@ -36,7 +35,7 @@ namespace GlmmGS
 						const Pointer<Boosters::IBooster> & booster);
 
 				// Properties
-				Vector<Vector<double> > Coefficients() const;
+				const Vector<Vector<double> > & Coefficients() const;
 				Pointer<CovarianceModels::ICovarianceModel> CovarianceModel() const;
 			};
 		}

@@ -2,7 +2,6 @@
 #define GLMMGS_RANDOMEFFECTS_COVARIANCEMODEL_PRECISIONMODEL_H
 
 #include "../../../Standard.h"
-#include "../../../Estimate.h"
 #include "ICovarianceModel.h"
 
 namespace GlmmGS
@@ -19,10 +18,8 @@ namespace GlmmGS
 				private:
 					// Fields
 					Matrix<const double> R;
-					CholeskyDecomposition beta_precision_chol;
 
 					// Implementation
-					Vector<double> CoefficientsVariance() const;
 					void Decompose(const TriangularMatrix<double> & precision);
 					int Update(const Vector<double> & beta, const Controls & controls);
 					Vector<double> UpdateCoefficients(const Vector<double> & jacobian, const Vector<double> & beta) const;
@@ -31,6 +28,9 @@ namespace GlmmGS
 					// Construction
 					PrecisionModel(Matrix<const double> R);
 					~PrecisionModel();
+
+					// Properties
+					TriangularMatrix<double> CoefficientCovariance() const;
 				};
 			}
 		}

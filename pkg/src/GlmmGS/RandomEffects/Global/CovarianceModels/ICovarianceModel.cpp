@@ -1,5 +1,4 @@
 #include "ICovarianceModel.h"
-#include "../../../Estimate.h"
 #include "../../../Controls.h"
 
 namespace GlmmGS
@@ -21,16 +20,22 @@ namespace GlmmGS
 				}
 
 				// Properties
-				Vector<Estimate> ICovarianceModel::Estimates() const
+				const Vector<double> & ICovarianceModel::Components() const
 				{
-					int npars = this->theta.Size();
-					Vector<Estimate> estimates(npars);
-					TriangularMatrix<double> covariance = this->chol.Inverse();
-					for (int j = 0; j < npars; ++j)
-						estimates(j) = Estimate(this->theta(j), covariance(j, j));
-					return estimates;
+					return this->theta;
 				}
 
+				TriangularMatrix<double> ICovarianceModel::Covariance() const
+				{
+					return this->chol.Inverse();
+				}
+
+				TriangularMatrix<double> ICovarianceModel::CoefficientCovariance() const
+				{
+					return this->beta_precision_chol.Inverse();
+				}
+
+				// Implementation
 				int ICovarianceModel::Update(const TriangularMatrix<double> & minus_hessian,
 						const Vector<double> & jacobian, const Controls & controls)
 				{

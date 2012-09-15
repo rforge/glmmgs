@@ -22,7 +22,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(Vector<TYPE> & dst, const Vector<TYPE> & src)
 	{
-		_ASSERT_ARGUMENT(dst.Size() == src.Size());
+		_VALIDATE_ARGUMENT(dst.Size() == src.Size());
 		for (int i = 0; i < dst.Size(); ++i)
 			dst(i) = src(i);
 	}
@@ -32,7 +32,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(Matrix<TYPE> & dst, const Matrix<TYPE> & src)
 	{
-		_ASSERT_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows() &&
+		_VALIDATE_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows() &&
 				dst.NumberOfColumns() == src.NumberOfColumns());
 		for (int i = 0; i < dst.NumberOfRows(); ++i)
 			for (int j = 0; j < dst.NumberOfColumns(); ++j)
@@ -52,7 +52,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(TYPE * dst, int size, const TriangularMatrix<TYPE> & src)
 	{
-		_ASSERT_ARGUMENT(size == TotalSizeAsSquareMatrix(src));
+		_VALIDATE_ARGUMENT(size == TotalSizeAsSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)
 			for (int j = 0; j < src.NumberOfRows(); ++j, ++dst)
 				*dst = src(i, j);
