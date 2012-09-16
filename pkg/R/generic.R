@@ -343,5 +343,5 @@ print.glmmGS <- function(x, ...)
 		}
 	}
 	
-	cat("\nNumber of GS iterations: ", glmmGS$iterations, "\n")
+	cat("\nNumber of Gauss-Seidel iterations: ", glmmGS$iterations, "\n")
 }

@@ -114,44 +114,59 @@
 \examples{
 	# Set data dimension: 
 	# - 1 million observations, 
-	# - 7 'dense' fixed effect covariates,
-	# - stratified random effects with 2000 strata (levels)
+	# - 7 day-of-the-week specific fixed effects
+	# - 2000 post-code specific random effects
 	nobs <- 1000000L
-	ndays <- 7L
+	nDaysOfWeek <- 7L
 	nPostCodes <- 2000L
 
 	# Generate data
+	set.seed(23)
+	# Size of binomial observations
 	size <- as.integer(runif(nobs, 1, 10))
-	days <- matrix(rnorm(nobs * ndays), nrow = nobs, ncol = ndays)
-	seifa <- rnorm(nobs)
-	postCodes <- as.factor(as.integer(runif(nobs, 0, nPostCodes)))
+	# Covariate
+	x <- rnorm(nobs)
+	# Fixed effects and random effects grouping factors
+	dayOfWeek <- factor(as.integer(runif(nobs, 1, nDaysOfWeek + 1))) 
+	postCode <- factor(as.integer(runif(nobs, 1, nPostCodes + 1)))
 	
-	# Generate coefficients
-	offset <- runif(nobs, -1, 1)
-	intercept <- -0.5
-	sd.days <- 0.1
-	beta.days <- rnorm(ndays, sd = sd.days)
-	sd.seifa <- 0.1
-	intercept.seifa <- rnorm(nPostCodes, sd = sd.seifa)
-	beta.seifa <- rnorm(nPostCodes, sd = sd.seifa)
+	# Set level names for dayOfWeek factor
+	levels(dayOfWeek) <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+	
+	# Generate fixed effects
+	beta0 <- -0.5
+	beta1 <- 0.7
+	betaDays <- rnorm(nDaysOfWeek, sd = 0.1)
+	betaDays[1] <- 0 # Set first level equal to zero
+	
+	# Generate random effects
+	b0 <- rnorm(nPostCodes, sd = sqrt(0.02))
+	b1 <- rnorm(nPostCodes, sd = sqrt(0.01))
 	
 	# Generate linear predictor
-	eta <- intercept + days \%*\% beta.days
-	eta <- eta + intercept.seifa[as.integer(postCodes)] + seifa * beta.seifa[as.integer(postCodes)]
+	eta <- beta0 + x * beta1
+	eta <- eta + betaDays[as.integer(dayOfWeek)]
+	eta <- eta + b0[as.integer(postCode)] + x * b1[as.integer(postCode)]
 
 	# Generate response
 	y <- as.integer(rbinom(nobs, size, plogis(eta)))
 
-	# Define identity precision model and control list
+	# Define identity covariance model
 	I <- glmmGS.CovarianceModel("identity")
-	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 200)
 	
-	# Fit model using Gauss-Seidel algorithm with two blocks: 
-	# - one fixed effect block: (1 + days);
-	# - one stratified random effect block with an identity  
-	#   covariance model: (1 + seifa | postCodes ~ I).
-	formula <- (y / size) ~ offset(offset) + (1 + days) + (1 + seifa | postCodes ~ I)
-	results <- glmmGS(formula = formula, family = binomial, control = control)
+	# Define control list
+	control <- glmmGS.Control(reltol = 1.e-6, abstol = 1.e-6, maxit = 200, verbose = FALSE)
+	
+	# Fit model using Gauss-Seidel algorithm with three blocks: 
+	# - one dense fixed effect block: (1 + x);
+	# - one stratified fixed effect block: (1 | dayOfWeek);
+	# - one stratified random effect block: (1 + x | postCode ~ I)
+	#   with an identity prior covariance matrix
+	results <- glmmGS(formula = (y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ I), 
+		family = binomial, control = control)
+	
+	# Print results
+	print(results)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

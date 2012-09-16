@@ -1,18 +1,20 @@
 # Construct covariance models
 glmmGS.CovarianceModel <- function(type, ...)
 {
-	model <- NULL
+	# Get variable list
 	ls <- list(...)
 	
+	# Instantiate covariance model
 	model <- list()
 	
+	# Build covariance model class
 	if (type == "identity")
 	{
 		class(model) <- "glmmGS.IdentityCovarianceModel"
 	}
 	else if (type == "precision")
 	{
-		R <- ls[[1]]
+		R <- ls[[1L]]
 		if (class(R) == "matrix" && nrow(R) == ncol(R))
 		{
 			class(model) <- "glmmGS.PrecisionModel" 
