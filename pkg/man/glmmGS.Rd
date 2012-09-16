@@ -5,14 +5,12 @@
 }
 \description{
 	glmmGS is used to fit generalized mixed linear models specified by a string-like formula.
-	The MLE estimation of the parameters is performed by using a Gauss-Seidel algorithm 
-	to fit the regression coefficients (see Reference), and a Penalized Quasi Likelihood (PQL) 
-	approach to fit the covariance components (see Note). The algorithm is highly optimized to fit 
-	fixed effect models to data-sets with a large number of observations and 
-	with stratified covariates with a large number of levels, and mixed models 
-	with stratified covariates with a large number of levels and diagonal
-	covariance structures. Covariance structures defined by non diagonal dense 
-	or sparse precision matrices are also allowed (see \code{\link{glmmGS.CovarianceModel}}).
+	The estimation of the parameters is performed by fitting a Penalized Quasi Likelihood (PQL) 
+	using a Gauss-Seidel algorithm to fit the regression coefficients (see Reference). 
+	The algorithm is highly optimized for data sets with a large number of observations 
+	and with stratified covariates with a large number of levels and diagonal covariance structures. 
+	Non diagonal covariance structures defined by dense	or sparse precision 
+	matrices are also allowed (see \code{\link{glmmGS.CovarianceModel}}).
 }
 \usage{
 	glmmGS(formula, family, data, covariance.models, control = glmmGS.Control())
@@ -71,11 +69,14 @@
 	%%  \item{comp1 }{Description of 'comp1'}
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
-	an object of type \code{glmmGS} containing: (1) the estimated fixed effects;
-	(2) the estimated random effects; (3) the diagonal blocks of the 
-	fixed effect covariance matrix according to the GS blocks
-	specified in the formula; (4) the covariance matrix of the random effects;
-	(5) the estimated working weights, predictors, and other control parameters.
+	an object of type \code{glmmGS} containing:
+	references to the input data blocks (for internal use only);   
+	the estimated fixed effects to be retrieved using the generic functions \code{coef} or \code{\link{fixef}};
+	the fixed effect conditional covariance matrices to be retrieved using the generic function \code{vcov}; 
+	the estimated random effects to be retrieved using the generic function \code{\link{ranef}}; 
+	the estimated parameters of the random effect covariance models used to calculated the variance
+	components of the random effects displayed by the generic function \code{print.glmmGS};
+	the number of GS iterations taken to converge.
 }
 
 \references{
@@ -88,33 +89,20 @@
 }
 \note{
 %%  ~~further notes~~
-	The distinguishing characteristic of the Gauss-Seidel algorithm is that the full
-	precision matrix of the posterior distribution of the parameters
-	is never computed. Only diagonal blocks of the precision matrix are computed, 
-	one for each pair of parentheses in the formula. Furthermore, each precision-block
-	associated with stratified covariates, is subdivided in as many sub-blocks 
-	as many levels there are in the grouping factor. As a consequence, 
-	the standard errors associated with the coefficient estimates are computed 
+	The \code{glmmGS} function is optimized to handle data-sets with very large numbers of observations 
+	containing stratified data with large numbers of levels. 
+	
+	One of the distinguishing characteristic of the Gauss-Seidel algorithm is that the full
+	precision matrix of the posterior distribution of the fixed effects
+	is never computed: only the diagonal blocks associated with the input blocks are computed. 
+	As a consequence, the standard errors associated with the coefficient estimates are computed 
 	for each block conditionally to the other blocks, and they tend to be
 	smaller than the standard-errors calculated using the full posterior
-	distribution of the parameters. 
-	
-	The \code{glmmGS} function is optimized to handle data-sets with a large number of observations 
-	and data stratifications with a large number of levels. 
-	To avoid unnecessary memory allocation, the return value contains only minimal fitting information.
-	Auxiliary functions to calculate quantities such as	block covariance matrices, 
-	fitted values, predictors, will be soon released. We strongly recommend not to commit 
-	to the current format of the return value, since it will likely change in the next release. 
-	A user should write \sQuote{accessor} functions to parse the return value, so that user-code 
-	using \code{glmmGS} would only need to change the \sQuote{accessor} functions in the next
-	release. 
+	distribution of the parameters.
 	
 	Although it is possible to specify as many blocks of random effects as desired, the PQL update
 	of the covariance components is performed one block at a time. This yields to different
-	estimates compared to a joint PQL update of the covariance components. Alternative
-	approaches, more compatible with the component-wise nature of the Gauss-Seidel
-	algorithm, to the PQL approximation of the integration over the random effect 
-	coefficients, are under consideration.
+	estimates compared to a joint PQL update of the covariance components.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
