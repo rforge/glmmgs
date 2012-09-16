@@ -1,24 +1,24 @@
 # Parsing utility funtions
-.GetVariables <- function(token)
+GetVariables <- function(token)
 {
 	token <- unlist(strsplit(token, "\\~"))[1L]
 	token <- unlist(strsplit(token, "\\|"))[1L]
 	unlist(strsplit(token, "\\+"))
 }
 
-.GetFactor <- function(token)
+GetFactor <- function(token)
 {
 	token <- unlist(strsplit(token, "\\~"))[1L]
 	unlist(strsplit(token, "\\|"))[2L]
 }
 
-.GetCovarianceModel <- function(token)
+GetCovarianceModel <- function(token)
 {
 	unlist(strsplit(token, "\\~"))[2L]
 }
 
 # Getter utility functions
-.GetNumberOfVariables <- function(block)
+GetNumberOfVariables <- function(block)
 {
 	nvars <- 0L
 	for (var in block$covariates)
@@ -26,12 +26,12 @@
 	nvars
 }
 
-.GetNumberOfLevels <- function(block)
+GetNumberOfLevels <- function(block)
 {
 	ifelse(attr(block, "type") == "stratified", nlevels(block$factor$value), 0L)
 }
 
-.GetNumberOfVarianceComponents <- function(block)
+GetNumberOfVarianceComponents <- function(block)
 {
 	size <- 0L
 	if (attr(block, "effects") == "random")
@@ -55,7 +55,7 @@
 					"glmmGS.PrecisionModel",
 					"glmmGS.SparsePrecisionModel"))
 			{
-				size <- .GetNumberOfVariables(block)
+				size <- GetNumberOfVariables(block)
 			}
 		}
 	}
@@ -67,9 +67,9 @@ glmmGS.Block <- function(token, data, covariance.models)
 #	print("Begin block")
 #	print(gc())
 	
-	variable.names <- .GetVariables(token)
-	factor.name <- .GetFactor(token)
-	covariance.model.name <- .GetCovarianceModel(token)
+	variable.names <- GetVariables(token)
+	factor.name <- GetFactor(token)
+	covariance.model.name <- GetCovarianceModel(token)
 	
 	# Initialize block
 	block <- list()

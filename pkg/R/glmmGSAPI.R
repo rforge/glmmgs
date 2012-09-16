@@ -287,7 +287,7 @@ glmmGSAPI.GetFixef <- function(fixef)
 			if (attr(block, "type") == "dense")
 			{
 				index <- i - 1L
-				nvars <- .GetNumberOfVariables(block)
+				nvars <- GetNumberOfVariables(block)
 				estm <- double(nvars)
 				vcov <- matrix(0, nvars, nvars)
 	
@@ -304,8 +304,8 @@ glmmGSAPI.GetFixef <- function(fixef)
 			else if (attr(block, "type") == "stratified")
 			{
 				index <- i - 1L
-				nvars <- .GetNumberOfVariables(block)
-				nlevels <- .GetNumberOfLevels(block)
+				nvars <- GetNumberOfVariables(block)
+				nlevels <- GetNumberOfLevels(block)
 				estm <- double(nvars * nlevels)
 				vcov <- array(0, dim = c(nlevels, nvars, nvars))
 				
@@ -347,7 +347,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 			{
 				index <- i - 1L
 				
-				nvars <- .GetNumberOfVariables(block)
+				nvars <- GetNumberOfVariables(block)
 				estm <- double(nvars)
 				.C("GlmmGSRAPI_GetRanefDenseBlock", 
 						index,
@@ -356,7 +356,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 				coef$estm <- estm
 				
-				size <- .GetNumberOfVarianceComponents(block)
+				size <- GetNumberOfVarianceComponents(block)
 				estm <- double(size)
 				vcov <- matrix(0, size, size)
 				.C("GlmmGSRAPI_GetVCompDenseBlock", 
@@ -372,8 +372,8 @@ glmmGSAPI.GetRanef <- function(ranef)
 			{
 				index <- i - 1L
 				
-				nvars <- .GetNumberOfVariables(block)
-				nlevels <- .GetNumberOfLevels(block)
+				nvars <- GetNumberOfVariables(block)
+				nlevels <- GetNumberOfLevels(block)
 				estm <- double(nvars * nlevels)
 				.C("GlmmGSRAPI_GetRanefStratifiedBlock", 
 						index,
@@ -383,7 +383,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 				coef$estm <- estm
 				
-				size <- .GetNumberOfVarianceComponents(block)
+				size <- GetNumberOfVarianceComponents(block)
 				estm <- double(size)
 				vcov <- matrix(0, size, size)
 				.C("GlmmGSRAPI_GetVCompStratifiedBlock", 
