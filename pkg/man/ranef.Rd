@@ -61,8 +61,7 @@ Extract random effect estimates
 	ranef2 <- ranef(result2)
 	
 	# Print covariance of estimated random effects in first (and only) 
-	# random effect block: '1 + x | postCode ~ I', '1 + x | postCode ~ Ic' 
-	# (see glmmGS example)
+	# random effect block for each model (see glmmGS example)
 	print(cov(cbind(ranef1[[1]][, 1], ranef1[[1]][, 2])))
 	print(cov(cbind(ranef2[[1]][, 1], ranef2[[1]][, 2])))
 }

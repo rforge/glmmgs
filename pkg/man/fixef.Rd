@@ -60,7 +60,7 @@ Extract fixed effect estimates
 	fixef1 <- fixef(result1)
 	fixef2 <- fixef(result2)
 	
-	# Print fixed effect estimates side by side for each block
+	# Print fixed effect estimates for each block and, side by side, for each model
 	print(cbind(fixef1[[1]], fixef2[[1]]))
 	print(cbind(fixef1[[2]], fixef2[[2]]))
 }
