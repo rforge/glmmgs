@@ -44,7 +44,7 @@ glmmGSAPI.EndModel <- function()
 glmmGSAPI.BeginResponse <- function(family)
 {
 	if (is.character(family) == FALSE)
-		stop("Invalid type")
+		stop("Invalid argument")
 	if (length(family) != 1L)
 		stop("Invalid size")
 	size = as.integer(nchar(family[1]))
@@ -134,7 +134,7 @@ glmmGSAPI.AddResponse <- function(values)
 	}
 	else
 	{
-		stop("Invalid type")
+		stop("Invalid argument")
 	}
 }
 
@@ -149,7 +149,7 @@ glmmGSAPI.AddCounts <- function(values)
 	}
 	else
 	{
-		stop("Invalid type")
+		stop("Invalid argument")
 	}
 }
 
@@ -169,20 +169,26 @@ glmmGSAPI.AddOffset <- function(values)
 	}
 	else
 	{
-		stop("Invalid type")
+		stop("Invalid argument")
 	}
 }
 
 # Add intercept
-glmmGSAPI.AddIntercept <- function()
+glmmGSAPI.AddIntercept <- function(duplicate)
 {
+	if (class(duplicate) != "integer")
+		stop("Invalid argument")
+	
 	.C("GlmmGSRAPI_AddIntercept", PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
 # Add a covariate
-glmmGSAPI.AddCovariate <- function(values)
+glmmGSAPI.AddCovariate <- function(values, duplicate)
 {
+	if (class(duplicate) != "integer")
+		stop("Invalid argument")
+	
 	if (is.vector(values))
 	{
 		size <- as.integer(length(values))
@@ -198,7 +204,7 @@ glmmGSAPI.AddCovariate <- function(values)
 		}
 		else
 		{
-			stop("Invalid type")
+			stop("Invalid argument")
 		}
 	}
 	else if (is.matrix(values))
@@ -216,12 +222,12 @@ glmmGSAPI.AddCovariate <- function(values)
 		}
 		else
 		{
-			stop("Invalid type")
+			stop("Invalid argument")
 		}
 	}
 	else
 	{
-		stop("Invalid type")
+		stop("Invalid argument")
 	}
 }
 
@@ -238,7 +244,7 @@ glmmGSAPI.AddIdentityCovarianceModel <- function(S)
 	}
 	else
 	{
-		stop("Invalid identity model")
+		stop("Invalid argument")
 	}
 }
 
@@ -256,7 +262,7 @@ glmmGSAPI.AddPrecisionModel <- function(R, S)
 	}
 	else
 	{
-		stop("Invalid precision model")
+		stop("Invalid argument")
 	}
 }
 
@@ -274,7 +280,7 @@ glmmGSAPI.AddSparsePrecisionModel <- function(R, S)
 	}
 	else
 	{
-		stop("Invalid sparse precision model")
+		stop("Invalid argument")
 	}
 }
 

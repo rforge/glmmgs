@@ -5,11 +5,11 @@ glmmGS.AddCovariates <- function(covariates)
 	{
 		if (var$name == "1") 
 		{
-			glmmGSAPI.AddIntercept()
+			glmmGSAPI.AddIntercept(var$duplicate)
 		}
 		else 
 		{
-			glmmGSAPI.AddCovariate(var$value)
+			glmmGSAPI.AddCovariate(var$value, var$duplicate)
 		}
 	}
 }
