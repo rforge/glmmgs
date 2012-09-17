@@ -3,8 +3,8 @@
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
+#include "../../Boosters/IBooster.h"
 #include "../IBlock.h"
-#include "Boosters/IBooster.h"
 #include "CovarianceModels/ICovarianceModel.h"
 
 namespace GlmmGS

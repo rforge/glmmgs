@@ -11,7 +11,7 @@ namespace GlmmGSAPI
 		{
 			// BlockSection
 			BlockSection::BlockSection(const Section & section, WeakFactor factor)
-				: Section(section), factor(factor), booster(new(bl) GlmmGS::RandomEffects::Stratified::Boosters::Default)
+				: Section(section), factor(factor), booster(new(bl) GlmmGS::Boosters::Default)
 			{
 			}
 
@@ -21,7 +21,7 @@ namespace GlmmGSAPI
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				if (this->data->fixed_intercept == true)
-					this->booster.Reset(new(bl) GlmmGS::RandomEffects::Stratified::Boosters::RemoveMean);
+					this->booster.Reset(new(bl) GlmmGS::Boosters::RemoveMean);
 
 				// Add intercept
 				typedef GlmmGS::Variables::Intercept T;
