@@ -203,15 +203,15 @@ glmmGSAPI.AddCovariate <- function(values)
 	}
 	else if (is.matrix(values))
 	{
-		dimensions <- dim(values)
+		dim <- dim(values)
 		if (is.integer(values))
 		{
-			.C("GlmmGSRAPI_AddCovariatesInt", values, dimensions, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariatesInt", values, dim, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else if (is.double(values))
 		{
-			.C("GlmmGSRAPI_AddCovariatesDbl", values, dimensions, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariatesDbl", values, dim, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else
@@ -232,7 +232,7 @@ glmmGSAPI.AddIdentityCovarianceModel <- function(S)
 	{
 		dimS <- dim(S)
 		.C("GlmmGSRAPI_AddIdentityCovarianceModel", 
-				S, dimS[1L], dimS[2L], 
+				S, dimS, 
 				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
@@ -250,8 +250,7 @@ glmmGSAPI.AddPrecisionModel <- function(R, S)
 		dimR <- dim(R)
 		dimS <- dim(S)
 		.C("GlmmGSRAPI_AddPrecisionModel", 
-				R, dimR[1L], dimR[2L], 
-				S, dimS[1L], dimS[2L], 
+				R, dimR, S, dimS, 
 				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
@@ -269,8 +268,7 @@ glmmGSAPI.AddSparsePrecisionModel <- function(R, S)
 		ncols = length(R$counts) - 1L
 		dimS <- dim(S)
 		.C("GlmmGSRAPI_AddSparsePrecisionModel", 
-				R$values, R$indices, R$counts, ncols, 
-				S, dimS[1L], dimS[2L], 
+				R$values, R$indices, R$counts, ncols, S, dimS, 
 				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}

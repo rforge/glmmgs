@@ -247,12 +247,12 @@ void GlmmGSRAPI_AddCovariateDbl(const double * values, const int * size)
 }
 
 template <class TYPE>
-void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dimensions)
+void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dim)
 {
 	try
 	{
-		const int nrows = dimensions[0];
-		const int ncols = dimensions[1];
+		const int nrows = dim[0];
+		const int ncols = dim[1];
 		for (int j = 0; j < ncols; ++j)
 			GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values + j * nrows), nrows));
 	}
@@ -262,28 +262,28 @@ void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dimensions)
 	}
 }
 
-void GlmmGSRAPI_AddCovariatesInt(const int * values, const int * dimensions)
+void GlmmGSRAPI_AddCovariatesInt(const int * values, const int * dim)
 {
-	GlmmGSRAPI_AddCovariatesImpl(values, dimensions);
+	GlmmGSRAPI_AddCovariatesImpl(values, dim);
 }
 
-void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dimensions)
+void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dim)
 {
-	GlmmGSRAPI_AddCovariatesImpl(values, dimensions);
+	GlmmGSRAPI_AddCovariatesImpl(values, dim);
 }
 
 void GlmmGSRAPI_AddIdentityCovarianceModel(
-		const double * S, const int * nrowsS, const int * ncolsS)
+		const double * S, const int * dimS)
 {
 	try
 	{
-		if (*nrowsS != *ncolsS)
+		if (dimS[0] != dimS[1])
 			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
 
 		// TODO: check matrix is symmetric
 
 		GlmmGSAPI::theApi.AddIdentityCovarianceModel(
-			Matrix<const double>(External<const double>(S), *nrowsS, *ncolsS));
+			Matrix<const double>(External<const double>(S), dimS[0], dimS[1]));
 	}
 	catch (Exception & e)
 	{
@@ -292,22 +292,22 @@ void GlmmGSRAPI_AddIdentityCovarianceModel(
 }
 
 void GlmmGSRAPI_AddPrecisionModel(
-		const double * R, const int * nrowsR, const int * ncolsR,
-		const double * S, const int * nrowsS, const int * ncolsS)
+		const double * R, const int * dimR,
+		const double * S, const int * dimS)
 {
 	try
 	{
-		if (*nrowsR != *ncolsR)
+		if (dimR[0] != dimR[1])
 			throw Utilities::Exceptions::Exception("Precision matrix must be square");
 
-		if (*nrowsS != *ncolsS)
+		if (dimS[0] != dimS[1])
 			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
 
 		// TODO: check matrices are symmetric
 
 		GlmmGSAPI::theApi.AddPrecisionModel(
-				Matrix<const double>(External<const double>(R), *nrowsR, *ncolsR),
-				Matrix<const double>(External<const double>(S), *nrowsS, *ncolsS));
+				Matrix<const double>(External<const double>(R), dimR[0], dimR[1]),
+				Matrix<const double>(External<const double>(S), dimS[0], dimS[1]));
 	}
 	catch (Exception & e)
 	{
@@ -317,11 +317,11 @@ void GlmmGSRAPI_AddPrecisionModel(
 
 void GlmmGSRAPI_AddSparsePrecisionModel(
 		const double * values, const int * indices, const int * counts, const int * ncols,
-		const double * S, const int * nrowsS, const int * ncolsS)
+		const double * S, const int * dimS)
 {
 	try
 	{
-		if (*nrowsS != *ncolsS)
+		if (dimS[0] != dimS[1])
 			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
 
 		// TODO: check matrices are symmetric
@@ -337,7 +337,7 @@ void GlmmGSRAPI_AddSparsePrecisionModel(
 				Vector<int>(External<int>(const_cast<int *>(counts)), n + 1));
 
 		GlmmGSAPI::theApi.AddSparsePrecisionModel(R,
-				Matrix<const double>(External<const double>(S), *nrowsS, *ncolsS));
+				Matrix<const double>(External<const double>(S), dimS[0], dimS[1]));
 	}
 	catch (Exception & e)
 	{
