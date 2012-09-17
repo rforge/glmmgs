@@ -35,5 +35,8 @@ glmmGS.CovarianceModel <- function(type, ...)
 		stop("Unsupported covariance model")
 	}
 	
+	# Set covariance components
+	ifelse(!is.null(ls$set.components), model$S <- ls$set.components, model$S <- matrix(0, ncol = 0L, nrow = 0L))
+
 	model
 }

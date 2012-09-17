@@ -26,7 +26,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					PrecisionModel(Matrix<const double> R);
+					PrecisionModel(Matrix<const double> R, Matrix<const double> S);
 					~PrecisionModel();
 
 					// Properties

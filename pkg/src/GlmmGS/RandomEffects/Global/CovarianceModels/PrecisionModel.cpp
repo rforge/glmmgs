@@ -11,10 +11,11 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				PrecisionModel::PrecisionModel(Matrix<const double> R)
-					: ICovarianceModel(1), R(R)
+				PrecisionModel::PrecisionModel(Matrix<const double> R, Matrix<const double> S)
+					: ICovarianceModel(1, S), R(R)
 				{
-					Set(this->theta, 1.0);
+					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == 1);
+					this->theta(0) = this->constant ? 1.0 / S(0, 0) : 1.0;
 				}
 
 				PrecisionModel::~PrecisionModel()

@@ -171,19 +171,19 @@ namespace GlmmGSAPI
 	}
 
 	// Covariance models
-	void GlmmGSAPI::AddIdentityCovarianceModel()
+	void GlmmGSAPI::AddIdentityCovarianceModel(Matrix<const double> S)
 	{
-		this->sections.Top()->AddIdentityCovarianceModel();
+		this->sections.Top()->AddIdentityCovarianceModel(S);
 	}
 
-	void GlmmGSAPI::AddPrecisionModel(Matrix<const double> precision)
+	void GlmmGSAPI::AddPrecisionModel(Matrix<const double> R, Matrix<const double> S)
 	{
-		this->sections.Top()->AddPrecisionModel(precision);
+		this->sections.Top()->AddPrecisionModel(R, S);
 	}
 
-	void GlmmGSAPI::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision)
+	void GlmmGSAPI::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S)
 	{
-		this->sections.Top()->AddSparsePrecisionModel(precision);
+		this->sections.Top()->AddSparsePrecisionModel(R, S);
 	}
 
 	// Fit

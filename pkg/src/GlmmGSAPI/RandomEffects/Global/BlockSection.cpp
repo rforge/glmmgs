@@ -47,24 +47,24 @@ namespace GlmmGSAPI
 				this->variables.Add(Pointer<T>(new(bl) T(values)));
 			}
 
-			void BlockSection::AddIdentityCovarianceModel()
+			void BlockSection::AddIdentityCovarianceModel(Matrix<const double> S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
 
 				// Add covariance model
 				typedef GlmmGS::RandomEffects::Global::CovarianceModels::IdentityModel T;
-				this->covariance_model.Reset(new(bl) T(this->variables.Size()));
+				this->covariance_model.Reset(new(bl) T(this->variables.Size(), S));
 			}
 
-			void BlockSection::AddPrecisionModel(Matrix<const double> precision)
+			void BlockSection::AddPrecisionModel(Matrix<const double> R, Matrix<const double> S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
 
 				// Add covariance model
 				typedef GlmmGS::RandomEffects::Global::CovarianceModels::PrecisionModel T;
-				this->covariance_model.Reset(new(bl) T(precision));
+				this->covariance_model.Reset(new(bl) T(R, S));
 			}
 
 			void BlockSection::EndBlock()

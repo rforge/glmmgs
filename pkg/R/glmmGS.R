@@ -19,15 +19,15 @@ glmmGS.AddCovarianceModel <- function(covariance.model)
 {
 	if (class(covariance.model) == "glmmGS.IdentityCovarianceModel") 
 	{
-		glmmGSAPI.AddIdentityCovarianceModel()
+		glmmGSAPI.AddIdentityCovarianceModel(covariance.model$S)
 	}
 	else if (class(covariance.model) == "glmmGS.PrecisionModel")
 	{
-		glmmGSAPI.AddPrecisionModel(covariance.model$R)
+		glmmGSAPI.AddPrecisionModel(covariance.model$R, covariance.model$S)
 	}
 	else if (class(covariance.model) == "glmmGS.SparsePrecisionModel") 
 	{
-		glmmGSAPI.AddSparsePrecisionModel(covariance.model$R)
+		glmmGSAPI.AddSparsePrecisionModel(covariance.model$R, covariance.model$S)
 	}
 	else
 	{

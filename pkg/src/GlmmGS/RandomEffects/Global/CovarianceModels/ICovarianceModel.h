@@ -18,6 +18,7 @@ namespace GlmmGS
 				protected:
 					// Fields
 					Vector<double> theta;
+					const bool constant;
 					CholeskyDecomposition chol;
 					CholeskyDecomposition beta_precision_chol;
 
@@ -26,7 +27,7 @@ namespace GlmmGS
 							const Vector<double> & jacobian, const Controls & controls);
 				public:
 					// Construction
-					ICovarianceModel(int npars);
+					ICovarianceModel(int npars, Matrix<const double> S);
 					virtual ~ICovarianceModel();
 
 					// Properties

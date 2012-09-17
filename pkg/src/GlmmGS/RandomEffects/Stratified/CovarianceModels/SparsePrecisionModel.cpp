@@ -11,10 +11,12 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R)
-					: ICovarianceModel(nvars), nvars(nvars), R(R)
+				SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R, Matrix<const double> S)
+					: ICovarianceModel(nvars, S), nvars(nvars), R(R)
 				{
-					Set(this->theta, 1.0);
+					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == nvars);
+					for (int i = 0; i < nvars; ++i)
+						this->theta(i) = this->constant ? 1.0 / S(i, i) : 1.0;
 				}
 
 				SparsePrecisionModel::~SparsePrecisionModel()

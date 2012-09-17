@@ -48,34 +48,34 @@ namespace GlmmGSAPI
 				this->variables.Add(Pointer<T>(new(bl) T(values)));
 			}
 
-			void BlockSection::AddIdentityCovarianceModel()
+			void BlockSection::AddIdentityCovarianceModel(Matrix<const double> S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
 
 				// Add covariance model
 				typedef GlmmGS::RandomEffects::Stratified::CovarianceModels::IdentityModel T;
-				this->covariance_model.Reset(new(bl) T(this->variables.Size(), this->factor.NumberOfLevels()));
+				this->covariance_model.Reset(new(bl) T(this->variables.Size(), this->factor.NumberOfLevels(), S));
 			}
 
-			void BlockSection::AddPrecisionModel(Matrix<const double> precision)
+			void BlockSection::AddPrecisionModel(Matrix<const double> R, Matrix<const double> S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
 
 				// Add covariance model
 				typedef GlmmGS::RandomEffects::Stratified::CovarianceModels::PrecisionModel T;
-				this->covariance_model.Reset(new(bl) T(this->variables.Size(), precision));
+				this->covariance_model.Reset(new(bl) T(this->variables.Size(), R, S));
 			}
 
-			void BlockSection::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision)
+			void BlockSection::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
 
 				// Add sparse covariance model
 				typedef GlmmGS::RandomEffects::Stratified::CovarianceModels::SparsePrecisionModel T;
-				this->covariance_model.Reset(new(bl) T(this->variables.Size(), precision));
+				this->covariance_model.Reset(new(bl) T(this->variables.Size(), R, S));
 			}
 
 			void BlockSection::EndStratifiedBlock()

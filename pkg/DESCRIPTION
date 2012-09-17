@@ -1,5 +1,5 @@
 Package: glmmGS
-Version: 0.6-111
+Version: 0.6-112
 Title: Gauss-Seidel Generalized Linear Mixed Model solver
 Author: Michele Morara, Louise Ryan, Subharup Guha, Christopher Paciorek 
 Maintainer: Michele Morara<moraram@battelle.org>

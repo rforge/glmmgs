@@ -24,9 +24,9 @@ namespace GlmmGSAPI
 				void AddIntercept();
 				void AddCovariate(Vector<const int> values);
 				void AddCovariate(Vector<const double> values);
-				void AddIdentityCovarianceModel();
-				void AddPrecisionModel(Matrix<const double> precision);
-				void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & precision);
+				void AddIdentityCovarianceModel(Matrix<const double> S);
+				void AddPrecisionModel(Matrix<const double> R, Matrix<const double> S);
+				void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S);
 				void EndStratifiedBlock();
 
 			public:

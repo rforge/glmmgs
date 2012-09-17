@@ -226,39 +226,57 @@ glmmGSAPI.AddCovariate <- function(values)
 }
 
 # Add identity covariance model
-glmmGSAPI.AddIdentityCovarianceModel <- function()
+glmmGSAPI.AddIdentityCovarianceModel <- function(S)
 {
-	.C("GlmmGSRAPI_AddIdentityCovarianceModel", PACKAGE = "glmmGS")
-	glmmGSAPI.GetLastError()
-}
-
-# Add precision model
-glmmGSAPI.AddPrecisionModel <- function(R)
-{
-	if (is.matrix(R) && is.double(R))
+	if (is.matrix(S) && is.double(S))
 	{
-		dim <- dim(R)
-		.C("GlmmGSRAPI_AddPrecisionModel", R, dim[1], dim[2], DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+		dimS <- dim(S)
+		.C("GlmmGSRAPI_AddIdentityCovarianceModel", 
+				S, dimS[1L], dimS[2L], 
+				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
 	else
 	{
-		stop("Invalid type")
+		stop("Invalid identity model")
+	}
+}
+
+# Add precision model
+glmmGSAPI.AddPrecisionModel <- function(R, S)
+{
+	if (is.matrix(R) && is.double(R) && is.matrix(S) && is.double(S))
+	{
+		dimR <- dim(R)
+		dimS <- dim(S)
+		.C("GlmmGSRAPI_AddPrecisionModel", 
+				R, dimR[1L], dimR[2L], 
+				S, dimS[1L], dimS[2L], 
+				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+		glmmGSAPI.GetLastError()
+	}
+	else
+	{
+		stop("Invalid precision model")
 	}
 }
 
 # Add sparse-precision model
-glmmGSAPI.AddSparsePrecisionModel <- function(R)
+glmmGSAPI.AddSparsePrecisionModel <- function(R, S)
 {
-	if (class(R) == "glmmGS.SparseMatrix")
+	if (class(R) == "glmmGS.SparseMatrix" && is.matrix(S) && is.double(S))
 	{
-		ncols = as.integer(length(R$counts)) - 1L
-		.C("GlmmGSRAPI_AddSparsePrecisionModel", R$values, R$indices, R$counts, ncols, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+		ncols = length(R$counts) - 1L
+		dimS <- dim(S)
+		.C("GlmmGSRAPI_AddSparsePrecisionModel", 
+				R$values, R$indices, R$counts, ncols, 
+				S, dimS[1L], dimS[2L], 
+				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
 	else
 	{
-		stop("Invalid type")
+		stop("Invalid sparse precision model")
 	}
 }
 

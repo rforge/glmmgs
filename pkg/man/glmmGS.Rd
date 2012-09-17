@@ -162,11 +162,17 @@
 	# - one stratified fixed effect block: (1 | dayOfWeek);
 	# - one stratified random effect block: (1 + x | postCode ~ I)
 	#   with an identity prior covariance matrix
-	results <- glmmGS(formula = (y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ I), 
+	result1 <- glmmGS((y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ I), 
+		family = binomial, control = control)
+	
+	# Refit model supplying covariance components
+	Ic <- glmmGS.CovarianceModel("identity", set.components = cov(data.frame(b0, b1)))
+	result2 <- glmmGS((y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ Ic), 
 		family = binomial, control = control)
 	
 	# Print results
-	print(results)
+	print(result1)
+	print(result2)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

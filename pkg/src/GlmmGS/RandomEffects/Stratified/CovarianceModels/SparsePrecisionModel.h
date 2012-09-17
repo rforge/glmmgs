@@ -28,7 +28,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R);
+					SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R, Matrix<const double> S);
 					~SparsePrecisionModel();
 				};
 			}

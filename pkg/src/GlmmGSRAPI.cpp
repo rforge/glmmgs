@@ -272,26 +272,18 @@ void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dimensions)
 	GlmmGSRAPI_AddCovariatesImpl(values, dimensions);
 }
 
-void GlmmGSRAPI_AddIdentityCovarianceModel()
+void GlmmGSRAPI_AddIdentityCovarianceModel(
+		const double * S, const int * nrowsS, const int * ncolsS)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddIdentityCovarianceModel();
-	}
-	catch (Exception & e)
-	{
-		GlmmGSAPI::theApi.SetLastError(e);
-	}
-}
+		if (*nrowsS != *ncolsS)
+			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
 
-void GlmmGSRAPI_AddPrecisionModel(const double * values, const int * nrows, const int * ncols)
-{
-	try
-	{
-		if (*nrows != *ncols)
-			throw Utilities::Exceptions::Exception("Precision matrix must be square");
 		// TODO: check matrix is symmetric
-		GlmmGSAPI::theApi.AddPrecisionModel(Matrix<const double>(External<const double>(values), *nrows, *ncols));
+
+		GlmmGSAPI::theApi.AddIdentityCovarianceModel(
+			Matrix<const double>(External<const double>(S), *nrowsS, *ncolsS));
 	}
 	catch (Exception & e)
 	{
@@ -299,23 +291,53 @@ void GlmmGSRAPI_AddPrecisionModel(const double * values, const int * nrows, cons
 	}
 }
 
-void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indices, const int * counts, const int * ncols)
+void GlmmGSRAPI_AddPrecisionModel(
+		const double * R, const int * nrowsR, const int * ncolsR,
+		const double * S, const int * nrowsS, const int * ncolsS)
 {
 	try
 	{
+		if (*nrowsR != *ncolsR)
+			throw Utilities::Exceptions::Exception("Precision matrix must be square");
+
+		if (*nrowsS != *ncolsS)
+			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
+
+		// TODO: check matrices are symmetric
+
+		GlmmGSAPI::theApi.AddPrecisionModel(
+				Matrix<const double>(External<const double>(R), *nrowsR, *ncolsR),
+				Matrix<const double>(External<const double>(S), *nrowsS, *ncolsS));
+	}
+	catch (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
+}
+
+void GlmmGSRAPI_AddSparsePrecisionModel(
+		const double * values, const int * indices, const int * counts, const int * ncols,
+		const double * S, const int * nrowsS, const int * ncolsS)
+{
+	try
+	{
+		if (*nrowsS != *ncolsS)
+			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
+
+		// TODO: check matrices are symmetric
+
 		// Counters
 		const int n = *ncols; // Number of columns
 		const int nz = counts[n]; // Total number of non-zero elements
 
-		// It is safe to use const_cast since we embed the const pointers inside constant objects
-		const Vector<double> vvalues(External<double>(const_cast<double *>(values)), nz);
-		const Vector<int> vindices(External<int>(const_cast<int *>(indices)), nz);
-		const Vector<int> vcounts(External<int>(const_cast<int *>(counts)), n + 1);
-
 		// Sparse matrix
-		const LDL::SparseMatrix<double> R(vvalues, vindices, vcounts);
+		const LDL::SparseMatrix<double> R(
+				Vector<double>(External<double>(const_cast<double *>(values)), nz),
+				Vector<int>(External<int>(const_cast<int *>(indices)), nz),
+				Vector<int>(External<int>(const_cast<int *>(counts)), n + 1));
 
-		GlmmGSAPI::theApi.AddSparsePrecisionModel(R);
+		GlmmGSAPI::theApi.AddSparsePrecisionModel(R,
+				Matrix<const double>(External<const double>(S), *nrowsS, *ncolsS));
 	}
 	catch (Exception & e)
 	{

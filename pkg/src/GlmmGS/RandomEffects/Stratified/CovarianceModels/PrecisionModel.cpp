@@ -11,10 +11,12 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				PrecisionModel::PrecisionModel(int nvars, Matrix<const double> R)
-					: ICovarianceModel(nvars), nvars(nvars), R(R)
+				PrecisionModel::PrecisionModel(int nvars, Matrix<const double> R, Matrix<const double> S)
+					: ICovarianceModel(nvars, S), nvars(nvars), R(R)
 				{
-					Set(this->theta, 1.0);
+					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == nvars);
+					for (int i = 0; i < nvars; ++i)
+						this->theta(i) = this->constant ? 1.0 / S(i, i) : 1.0;
 				}
 
 				PrecisionModel::~PrecisionModel()

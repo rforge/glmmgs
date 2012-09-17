@@ -21,15 +21,20 @@
 		and precision models represent the global precision parameters.
   	}
   	\item{\dots}{
-    	optional arguments containing information about the precision or covariance structure.
-    	If the type is \code{identity}, no optional arguments are required;
-    	if the type is \code{precision}, the optional argument is a precision matrix 
-    	of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
+    	additional arguments containing information about the precision or covariance structure.
+    	If the type is \code{identity}, no additional arguments are required;
+    	if the type is \code{precision}, the required additional argument must be 
+    	a precision matrix of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
+    	In all covariance models the covariance components can be set by specifying
+    	the named argument \code{set.component = S}, where \code{S} is a cluster-specific
+    	covariance matrix.
   	}
 }
 
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
+		Fit the covariance components using a PQL algorithm unless \code{set.component} is specified, 
+		in which case the covariance components are assumed known and fixed.
 }
 \value{
 	%%  ~Describe the value returned
@@ -37,8 +42,7 @@
 	%%  \item{comp1 }{Description of 'comp1'}
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
-	A list of parameters specifying a covariance model for the 
-	\code{\link{glmmGS}} function.
+	A list of parameters specifying a covariance model for the \code{\link{glmmGS}} function.
 }
 \references{
 	%% ~put references to the literature/web site here ~
@@ -58,16 +62,20 @@
 	\code{\link{glmmGS}}, \code{\link{glmmGS.SparseMatrix}}
 }
 \examples{
-# Set number of columns
-	ncols <- 100
+# Set dimensions of hypothetical data set
+	
+	nlevels <- 100 	# Number of levels of a hypothetical stratified data set
+	nvars <- 2		# Number of random effect covariates within each stratum
 
 # Identity covariance model (no need to specify matrix dimensions)
+ 	
  	# Define dense-precision model
  	I <- glmmGS.CovarianceModel("identity")
 
 # Dense-precision model
 
 	# Dense precision matrix
+	ncols <- nlevels
 	R <- matrix(rnorm(ncols * ncols), nrow = ncols, ncol = ncols)
 	R <- R \%*\% t(R)
 	
@@ -77,6 +85,7 @@
 # Sparse-precision model
 
 	# Sparse precision matrix
+	ncols <- nlevels
 	R <- diag(rep(1, ncols))
 	for (i in 2:ncols)
 	{
@@ -89,7 +98,17 @@
 	
  	# Define sparse-precision model
  	T.sparse <- glmmGS.CovarianceModel("precision", R.sparse)
+
+# Sparse-precision model with supplied covariance components
+
+	# Dense precision matrix having dimensions equal to the number of within-stratum 
+	# random effect covariates - in this hypothetical example a random intercept and a random slope.
+	S <- matrix(c(0.1, 0, 0, 0.2), nvars, nvars) 
+	
+ 	# Define sparse-precision model and supplies covariance components
+ 	Tc.sparse <- glmmGS.CovarianceModel("precision", R.sparse, set.components = S)
 }
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }

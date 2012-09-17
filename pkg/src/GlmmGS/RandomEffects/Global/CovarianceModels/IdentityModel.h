@@ -17,7 +17,7 @@ namespace GlmmGS
 				{
 				private:
 					// Fields
-					int size;
+					const int size;
 
 					// Implementation
 					void Decompose(const TriangularMatrix<double> & precision);
@@ -26,7 +26,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					IdentityModel(int nvars);
+					IdentityModel(int nvars, Matrix<const double> S);
 					~IdentityModel();
 				};
 			}

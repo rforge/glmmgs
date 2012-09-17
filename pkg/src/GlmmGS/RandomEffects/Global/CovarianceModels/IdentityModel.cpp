@@ -10,10 +10,11 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				IdentityModel::IdentityModel(int nvars)
-					: ICovarianceModel(1), size(nvars)
+				IdentityModel::IdentityModel(int nvars, Matrix<const double> S)
+					: ICovarianceModel(1, S), size(nvars)
 				{
-					this->theta(0) = 1.0;
+					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == 1);
+					this->theta(0) = this->constant ? 1.0 / S(0, 0) : 1.0;
 				}
 
 				IdentityModel::~IdentityModel()
