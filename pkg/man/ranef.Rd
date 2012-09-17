@@ -30,7 +30,10 @@ Extract random effect estimates
 	%%  \item{comp1 }{Description of 'comp1'}
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
-	a list of numeric vectors (one vector for each block of random effects) of random effect estimates.
+	a list of numeric vectors or matrix (one vector or matrix for each block of random effects) 
+	of random effect estimates. If, in a given block, the covariates associated with the random effects are stratified, then 
+	the random effect estimates are returned as a matrix with one column for each covariate and
+	as many rows as many strata. Otherwise the random effect block estimates are returned as vectors. 
 }
 \references{
 	%% ~put references to the literature/web site here ~
@@ -50,12 +53,20 @@ Extract random effect estimates
 }
 
 \examples{
-	# Run glmmGS example producing the variable 'results'
+	# Run glmmGS example producing the variable 'result1' and 'result2'
 	example(glmmGS)
 	
-	# Extract random effects from 'results'
-	ranef <- ranef(results)
+	# Extract random effect estimates from results 
+	ranef1 <- ranef(result1)
+	ranef2 <- ranef(result2)
+	
+	# Print covariance of estimated random effects in first (and only) 
+	# random effect block: '1 + x | postCode ~ I', '1 + x | postCode ~ Ic' 
+	# (see glmmGS example)
+	print(cov(cbind(ranef1[[1]][, 1], ranef1[[1]][, 2])))
+	print(cov(cbind(ranef2[[1]][, 1], ranef2[[1]][, 2])))
 }
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }

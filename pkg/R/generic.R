@@ -1,8 +1,13 @@
-# coef
-coef.glmmGS <- function(object, ...)
+# fixef
+fixef <- function(object, ...)
+{
+	UseMethod("fixef")
+}
+
+fixef.glmmGS <- function(object, ...)
 {
 	glmmGS <- object
-
+	
 	coef <- list()
 	n <- length(glmmGS$fixef)
 	if (n > 0L)
@@ -17,36 +22,6 @@ coef.glmmGS <- function(object, ...)
 		names(coef) <- names
 	}
 	coef
-}
-
-# vcov
-vcov.glmmGS <- function(object, ...)
-{
-	glmmGS <- object
-	
-	n <- length(glmmGS$fixef)
-	vcov <- list()
-	names <- character(n)
-	for (i in 1L:n)
-	{
-		block <- glmmGS$fixef[[i]]
-		vcov[[i]] <- block$coef$vcov
-		names[i] <- block$block$name
-	}
-	names(vcov) <- names
-	
-	vcov
-}
-
-# fixef
-fixef <- function(object, ...)
-{
-	UseMethod("fixef")
-}
-
-fixef.glmmGS <- function(object, ...)
-{
-	coef.glmmGS(object, list(...))
 }
 
 # ranef
@@ -74,6 +49,32 @@ ranef.glmmGS <- function(object, ...)
 	}
 	coef
 }
+
+# coef
+coef.glmmGS <- function(object, ...)
+{
+	fixef.glmmGS(object, list(...))
+}
+
+# vcov
+vcov.glmmGS <- function(object, ...)
+{
+	glmmGS <- object
+	
+	n <- length(glmmGS$fixef)
+	vcov <- list()
+	names <- character(n)
+	for (i in 1L:n)
+	{
+		block <- glmmGS$fixef[[i]]
+		vcov[[i]] <- block$coef$vcov
+		names[i] <- block$block$name
+	}
+	names(vcov) <- names
+	
+	vcov
+}
+
 
 # Utilities functions for print.glmmGS
 GetFixefNames <- function(fixef)
@@ -296,7 +297,7 @@ print.glmmGS <- function(x, ...)
 		{
 			names <- GetFixefNames(fixef)
 			se <- GetFixefSE(fixef)
-			estm <- fixef$coef$estm
+			estm <- as.vector(fixef$coef$estm)
 			
 			zval <- estm / se
 			pval <- 2 * (1 - pnorm(abs(zval)))

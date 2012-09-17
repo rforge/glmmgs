@@ -324,7 +324,7 @@ glmmGSAPI.GetFixef <- function(fixef)
 				index <- i - 1L
 				nvars <- GetNumberOfVariables(block)
 				nlevels <- GetNumberOfLevels(block)
-				estm <- double(nvars * nlevels)
+				estm <- matrix(0, nrow = nlevels, ncol = nvars )
 				vcov <- array(0, dim = c(nlevels, nvars, nvars))
 				
 				.C("GlmmGSRAPI_GetFixefStratifiedBlock", 
@@ -392,7 +392,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 				
 				nvars <- GetNumberOfVariables(block)
 				nlevels <- GetNumberOfLevels(block)
-				estm <- double(nvars * nlevels)
+				estm <- matrix(0, nrow = nlevels, ncol = nvars )
 				.C("GlmmGSRAPI_GetRanefStratifiedBlock", 
 						index,
 						estm,

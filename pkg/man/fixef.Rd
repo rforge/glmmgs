@@ -30,7 +30,10 @@ Extract fixed effect estimates
 	%%  \item{comp1 }{Description of 'comp1'}
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
-	a list of numeric vectors (one vector for each block of fixed effects) of fixed effect estimates.
+	a list of numeric vectors or matrix (one vector or matrix for each block of fixed effects) 
+	of fixed effect estimates. If, in a given block, the covariates associated with the fixed effects are stratified, then 
+	the fixed effect estimates are returned as a matrix with one column for each covariate and
+	as many rows as many strata. Otherwise the fixed effect block estimates are returned as vectors. 
 }
 \references{
 	%% ~put references to the literature/web site here ~
@@ -50,11 +53,16 @@ Extract fixed effect estimates
 }
 
 \examples{
-	# Run glmmGS example producing the variable 'results'
+	# Run glmmGS example producing the variable 'result1' and 'result2'
 	example(glmmGS)
 	
-	# Extract fixed effects from 'results'
-	fixef <- fixef(results)
+	# Extract fixed effect estimates from results
+	fixef1 <- fixef(result1)
+	fixef2 <- fixef(result2)
+	
+	# Print fixed effect estimates side by side for each block
+	print(cbind(fixef1[[1]], fixef2[[1]]))
+	print(cbind(fixef1[[2]], fixef2[[2]]))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

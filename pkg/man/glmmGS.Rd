@@ -166,7 +166,7 @@
 		family = binomial, control = control)
 	
 	# Refit model supplying covariance components
-	Ic <- glmmGS.CovarianceModel("identity", set.components = cov(data.frame(b0, b1)))
+	Ic <- glmmGS.CovarianceModel("identity", set.components = cov(cbind(b0, b1)))
 	result2 <- glmmGS((y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ Ic), 
 		family = binomial, control = control)
 	
