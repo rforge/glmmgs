@@ -25,16 +25,13 @@
     	If the type is \code{identity}, no additional arguments are required;
     	if the type is \code{precision}, the required additional argument must be 
     	a precision matrix of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
-    	In all covariance models the covariance components can be set by specifying
-    	the named argument \code{set.component = S}, where \code{S} is a cluster-specific
-    	covariance matrix.
+    	In all covariance models the covariance components can be fixed by setting
+    	the named argument \code{set.components} equal to a given covariance	component matrix.
   	}
 }
 
 \details{
 	%%  ~~ If necessary, more details than the description above ~~
-		Fit the covariance components using a PQL algorithm unless \code{set.component} is specified, 
-		in which case the covariance components are assumed known and fixed.
 }
 \value{
 	%%  ~Describe the value returned
@@ -101,9 +98,8 @@
 
 # Sparse-precision model with supplied covariance components
 
-	# Dense precision matrix having dimensions equal to the number of within-stratum 
-	# random effect covariates - in this hypothetical example a random intercept and a random slope.
-	S <- matrix(c(0.1, 0, 0, 0.2), nvars, nvars) 
+	# Define a covariance component matrix of dimensions equal to the number of random effect covariates 
+	S <- matrix(c(0.1, 0, 0, 0.2), nrow = nvars, ncol = nvars) 
 	
  	# Define sparse-precision model and supplies covariance components
  	Tc.sparse <- glmmGS.CovarianceModel("precision", R.sparse, set.components = S)
