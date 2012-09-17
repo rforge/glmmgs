@@ -308,7 +308,7 @@ print.glmmGS <- function(x, ...)
 			
 			# Significance codes
 			signif.values <- c(0, 0.001, 0.01, 0.05, 0.1, 1)
-			signif.codes <- c("***", "**", "*", ".", " ") 
+			signif.codes <- c("***", "** ", "*  ", ".  ", "") 
 			intervals <- findInterval(pval, signif.values, all.inside = TRUE)
 			sstr <- signif.codes[intervals]
 			
@@ -319,7 +319,7 @@ print.glmmGS <- function(x, ...)
 			# Print summary table
 			cat("\nBlock: \'", fixef$block$name, "\'\n", sep = "")
 			cat("Fixed Effects:\n")
-			print(summary, digits = 3, right = TRUE)
+			print(summary, digits = 3)
 		}
 		cat("\nSignif. codes:  0 \'***\' 0.001 \'**\' 0.01 \'*\' 0.05 \'.\' 0.1 \' \' 1\n")
 	}
