@@ -211,11 +211,11 @@ void GlmmGSRAPI_AddOffsetDbl(const double * values, const int * size)
 	GlmmGSRAPI_AddOffsetImpl(values, size);
 }
 
-void GlmmGSRAPI_AddIntercept()
+void GlmmGSRAPI_AddIntercept(const int * duplicate)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddIntercept();
+		GlmmGSAPI::theApi.AddIntercept(*duplicate);
 	}
 	catch (Exception & e)
 	{
@@ -224,11 +224,11 @@ void GlmmGSRAPI_AddIntercept()
 }
 
 template <class TYPE>
-void GlmmGSRAPI_AddCovariateImpl(const TYPE * values, const int * size)
+void GlmmGSRAPI_AddCovariateImpl(const TYPE * values, const int * size, const int * duplicate)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values), *size));
+		GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values), *size), *duplicate);
 	}
 	catch (Exception & e)
 	{
@@ -236,25 +236,25 @@ void GlmmGSRAPI_AddCovariateImpl(const TYPE * values, const int * size)
 	}
 }
 
-void GlmmGSRAPI_AddCovariateInt(const int * values, const int * size)
+void GlmmGSRAPI_AddCovariateInt(const int * values, const int * size, const int * duplicate)
 {
-	GlmmGSRAPI_AddCovariateImpl(values, size);
+	GlmmGSRAPI_AddCovariateImpl(values, size, duplicate);
 }
 
-void GlmmGSRAPI_AddCovariateDbl(const double * values, const int * size)
+void GlmmGSRAPI_AddCovariateDbl(const double * values, const int * size, const int * duplicate)
 {
-	GlmmGSRAPI_AddCovariateImpl(values, size);
+	GlmmGSRAPI_AddCovariateImpl(values, size, duplicate);
 }
 
 template <class TYPE>
-void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dim)
+void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dim, const int * duplicate)
 {
 	try
 	{
 		const int nrows = dim[0];
 		const int ncols = dim[1];
 		for (int j = 0; j < ncols; ++j)
-			GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values + j * nrows), nrows));
+			GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values + j * nrows), nrows), *duplicate);
 	}
 	catch (Exception & e)
 	{
@@ -262,14 +262,14 @@ void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dim)
 	}
 }
 
-void GlmmGSRAPI_AddCovariatesInt(const int * values, const int * dim)
+void GlmmGSRAPI_AddCovariatesInt(const int * values, const int * dim, const int * duplicate)
 {
-	GlmmGSRAPI_AddCovariatesImpl(values, dim);
+	GlmmGSRAPI_AddCovariatesImpl(values, dim, duplicate);
 }
 
-void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dim)
+void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dim, const int * duplicate)
 {
-	GlmmGSRAPI_AddCovariatesImpl(values, dim);
+	GlmmGSRAPI_AddCovariatesImpl(values, dim, duplicate);
 }
 
 void GlmmGSRAPI_AddIdentityCovarianceModel(

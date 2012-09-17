@@ -49,9 +49,9 @@ namespace GlmmGSAPI
 		void AddCounts(Vector<const int> values);
 		void AddOffset(Vector<const int> values);
 		void AddOffset(Vector<const double> values);
-		void AddIntercept();
-		void AddCovariate(Vector<const int> values);
-		void AddCovariate(Vector<const double> values);
+		void AddIntercept(int duplicate);
+		void AddCovariate(Vector<const int> values, int duplicate);
+		void AddCovariate(Vector<const double> values, int duplicate);
 
 		// Covariance models
 		void AddIdentityCovarianceModel(Matrix<const double> S);

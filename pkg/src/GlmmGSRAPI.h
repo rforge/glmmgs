@@ -26,11 +26,11 @@ extern "C"
 	void GlmmGSRAPI_AddCountsInt(const int * values, const int * size);
 	void GlmmGSRAPI_AddOffsetInt(const int * values, const int * size);
 	void GlmmGSRAPI_AddOffsetDbl(const double * values, const int * size);
-	void GlmmGSRAPI_AddIntercept();
-	void GlmmGSRAPI_AddCovariateInt(const int * values, const int * size);
-	void GlmmGSRAPI_AddCovariateDbl(const double * values, const int * size);
-	void GlmmGSRAPI_AddCovariatesInt(const int * values, const int * dim);
-	void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dim);
+	void GlmmGSRAPI_AddIntercept(const int * duplicate);
+	void GlmmGSRAPI_AddCovariateInt(const int * values, const int * size, const int * duplicate);
+	void GlmmGSRAPI_AddCovariateDbl(const double * values, const int * size, const int * duplicate);
+	void GlmmGSRAPI_AddCovariatesInt(const int * values, const int * dim, const int * duplicate);
+	void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dim, const int * duplicate);
 
 	// Covariance models
 	void GlmmGSRAPI_AddIdentityCovarianceModel(

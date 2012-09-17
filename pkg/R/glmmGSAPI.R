@@ -179,7 +179,9 @@ glmmGSAPI.AddIntercept <- function(duplicate)
 	if (class(duplicate) != "integer")
 		stop("Invalid argument")
 	
-	.C("GlmmGSRAPI_AddIntercept", PACKAGE = "glmmGS")
+	.C("GlmmGSRAPI_AddIntercept", 
+			duplicate, 
+			PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
@@ -194,12 +196,16 @@ glmmGSAPI.AddCovariate <- function(values, duplicate)
 		size <- as.integer(length(values))
 		if (is.integer(values))
 		{
-			.C("GlmmGSRAPI_AddCovariateInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariateInt", 
+					values, size, duplicate, 
+					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else if (is.double(values))
 		{
-			.C("GlmmGSRAPI_AddCovariateDbl", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariateDbl", 
+					values, size, duplicate, 
+					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else
@@ -212,12 +218,16 @@ glmmGSAPI.AddCovariate <- function(values, duplicate)
 		dim <- dim(values)
 		if (is.integer(values))
 		{
-			.C("GlmmGSRAPI_AddCovariatesInt", values, dim, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariatesInt", 
+					values, dim, duplicate, 
+					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else if (is.double(values))
 		{
-			.C("GlmmGSRAPI_AddCovariatesDbl", values, dim, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariatesDbl", 
+					values, dim, duplicate, 
+					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else
