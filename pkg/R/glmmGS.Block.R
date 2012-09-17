@@ -72,7 +72,7 @@ glmmGS.Block <- function(token, data, covariance.models)
 	covariance.model.name <- GetCovarianceModel(token)
 	
 	# Initialize block
-	block <- list()
+	block <- new.env(hash = FALSE, parent = emptyenv())
 	class(block) <- "glmmGS.Block"
 	block$name <- token
 	
@@ -82,7 +82,7 @@ glmmGS.Block <- function(token, data, covariance.models)
 	{
 		varname <- variable.names[i]
 		# Avoid deep copies
-		block$covariates[[i]] <- list()
+		block$covariates[[i]] <- new.env(hash = FALSE, parent = emptyenv())
 		block$covariates[[i]]$name <- varname
 		if (varname != "1")
 		{
@@ -95,12 +95,11 @@ glmmGS.Block <- function(token, data, covariance.models)
 	if (!is.na(factor.name))
 	{
 		# Avoid deep copies
-		block$factor <- list()
+		block$factor <- new.env(hash = FALSE, parent = emptyenv())
 		block$factor$name <- factor.name
 		value <- factor(get(factor.name, data))
 		block$factor$value <- value
-		indices <- as.integer(value) - 1L
-		block$factor$indices <- indices 
+		block$factor$indices <- as.integer(value) - 1L 
 	}
 	
 	# Set covariance model
