@@ -26,7 +26,7 @@
     	if the type is \code{precision}, the required additional argument must be 
     	a precision matrix of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
     	In all covariance models the covariance components can be fixed by setting
-    	the named argument \code{set.components} equal to a given covariance	component matrix.
+    	the named argument \code{fix.components} equal to a given covariance	component matrix.
   	}
 }
 
@@ -102,7 +102,7 @@
 	S <- matrix(c(0.1, 0, 0, 0.2), nrow = nvars, ncol = nvars) 
 	
  	# Define sparse-precision model and supplies covariance components
- 	Tc.sparse <- glmmGS.CovarianceModel("precision", R.sparse, set.components = S)
+ 	Tc.sparse <- glmmGS.CovarianceModel("precision", R.sparse, fix.components = S)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -36,7 +36,7 @@ glmmGS.CovarianceModel <- function(type, ...)
 	}
 	
 	# Set covariance components
-	ifelse(!is.null(ls$set.components), model$S <- ls$set.components, model$S <- matrix(0, ncol = 0L, nrow = 0L))
+	ifelse(!is.null(ls$fix.components), model$S <- ls$fix.components, model$S <- matrix(0, ncol = 0L, nrow = 0L))
 
 	model
 }

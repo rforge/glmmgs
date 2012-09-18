@@ -289,6 +289,7 @@ GetVCompVarianceInterval <- function(ranef)
 print.glmmGS <- function(x, ...)
 {
 	glmmGS <- x
+	digits <- 4L
 	
 	if (length(glmmGS$fixef) > 0L)
 	{
@@ -319,7 +320,7 @@ print.glmmGS <- function(x, ...)
 			# Print summary table
 			cat("\nBlock: \'", fixef$block$name, "\'\n", sep = "")
 			cat("Fixed Effects:\n")
-			print(summary, digits = 3)
+			print(summary, digits = digits)
 		}
 		cat("\nSignif. codes:  0 \'***\' 0.001 \'**\' 0.01 \'*\' 0.05 \'.\' 0.1 \' \' 1\n")
 	}
@@ -340,7 +341,7 @@ print.glmmGS <- function(x, ...)
 			# Print summary table
 			cat("\nBlock: \'", ranef$block$name, "\'\n", sep = "")
 			cat("Variance Components:\n")
-			print(summary, digits = 3, right = TRUE)
+			print(summary, digits = digits, right = TRUE)
 		}
 	}
 	
