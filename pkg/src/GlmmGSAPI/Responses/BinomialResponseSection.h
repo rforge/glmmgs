@@ -13,8 +13,8 @@ namespace GlmmGSAPI
 		{
 		private:
 			// Fields
-			Pointer<Vector<const int> > values;
-			Pointer<Vector<const int> > counts;
+			Vector<const int> values;
+			Vector<const int> counts;
 
 			// Implementation
 			void AddResponse(Vector<const int> values);

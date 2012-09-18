@@ -23,6 +23,7 @@ extern "C"
 
 	// Variables
 	void GlmmGSRAPI_AddResponseInt(const int * values, const int * size);
+	void GlmmGSRAPI_AddResponseDbl(const double * values, const int * size);
 	void GlmmGSRAPI_AddCountsInt(const int * values, const int * size);
 	void GlmmGSRAPI_AddOffsetInt(const int * values, const int * size);
 	void GlmmGSRAPI_AddOffsetDbl(const double * values, const int * size);

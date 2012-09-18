@@ -1,6 +1,7 @@
 #include "Standard.h"
 #include "Section.h"
 #include "GlmmGSAPI.h"
+#include "Responses/NormalResponseSection.h"
 #include "Responses/BinomialResponseSection.h"
 #include "Responses/PoissonResponseSection.h"
 #include "FixedEffects/FixedEffectsSection.h"
@@ -35,7 +36,12 @@ namespace GlmmGSAPI
 
 	Pointer<Section> Section::BeginResponse(WeakString<const char> family)
 	{
-		if (family == "binomial")
+		if (family == "gaussian")
+		{
+			typedef Responses::NormalResponseSection T;
+			return Pointer<T>(new(bl) T(*this));
+		}
+		else if (family == "binomial")
 		{
 			typedef Responses::BinomialResponseSection T;
 			return Pointer<T>(new(bl) T(*this));
@@ -46,7 +52,7 @@ namespace GlmmGSAPI
 			return Pointer<T>(new(bl) T(*this));
 		}
 		else
-			throw Exception("Non supported response family");
+			throw Exception("Unsupported response family");
 	}
 
 	void Section::EndResponse()
@@ -113,6 +119,11 @@ namespace GlmmGSAPI
 	}
 
 	void Section::AddResponse(Vector<const int>)
+	{
+		throw Exception("Invalid call: AddResponse");
+	}
+
+	void Section::AddResponse(Vector<const double>)
 	{
 		throw Exception("Invalid call: AddResponse");
 	}

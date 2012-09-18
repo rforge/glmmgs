@@ -43,6 +43,7 @@ namespace GlmmGSAPI
 
 		// Response section methods
 		virtual void AddResponse(Vector<const int> values);
+		virtual void AddResponse(Vector<const double> values);
 		virtual void AddCounts(Vector<const int> values);
 		virtual void EndResponse();
 

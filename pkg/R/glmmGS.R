@@ -64,18 +64,25 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	}
 	
 	# Vaidate family members
-	if (family$family == "binomial") 
+	if (family$family == "gaussian") 
 	{
-		if ((family$link %in% c("logit")) == FALSE) 
+		if (family$link != "identity") 
 		{
-			stop("unsupported link in binomial family")
+			stop("unsupported link in \'gaussian\' family")
+		}
+	}
+	else if (family$family == "binomial") 
+	{
+		if (family$link != "logit") 
+		{
+			stop("unsupported link in \'binomial\' family")
 		}
 	}
 	else if (family$family == "poisson") 
 	{
-		if ((family$link %in% c("log")) == FALSE) 
+		if (family$link != "log") 
 		{
-			stop("unsupported link in poisson family")
+			stop("unsupported link in \'poisson\' family")
 		}
 	}
 	else

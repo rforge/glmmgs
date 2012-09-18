@@ -14,17 +14,17 @@ namespace GlmmGSAPI
 
 		void BinomialResponseSection::AddResponse(Vector<const int> values)
 		{
-			this->values.Reset(new(bl) Vector<const int>(values));
+			this->values = values;
 		}
 
 		void BinomialResponseSection::AddCounts(Vector<const int> counts)
 		{
-			this->counts.Reset(new(bl) Vector<const int>(counts));
+			this->counts= counts;
 		}
 
 		void BinomialResponseSection::EndResponse()
 		{
-			this->data->response.Reset(new(bl) GlmmGS::Responses::BinomialResponse(*this->values, *this->counts));
+			this->data->response.Reset(new(bl) GlmmGS::Responses::BinomialResponse(this->values, this->counts));
 		}
 	}
 }

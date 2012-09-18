@@ -46,6 +46,7 @@ namespace GlmmGSAPI
 
 		// Variables
 		void AddResponse(Vector<const int> values);
+		void AddResponse(Vector<const double> values);
 		void AddCounts(Vector<const int> values);
 		void AddOffset(Vector<const int> values);
 		void AddOffset(Vector<const double> values);

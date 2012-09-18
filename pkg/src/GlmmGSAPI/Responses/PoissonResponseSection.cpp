@@ -15,12 +15,12 @@ namespace GlmmGSAPI
 
 		void PoissonResponseSection::AddResponse(Vector<const int> values)
 		{
-			this->values.Reset(new(bl) Vector<const int>(values));
+			this->values = values;
 		}
 
 		void PoissonResponseSection::EndResponse()
 		{
-			this->data->response.Reset(new(bl) GlmmGS::Responses::PoissonResponse(*this->values));
+			this->data->response.Reset(new(bl) GlmmGS::Responses::PoissonResponse(this->values));
 		}
 	}
 }

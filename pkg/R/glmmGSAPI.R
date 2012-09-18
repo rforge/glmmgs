@@ -43,12 +43,10 @@ glmmGSAPI.EndModel <- function()
 # Begin response
 glmmGSAPI.BeginResponse <- function(family)
 {
-	if (is.character(family) == FALSE)
+	if (class(family) != "character" || length(family) != 1L)
 		stop("Invalid argument")
-	if (length(family) != 1L)
-		stop("Invalid size")
-	size = as.integer(nchar(family[1]))
-	.C("GlmmGSRAPI_BeginResponse", family[1], size, PACKAGE = "glmmGS")
+	size = nchar(family)
+	.C("GlmmGSRAPI_BeginResponse", family, size, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
@@ -112,7 +110,7 @@ glmmGSAPI.BeginStratifiedBlock <- function(levels)
 	}
 	else
 	{
-		stop("Invalid factor type")
+		stop("Invalid argument")
 	}
 }
 
@@ -126,10 +124,15 @@ glmmGSAPI.EndStratifiedBlock <- function()
 # Add response vector
 glmmGSAPI.AddResponse <- function(values)
 {
-	size <- as.integer(length(values))
-	if (is.integer(values))
+	size <- length(values)
+	if (class(values) == "integer")
 	{
 		.C("GlmmGSRAPI_AddResponseInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+		glmmGSAPI.GetLastError()
+	}
+	else if (class(values) == "numeric")
+	{
+		.C("GlmmGSRAPI_AddResponseDbl", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
 	else
@@ -141,8 +144,8 @@ glmmGSAPI.AddResponse <- function(values)
 # Add vector of counts (for binomial response)
 glmmGSAPI.AddCounts <- function(values)
 {
-	size <- as.integer(length(values))
-	if (is.integer(values))
+	size <- length(values)
+	if (class(values) == "integer")
 	{
 		.C("GlmmGSRAPI_AddCountsInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
@@ -157,12 +160,12 @@ glmmGSAPI.AddCounts <- function(values)
 glmmGSAPI.AddOffset <- function(values)
 {
 	size <- as.integer(length(values))
-	if (is.integer(values))
+	if (class(values) == "integer")
 	{
 		.C("GlmmGSRAPI_AddOffsetInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
-	else if (is.double(values))
+	else if (class(values) == "numeric")
 	{
 		.C("GlmmGSRAPI_AddOffsetDbl", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
@@ -179,9 +182,7 @@ glmmGSAPI.AddIntercept <- function(duplicate)
 	if (class(duplicate) != "integer")
 		stop("Invalid argument")
 	
-	.C("GlmmGSRAPI_AddIntercept", 
-			duplicate, 
-			PACKAGE = "glmmGS")
+	.C("GlmmGSRAPI_AddIntercept", duplicate, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
@@ -196,16 +197,12 @@ glmmGSAPI.AddCovariate <- function(values, duplicate)
 		size <- as.integer(length(values))
 		if (is.integer(values))
 		{
-			.C("GlmmGSRAPI_AddCovariateInt", 
-					values, size, duplicate, 
-					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariateInt", values, size, duplicate, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else if (is.double(values))
 		{
-			.C("GlmmGSRAPI_AddCovariateDbl", 
-					values, size, duplicate, 
-					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariateDbl", values, size, duplicate, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else
@@ -218,16 +215,12 @@ glmmGSAPI.AddCovariate <- function(values, duplicate)
 		dim <- dim(values)
 		if (is.integer(values))
 		{
-			.C("GlmmGSRAPI_AddCovariatesInt", 
-					values, dim, duplicate, 
-					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariatesInt", values, dim, duplicate, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else if (is.double(values))
 		{
-			.C("GlmmGSRAPI_AddCovariatesDbl", 
-					values, dim, duplicate, 
-					DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+			.C("GlmmGSRAPI_AddCovariatesDbl", values, dim, duplicate, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 			glmmGSAPI.GetLastError()
 		}
 		else
@@ -247,9 +240,7 @@ glmmGSAPI.AddIdentityCovarianceModel <- function(S)
 	if (is.matrix(S) && is.double(S))
 	{
 		dimS <- dim(S)
-		.C("GlmmGSRAPI_AddIdentityCovarianceModel", 
-				S, dimS, 
-				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+		.C("GlmmGSRAPI_AddIdentityCovarianceModel", S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
 	else
@@ -265,9 +256,7 @@ glmmGSAPI.AddPrecisionModel <- function(R, S)
 	{
 		dimR <- dim(R)
 		dimS <- dim(S)
-		.C("GlmmGSRAPI_AddPrecisionModel", 
-				R, dimR, S, dimS, 
-				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+		.C("GlmmGSRAPI_AddPrecisionModel", R, dimR, S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}
 	else
@@ -283,8 +272,7 @@ glmmGSAPI.AddSparsePrecisionModel <- function(R, S)
 	{
 		ncols = length(R$counts) - 1L
 		dimS <- dim(S)
-		.C("GlmmGSRAPI_AddSparsePrecisionModel", 
-				R$values, R$indices, R$counts, ncols, S, dimS, 
+		.C("GlmmGSRAPI_AddSparsePrecisionModel", R$values, R$indices, R$counts, ncols, S, dimS, 
 				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 		glmmGSAPI.GetLastError()
 	}

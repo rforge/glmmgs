@@ -176,6 +176,18 @@ void GlmmGSRAPI_AddResponseInt(const int * values, const int * size)
 	}
 }
 
+void GlmmGSRAPI_AddResponseDbl(const double * values, const int * size)
+{
+	try
+	{
+		GlmmGSAPI::theApi.AddResponse(Vector<const double>(External<const double>(values), *size));
+	}
+	catch (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
+}
+
 void GlmmGSRAPI_AddCountsInt(const int * values, const int * size)
 {
 	try

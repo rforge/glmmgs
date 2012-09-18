@@ -140,6 +140,11 @@ namespace GlmmGSAPI
 		this->sections.Top()->AddResponse(values);
 	}
 
+	void GlmmGSAPI::AddResponse(Vector<const double> values)
+	{
+		this->sections.Top()->AddResponse(values);
+	}
+
 	void GlmmGSAPI::AddCounts(Vector<const int> values)
 	{
 		this->sections.Top()->AddCounts(values);
