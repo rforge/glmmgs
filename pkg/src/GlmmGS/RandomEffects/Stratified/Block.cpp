@@ -78,8 +78,7 @@ namespace GlmmGS
 					Print("Max update random effects: %g\n", MaxAbs(h));
 
 				// Update
-				for (int i = 0; i < h.Size(); ++i)
-					this->beta(i) += h(i);
+				this->beta += h;
 
 				// Update covariance components
 				update += this->covariance_model->Update(this->beta, controls);

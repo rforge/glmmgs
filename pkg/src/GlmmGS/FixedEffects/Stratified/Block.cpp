@@ -68,8 +68,7 @@ namespace GlmmGS
 					update = 0;
 
 				// Update
-				for (int i = 0; i < h.Size(); ++i)
-					this->beta(i) += h(i);
+				this->beta += h;
 
 				return update;
 			}

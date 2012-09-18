@@ -12,9 +12,9 @@ namespace Utilities
 	template <class TYPE>
 	int TotalSize(const Vector<Vector<TYPE> > & v)
 	{
-		const int nvars = v.Size();
+		const int n = v.Size();
 		int size = 0;
-		for (int i = 0; i < nvars; ++i)
+		for (int i = 0; i < n; ++i)
 			size += v(i).Size();
 		return size;
 	}

@@ -9,25 +9,16 @@ namespace Utilities
 		// Operators
 		Vector<double> & operator *=(Vector<double> & v, double a)
 		{
-			int n = v.Size();
+			const int n = v.Size();
 			for (int i = 0; i < n; ++i)
 				v(i) *= a;
 			return v;
 		}
 
-		Vector<double> & operator +=(Vector<double> & v, const Vector<double> & w)
-		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size())
-			int n = v.Size();
-			for (int i = 0; i < n; ++i)
-				v(i) += w(i);
-			return v;
-		}
-
 		Vector<double> & operator -=(Vector<double> & v, const Vector<double> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size())
-			int n = v.Size();
+			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			const int n = v.Size();
 			for (int i = 0; i < n; ++i)
 				v(i) -= w(i);
 			return v;
@@ -35,7 +26,7 @@ namespace Utilities
 
 		Vector<double> operator *(double a, const Vector<double> & v)
 		{
-			int n = v.Size();
+			const int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
 				y(i) = a * v(i);
@@ -44,8 +35,8 @@ namespace Utilities
 
 		Vector<double> operator +(const Vector<double> & v, const Vector<double> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size())
-			int n = v.Size();
+			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			const int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
 				y(i) = v(i) + w(i);
@@ -54,8 +45,8 @@ namespace Utilities
 
 		Vector<double> operator -(const Vector<double> & v, const Vector<double> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size())
-			int n = v.Size();
+			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			const int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
 				y(i) = v(i) - w(i);
@@ -144,15 +135,6 @@ namespace Utilities
 		}
 
 		// Vectorial functions
-		int TotalSize(const Vector<Vector<double> > & x)
-		{
-			const int n = x.Size();
-			int size = 0;
-			for (int i = 0; i < n; ++i)
-				size += x(i).Size();
-			return size;
-		}
-
 		double ScalarProduct(const Vector<Vector<double> > & x, const Vector<Vector<double> > & y)
 		{
 			_ASSERT_ARGUMENT(x.Size() == y.Size());
