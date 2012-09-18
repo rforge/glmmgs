@@ -22,6 +22,7 @@
 #include "Stack.h"
 #include "Vector.h"
 #include "VectorBuilder.h"
+#include "VectorVector.h"
 #include "Matrix.h"
 #include "TriangularMatrix.h"
 
@@ -30,7 +31,6 @@
 
 // Functions
 #include "VectorialAlgorithms.h"
-#include "Size.h"
 #include "Copy.h"
 
 #endif

@@ -2,13 +2,41 @@
 #define UTILITIES_COPY_H
 
 #include "Exceptions/Assertions.h"
-#include "Size.h"
 #include "Vector.h"
 #include "Matrix.h"
 #include "TriangularMatrix.h"
 
 namespace Utilities
 {
+
+	// Helper functions
+
+	// Size of a triangular matrix
+	template <class TYPE>
+	int TotalSizeAsSquareMatrix(const TriangularMatrix<TYPE> & mat)
+	{
+		// Return size as it were a square matrix
+		return mat.NumberOfRows() * mat.NumberOfRows();
+	}
+
+	// Size of a stratified triangular matrix
+	template <class TYPE>
+	int TotalSizeAsStratifiedSquareMatrix(const TriangularMatrix<Vector<TYPE> > & mat)
+	{
+		// Return size as it were a square matrix
+		const int nvars = mat.NumberOfRows();
+		int size = 0;
+		for (int i = 0; i < nvars; ++i)
+		{
+			size += mat(i, i).Size();
+			for (int j = 0; j < i; ++j)
+				size += 2 * mat(i, j).Size();
+		}
+		return size;
+	}
+
+	// Set and Copy functions
+
 	// Assign constant to vector
 	template <class TYPE>
 	void Set(Vector<TYPE> & dst, const TYPE & x)

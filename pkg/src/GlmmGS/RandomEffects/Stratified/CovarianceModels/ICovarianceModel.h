@@ -3,6 +3,7 @@
 
 #include "../../../Standard.h"
 #include "../../../Controls.h"
+#include "../../../Variables/IVariable.h"
 
 namespace GlmmGS
 {
@@ -36,8 +37,10 @@ namespace GlmmGS
 					// Methods
 					virtual void Decompose(const TriangularMatrix<Vector<double> > & precision) = 0;
 					virtual int Update(const Vector<Vector<double> > & beta, const Controls & controls) = 0;
-					virtual Vector<Vector<double> > UpdateCoefficients(const Vector<Vector<double> > & jacobian,
+					virtual Vector<Vector<double> > CoefficientsUpdate(	const Vector<Vector<double> > & jacobian,
 							const Vector<Vector<double> > & beta) const = 0;
+					virtual void ReparameterizeCoefficients(Vector<Vector<double> > & beta,
+							const Vector<Pointer<Variables::IVariable> > variables) const = 0;
 				};
 			}
 		}

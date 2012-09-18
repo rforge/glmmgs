@@ -1,7 +1,6 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
 #include "../../Controls.h"
-#include "../../Boosters/IBooster.h"
 #include "Block.h"
 #include "CovarianceModels/ICovarianceModel.h"
 
@@ -14,13 +13,12 @@ namespace GlmmGS
 			// Block
 			Block::Block(const Vector<Pointer<Variables::IVariable> > & variables,
 					WeakFactor factor,
-					const Pointer<CovarianceModels::ICovarianceModel> & covariance_model,
-					const Pointer<Boosters::IBooster> & booster)
-				: variables(variables), factor(factor), beta(variables.Size()),
-				  covariance_model(covariance_model), booster(booster)
+					const Pointer<CovarianceModels::ICovarianceModel> & covariance_model)
+				: variables(variables),
+				  factor(factor),
+				  beta(VectorVector<double>(variables.Size(), this->factor.NumberOfLevels())),
+				  covariance_model(covariance_model)
 			{
-				for (int i = 0; i < this->variables.Size(); ++i)
-					this->beta(i) = Vector<double>(this->factor.NumberOfLevels());
 			}
 
 			// Properties
@@ -62,13 +60,13 @@ namespace GlmmGS
 				this->covariance_model->Decompose(precision);
 
 				// Re-parameterize coefficients
-				this->booster->Reparameterize(this->beta(0));
+				this->covariance_model->ReparameterizeCoefficients(this->beta, this->variables);
 
 				// Evaluate coefficients update
-				Vector<Vector<double> > h = this->covariance_model->UpdateCoefficients(jacobian, this->beta);
+				Vector<Vector<double> > h = this->covariance_model->CoefficientsUpdate(jacobian, this->beta);
 
 				// Re-parameterize updates
-				this->booster->Reparameterize(h(0));
+				this->covariance_model->ReparameterizeCoefficients(h, this->variables);
 
 				// Check if update is significant
 				int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;

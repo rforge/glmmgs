@@ -1,4 +1,6 @@
 #include "../../../Standard.h"
+#include "../../../Boosters/Boosters.h"
+#include "../../../Variables/IVariable.h"
 #include "IdentityModel.h"
 
 namespace GlmmGS
@@ -57,7 +59,7 @@ namespace GlmmGS
 					return ICovarianceModel::Update(minus_hessian, jac, controls);
 				}
 
-				Vector<Vector<double> > IdentityModel::UpdateCoefficients(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
+				Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
 				{
 					// Add diagonal terms
 					Vector<Vector<double> > jac = jacobian;
@@ -67,6 +69,12 @@ namespace GlmmGS
 
 					// Decomposes
 					return this->beta_precision_chol.Solve(jac);
+				}
+
+				void IdentityModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
+						const Vector<Pointer<Variables::IVariable> > variables) const
+				{
+					Boosters::Reparameterize(beta, variables, this->remove_mean);
 				}
 			}
 		}

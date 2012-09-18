@@ -37,11 +37,6 @@
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/PrecisionModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/SparsePrecisionModel.h"
 
-// Boosters
-#include "../GlmmGS/Boosters/IBooster.h"
-#include "../GlmmGS/Boosters/Default.h"
-#include "../GlmmGS/Boosters/RemoveMean.h"
-
 // Variables
 #include "../GlmmGS/Variables/IVariable.h"
 #include "../GlmmGS/Variables/Intercept.h"

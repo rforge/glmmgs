@@ -3,7 +3,6 @@
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Boosters/IBooster.h"
 #include "../IBlock.h"
 #include "CovarianceModels/ICovarianceModel.h"
 
@@ -22,7 +21,6 @@ namespace GlmmGS
 				WeakFactor factor;
 				Vector<Vector<double> > beta;
 				Pointer<CovarianceModels::ICovarianceModel> covariance_model;
-				Pointer<Boosters::IBooster> booster;
 
 				// Implementation
 				void UpdatePredictor(Vector<double> & eta) const;
@@ -31,8 +29,7 @@ namespace GlmmGS
 			public:
 				// Construction
 				Block(const Vector<Pointer<Variables::IVariable> > & variables, WeakFactor factor,
-						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model,
-						const Pointer<Boosters::IBooster> & booster);
+						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model);
 
 				// Properties
 				const Vector<Vector<double> > & Coefficients() const;

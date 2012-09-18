@@ -11,7 +11,7 @@ namespace GlmmGSAPI
 		{
 			// BlockSection
 			BlockSection::BlockSection(const Section & section, WeakFactor factor)
-				: Section(section), factor(factor), booster(new(bl) GlmmGS::Boosters::Default)
+				: Section(section), factor(factor)
 			{
 			}
 
@@ -19,9 +19,6 @@ namespace GlmmGSAPI
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
-
-				if (this->data->fixed_intercept == true)
-					this->booster.Reset(new(bl) GlmmGS::Boosters::RemoveMean);
 
 				// Add intercept
 				typedef GlmmGS::Variables::Intercept T;
@@ -85,8 +82,8 @@ namespace GlmmGSAPI
 
 				// Add random effect block to random effects;
 				typedef GlmmGS::RandomEffects::Stratified::Block T;
-				this->data->random_effects.Add(Pointer<T>(new(bl) T(this->variables.ToVector(),
-						this->factor, this->covariance_model, this->booster)));
+				this->data->random_effects.Add(Pointer<T>(
+						new(bl) T(this->variables.ToVector(), this->factor, this->covariance_model)));
 			}
 		}
 	}

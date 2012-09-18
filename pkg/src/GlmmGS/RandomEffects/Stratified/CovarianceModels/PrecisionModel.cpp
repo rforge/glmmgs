@@ -1,4 +1,6 @@
 #include "../../../Standard.h"
+#include "../../../Boosters/Boosters.h"
+#include "../../../Variables/IVariable.h"
 #include "PrecisionModel.h"
 #include "Functions.h"
 
@@ -12,7 +14,7 @@ namespace GlmmGS
 			{
 				// Construction
 				PrecisionModel::PrecisionModel(int nvars, Matrix<const double> R, Matrix<const double> S)
-					: ICovarianceModel(nvars, S), nvars(nvars), R(R)
+					: ICovarianceModel(nvars, S), nvars(nvars), R(R), remove_weighted_mean(R)
 				{
 					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == nvars);
 					for (int i = 0; i < nvars; ++i)
@@ -96,7 +98,7 @@ namespace GlmmGS
 					return ICovarianceModel::Update(minus_hessian, jac, controls);
 				}
 
-				Vector<Vector<double> > PrecisionModel::UpdateCoefficients(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
+				Vector<Vector<double> > PrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
 				{
 					// Add diagonal terms
 					const int nlevels = this->R.NumberOfRows();
@@ -116,6 +118,13 @@ namespace GlmmGS
 					}
 					return h;
 				}
+
+				void PrecisionModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
+						const Vector<Pointer<Variables::IVariable> > variables) const
+				{
+					Boosters::Reparameterize(beta, variables, this->remove_weighted_mean);
+				}
+
 			}
 		}
 	}

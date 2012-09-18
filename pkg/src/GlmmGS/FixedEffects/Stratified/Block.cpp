@@ -1,6 +1,7 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
 #include "../../Controls.h"
+#include "../../Boosters/Boosters.h"
 #include "Block.h"
 
 namespace GlmmGS
@@ -11,10 +12,10 @@ namespace GlmmGS
 		{
 			// Block
 			Block::Block(Vector<Pointer<Variables::IVariable> > variables, WeakFactor factor)
-				: variables(variables), factor(factor), beta(variables.Size())
+				: variables(variables),
+				  factor(factor),
+				  beta(VectorVector<double>(this->variables.Size(), this->factor.NumberOfLevels()))
 			{
-				for (int i = 0; i < this->variables.Size(); ++i)
-					this->beta(i) = Vector<double>(this->factor.NumberOfLevels());
 			}
 
 			Block::~Block()
@@ -58,17 +59,21 @@ namespace GlmmGS
 				// Evaluate update
 				Vector<Vector<double> > h = this->chol.Solve(jacobian);
 
+				// Re-parameterize updates
+				//Boosters::Reparameterize(h, this->variables, Boosters::RemoveFirstComponent());
+
 				// Print
 				if (controls.Verbose())
 					Print("Max update fixed effects: %g\n", MaxAbs(h));
 
 				// Check if update is significant
-				int update = 1;
-				if (controls.Comparer().IsZero(h, this->beta))
-					update = 0;
+				const int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;
 
 				// Update
 				this->beta += h;
+
+				// Re-parameterize coefficients
+				//Boosters::Reparameterize(this->beta, this->variables, Boosters::RemoveFirstComponent());
 
 				return update;
 			}

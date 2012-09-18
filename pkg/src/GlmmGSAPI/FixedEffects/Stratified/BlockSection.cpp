@@ -16,7 +16,6 @@ namespace GlmmGSAPI
 
 			void BlockSection::AddIntercept(int duplicate)
 			{
-				this->data->fixed_intercept = true;
 				typedef GlmmGS::Variables::Intercept T;
 				this->variables.Add(Pointer<T>(new(bl) T(duplicate)));
 			}

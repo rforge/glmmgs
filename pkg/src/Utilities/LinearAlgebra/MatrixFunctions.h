@@ -23,7 +23,7 @@ namespace Utilities
 		Matrix<double> Diagonal(const Vector<double> & v);
 		Vector<double> Diagonal(const Matrix<double> & A);
 		Vector<double> RowSums(const Matrix<double> & A);
-		Vector<double> ColumnSums(const Matrix<double> & A);
+		Vector<double> ColumnSums(Matrix<const double> A);
 		double MaxAbs(const Matrix<double> & A);
 		double Trace(const Matrix<double> & A);
 

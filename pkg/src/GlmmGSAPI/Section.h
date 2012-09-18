@@ -16,14 +16,10 @@ namespace GlmmGSAPI
 		struct Data
 		{
 			// Fields
-			bool fixed_intercept;
 			Pointer<GlmmGS::Responses::IResponse> response;
 			Pointer<GlmmGS::Offsets::IOffset> offset;
 			VectorBuilder<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
 			VectorBuilder<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
-
-			// Constructor
-			Data() : fixed_intercept(false) {}
 		};
 
 	public:

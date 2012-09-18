@@ -150,7 +150,7 @@ namespace Utilities
 			return y;
 		}
 
-		Vector<double> ColumnSums(const Matrix<double> & A)
+		Vector<double> ColumnSums(Matrix<const double> A)
 		{
 			Vector<double> y(A.NumberOfColumns());
 			for (int j = 0; j < A.NumberOfColumns(); ++j)
