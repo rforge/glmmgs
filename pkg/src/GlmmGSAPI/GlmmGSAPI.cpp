@@ -157,17 +157,17 @@ namespace GlmmGSAPI
 
 	void GlmmGSAPI::AddIntercept(int duplicate)
 	{
-		this->sections.Top()->AddIntercept();
+		this->sections.Top()->AddIntercept(duplicate);
 	}
 
 	void GlmmGSAPI::AddCovariate(Vector<const int> values, int duplicate)
 	{
-		this->sections.Top()->AddCovariate(values);
+		this->sections.Top()->AddCovariate(values, duplicate);
 	}
 	
 	void GlmmGSAPI::AddCovariate(Vector<const double> values, int duplicate)
 	{
-		this->sections.Top()->AddCovariate(values);
+		this->sections.Top()->AddCovariate(values, duplicate);
 	}
 
 	// Covariance models

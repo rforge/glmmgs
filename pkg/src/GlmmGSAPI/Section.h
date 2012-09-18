@@ -55,9 +55,9 @@ namespace GlmmGSAPI
 		virtual void EndBlock();
 		virtual Pointer<Section> BeginStratifiedBlock(WeakFactor factor);
 		virtual void EndStratifiedBlock();
-		virtual void AddIntercept();
-		virtual void AddCovariate(Vector<const int> values);
-		virtual void AddCovariate(Vector<const double> values);
+		virtual void AddIntercept(int duplicate);
+		virtual void AddCovariate(Vector<const int> values, int duplicate);
+		virtual void AddCovariate(Vector<const double> values, int duplicate);
 
 		// Fixed effect methods
 		virtual void EndFixedEffects();

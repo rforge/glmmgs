@@ -21,9 +21,9 @@ namespace GlmmGSAPI
 				Pointer<GlmmGS::Boosters::IBooster> booster;
 
 				// Implementation
-				void AddIntercept();
-				void AddCovariate(Vector<const int> values);
-				void AddCovariate(Vector<const double> values);
+				void AddIntercept(int duplicate);
+				void AddCovariate(Vector<const int> values, int duplicate);
+				void AddCovariate(Vector<const double> values, int duplicate);
 				void AddIdentityCovarianceModel(Matrix<const double> S);
 				void AddPrecisionModel(Matrix<const double> R, Matrix<const double> S);
 				void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S);

@@ -29,8 +29,11 @@ namespace GlmmGS
 			template <class OTHER> Vector<double> ScalarProductImpl(const Vector<double> & weights, Vector<const OTHER> values, WeakFactor factor) const;
 
 		public:
+			// Properties
+			const int duplicate;
+
 			// Construction
-			Intercept();
+			Intercept(int duplicate);
 			~Intercept();
 		};
 

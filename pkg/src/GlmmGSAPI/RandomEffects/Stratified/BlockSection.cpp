@@ -15,7 +15,7 @@ namespace GlmmGSAPI
 			{
 			}
 
-			void BlockSection::AddIntercept()
+			void BlockSection::AddIntercept(int duplicate)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
@@ -25,27 +25,27 @@ namespace GlmmGSAPI
 
 				// Add intercept
 				typedef GlmmGS::Variables::Intercept T;
-				this->variables.Add(Pointer<T>(new(bl) T));
+				this->variables.Add(Pointer<T>(new(bl) T(duplicate)));
 			}
 
-			void BlockSection::AddCovariate(Vector<const int> values)
+			void BlockSection::AddCovariate(Vector<const int> values, int duplicate)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				// Add covariate
 				typedef GlmmGS::Variables::VectorVariable<const int> T;
-				this->variables.Add(Pointer<T>(new(bl) T(values)));
+				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
-			void BlockSection::AddCovariate(Vector<const double> values)
+			void BlockSection::AddCovariate(Vector<const double> values, int duplicate)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				// Add covariate
 				typedef GlmmGS::Variables::VectorVariable<const double> T;
-				this->variables.Add(Pointer<T>(new(bl) T(values)));
+				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
 			void BlockSection::AddIdentityCovarianceModel(Matrix<const double> S)

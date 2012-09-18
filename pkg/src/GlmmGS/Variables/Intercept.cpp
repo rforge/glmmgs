@@ -7,7 +7,8 @@ namespace GlmmGS
 	namespace Variables
 	{
 		// Intercept
-		Intercept::Intercept()
+		Intercept::Intercept(int duplicate)
+			: duplicate(duplicate)
 		{
 		}
 

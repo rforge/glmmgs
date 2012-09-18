@@ -33,15 +33,17 @@ namespace GlmmGS
 			template <class OTHER> Vector<double> ScalarProductImpl(const Vector<double> & weights, Vector<const OTHER> values, WeakFactor factor) const;
 
 		public:
+			const int duplicate;
+
 			// Construction
-			VectorVariable(Vector<TYPE> values);
+			VectorVariable(Vector<TYPE> values, int duplicate);
 			~VectorVariable();
 		};
 
 		// Construction
 		template <class TYPE>
-		VectorVariable<TYPE>::VectorVariable(Vector<TYPE> values)
-			: values(values)
+		VectorVariable<TYPE>::VectorVariable(Vector<TYPE> values, int duplicate)
+			: values(values), duplicate(duplicate)
 		{
 		}
 

@@ -19,9 +19,9 @@ namespace GlmmGSAPI
 				VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
 
 				// Implementation
-				void AddIntercept();
-				void AddCovariate(Vector<const int> values);
-				void AddCovariate(Vector<const double> values);
+				void AddIntercept(int duplicate);
+				void AddCovariate(Vector<const int> values, int duplicate);
+				void AddCovariate(Vector<const double> values, int duplicate);
 				void EndStratifiedBlock();
 	
 			public:

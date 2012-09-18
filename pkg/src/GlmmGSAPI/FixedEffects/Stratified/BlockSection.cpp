@@ -14,23 +14,23 @@ namespace GlmmGSAPI
 			{
 			}
 
-			void BlockSection::AddIntercept()
+			void BlockSection::AddIntercept(int duplicate)
 			{
 				this->data->fixed_intercept = true;
 				typedef GlmmGS::Variables::Intercept T;
-				this->variables.Add(Pointer<T>(new(bl) T));
+				this->variables.Add(Pointer<T>(new(bl) T(duplicate)));
 			}
 
-			void BlockSection::AddCovariate(Vector<const int> values)
+			void BlockSection::AddCovariate(Vector<const int> values, int duplicate)
 			{
 				typedef GlmmGS::Variables::VectorVariable<const int> T;
-				this->variables.Add(Pointer<T>(new(bl) T(values)));
+				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
-			void BlockSection::AddCovariate(Vector<const double> values)
+			void BlockSection::AddCovariate(Vector<const double> values, int duplicate)
 			{
 				typedef GlmmGS::Variables::VectorVariable<const double> T;
-				this->variables.Add(Pointer<T>(new(bl) T(values)));
+				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
 			void BlockSection::EndStratifiedBlock()

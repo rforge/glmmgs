@@ -122,17 +122,17 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: AddCounts");
 	}
 
-	void Section::AddIntercept()
+	void Section::AddIntercept(int)
 	{
 		throw Exception("Invalid call: AddIntercept");
 	}
 
-	void Section::AddCovariate(Vector<const int>)
+	void Section::AddCovariate(Vector<const int>, int)
 	{
 		throw Exception("Invalid call: AddCovariate");
 	}
 
-	void Section::AddCovariate(Vector<const double>)
+	void Section::AddCovariate(Vector<const double>, int)
 	{
 		throw Exception("Invalid call: AddCovariate");
 	}
