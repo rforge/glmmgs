@@ -8,7 +8,7 @@ namespace GlmmGS
 	{
 		// Intercept
 		Intercept::Intercept(int duplicate)
-			: duplicate(duplicate)
+			: IVariable(duplicate)
 		{
 		}
 

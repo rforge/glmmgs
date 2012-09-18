@@ -5,7 +5,8 @@ namespace GlmmGS
 	namespace Variables
 	{
 		// IVariable
-		IVariable::IVariable()
+		IVariable::IVariable(int duplicate)
+			: duplicate(duplicate)
 		{
 		}
 
