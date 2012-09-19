@@ -82,8 +82,12 @@ namespace Utilities
 	{
 		_VALIDATE_ARGUMENT(size == TotalSizeAsSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)
-			for (int j = 0; j < src.NumberOfRows(); ++j, ++dst)
+		{
+			for (int j = 0; j < i; ++j, ++dst)
 				*dst = src(i, j);
+			for (int j = i; j < src.NumberOfRows(); ++j, ++dst)
+				*dst = src(j, i);
+		}
 	}
 
 	// Copy stratified vector to raw vector
@@ -103,12 +107,12 @@ namespace Utilities
 		_VALIDATE_ARGUMENT(size == TotalSizeAsStratifiedSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)
 		{
-			for (int j  = 0; j <= i; ++j)
+			for (int j  = 0; j < i; ++j)
 			{
 				for (int k = 0; k < src(i, j).Size(); ++k, ++dst)
 					*dst = src(i, j)(k);
 			}
-			for (int j  = i + 1; j < src.NumberOfRows(); ++j)
+			for (int j  = i; j < src.NumberOfRows(); ++j)
 			{
 				for (int k = 0; k < src(j, i).Size(); ++k, ++dst)
 					*dst = src(j, i)(k);
