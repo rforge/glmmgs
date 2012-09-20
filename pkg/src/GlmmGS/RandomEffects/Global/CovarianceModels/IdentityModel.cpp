@@ -10,7 +10,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				IdentityModel::IdentityModel(int nvars, Matrix<const double> S)
+				IdentityModel::IdentityModel(int nvars, const ImmutableMatrix<double> & S)
 					: ICovarianceModel(1, S), size(nvars)
 				{
 					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == 1);
@@ -22,12 +22,16 @@ namespace GlmmGS
 				}
 
 				// Methods
-				void IdentityModel::Decompose(const TriangularMatrix<double> & design_precision)
+				void IdentityModel::Decompose(const ImmutableTriangularMatrix<double> & design_precision)
 				{
 					// Add diagonal to precision
-					TriangularMatrix<double> prec = design_precision;
+					TriangularMatrix<double> prec(this->size);
 					for (int i = 0; i < this->size; ++i)
-						prec(i, i) += this->theta(0);
+					{
+						prec(i, i) = design_precision(i, i) + this->theta(0);
+						for (int j = 0; j <= i; ++j)
+							prec(i, j) = design_precision(i, j);
+					}
 
 					// Decompose
 					this->beta_precision_chol.Decompose(prec);
@@ -54,9 +58,8 @@ namespace GlmmGS
 				{
 					// Add diagonal terms
 					Vector<double> jac(this->size);
-					Copy(jac, jacobian);
 					for (int i = 0; i < this->size; ++i)
-						jac(i) -= this->theta(0) * beta(i);
+						jac(i) = jacobian(i) - this->theta(0) * beta(i);
 
 					// Decomposes
 					return this->beta_precision_chol.Solve(jac);

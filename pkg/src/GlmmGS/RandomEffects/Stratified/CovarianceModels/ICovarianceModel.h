@@ -23,11 +23,11 @@ namespace GlmmGS
 					CholeskyDecomposition chol;
 
 					// Implementation
-					int Update(const TriangularMatrix<double> & minus_hessian,
+					int Update(const ImmutableTriangularMatrix<double> & minus_hessian,
 							const ImmutableVector<double> & jacobian, const Controls & controls);
 				public:
 					// Construction
-					ICovarianceModel(int npars, Matrix<const double> S);
+					ICovarianceModel(int npars, const ImmutableMatrix<double> & S);
 					virtual ~ICovarianceModel();
 
 					// Properties

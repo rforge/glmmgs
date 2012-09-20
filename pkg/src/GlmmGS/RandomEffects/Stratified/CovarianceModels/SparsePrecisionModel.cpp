@@ -13,7 +13,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R, Matrix<const double> S)
+				SparsePrecisionModel::SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R, const ImmutableMatrix<double> & S)
 					: ICovarianceModel(nvars, S), nvars(nvars), R(R), remove_weighted_mean(R)
 				{
 					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == nvars);

@@ -13,7 +13,7 @@ namespace Utilities
 
 	// Size of a triangular matrix
 	template <class TYPE>
-	int TotalSizeAsSquareMatrix(const TriangularMatrix<TYPE> & mat)
+	int TotalSizeAsSquareMatrix(const ImmutableTriangularMatrix<TYPE> & mat)
 	{
 		// Return size as it were a square matrix
 		return mat.NumberOfRows() * mat.NumberOfRows();
@@ -58,12 +58,22 @@ namespace Utilities
 
 	// Copy matrix to matrix
 	template <class TYPE>
-	void Copy(Matrix<TYPE> & dst, const Matrix<TYPE> & src)
+	void Copy(Matrix<TYPE> & dst, const ImmutableMatrix<TYPE> & src)
 	{
 		_VALIDATE_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows() &&
 				dst.NumberOfColumns() == src.NumberOfColumns());
 		for (int i = 0; i < dst.NumberOfRows(); ++i)
 			for (int j = 0; j < dst.NumberOfColumns(); ++j)
+				dst(i, j) = src(i, j);
+	}
+
+	// Copy matrix to matrix
+	template <class TYPE>
+	void Copy(TriangularMatrix<TYPE> & dst, const ImmutableTriangularMatrix<TYPE> & src)
+	{
+		_VALIDATE_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows());
+		for (int i = 0; i < dst.NumberOfRows(); ++i)
+			for (int j = 0; j <= i; ++j)
 				dst(i, j) = src(i, j);
 	}
 
@@ -78,7 +88,7 @@ namespace Utilities
 
 	// Copy matrix to raw vector
 	template <class TYPE>
-	void Copy(TYPE * dst, int size, const TriangularMatrix<TYPE> & src)
+	void Copy(TYPE * dst, int size, const ImmutableTriangularMatrix<TYPE> & src)
 	{
 		_VALIDATE_ARGUMENT(size == TotalSizeAsSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)

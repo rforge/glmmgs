@@ -301,9 +301,8 @@ void GlmmGSRAPI_AddIdentityCovarianceModel(
 			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
 
 		// TODO: check matrix is symmetric
-
-		GlmmGSAPI::theApi.AddIdentityCovarianceModel(
-			Matrix<const double>(External<const double>(S), dimS[0], dimS[1]));
+		External<double> ext(const_cast<double *>(S));
+		GlmmGSAPI::theApi.AddIdentityCovarianceModel(ImmutableMatrix<double>(ext, dimS[0], dimS[1]));
 	}
 	catch (Exception & e)
 	{
@@ -325,9 +324,11 @@ void GlmmGSRAPI_AddPrecisionModel(
 
 		// TODO: check matrices are symmetric
 
+		External<double> extR(const_cast<double *>(R));
+		External<double> extS(const_cast<double *>(S));
 		GlmmGSAPI::theApi.AddPrecisionModel(
-				Matrix<const double>(External<const double>(R), dimR[0], dimR[1]),
-				Matrix<const double>(External<const double>(S), dimS[0], dimS[1]));
+				ImmutableMatrix<double>(extR, dimR[0], dimR[1]),
+				ImmutableMatrix<double>(extS, dimS[0], dimS[1]));
 	}
 	catch (Exception & e)
 	{
@@ -356,8 +357,9 @@ void GlmmGSRAPI_AddSparsePrecisionModel(
 				Vector<int>(External<int>(const_cast<int *>(indices)), nz),
 				Vector<int>(External<int>(const_cast<int *>(counts)), n + 1));
 
+		External<double> extS(const_cast<double *>(S));
 		GlmmGSAPI::theApi.AddSparsePrecisionModel(R,
-				Matrix<const double>(External<const double>(S), dimS[0], dimS[1]));
+				ImmutableMatrix<double>(extS, dimS[0], dimS[1]));
 	}
 	catch (Exception & e)
 	{

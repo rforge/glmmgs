@@ -17,7 +17,7 @@ namespace Utilities
 			return A;
 		}
 
-		Matrix<double> & operator +=(Matrix<double> & A, const Matrix<double> & B)
+		Matrix<double> & operator +=(Matrix<double> & A, const ImmutableMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
@@ -28,7 +28,7 @@ namespace Utilities
 			return A;
 		}
 
-		Matrix<double> & operator -=(Matrix<double> & A, const Matrix<double> & B)
+		Matrix<double> & operator -=(Matrix<double> & A, const ImmutableMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
@@ -39,7 +39,7 @@ namespace Utilities
 			return A;
 		}
 
-		Matrix<double> operator *(double a, const Matrix<double> & A)
+		Matrix<double> operator *(double a, const ImmutableMatrix<double> & A)
 		{
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
@@ -50,7 +50,7 @@ namespace Utilities
 			return Y;
 		}
 
-		Vector<double> operator *(const Matrix<double> & A, const ImmutableVector<double> & v)
+		Vector<double> operator *(const ImmutableMatrix<double> & A, const ImmutableVector<double> & v)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == v.Size())
 			int m = A.NumberOfRows();
@@ -64,7 +64,7 @@ namespace Utilities
 			return y;
 		}
 
-		Matrix<double> operator *(const Matrix<double> & A, const Matrix<double> & B)
+		Matrix<double> operator *(const ImmutableMatrix<double> & A, const ImmutableMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfRows())
 			int m = A.NumberOfRows();
@@ -80,7 +80,7 @@ namespace Utilities
 			return C;
 		}
 
-		Matrix<double> operator +(const Matrix<double> & A, const Matrix<double> & B)
+		Matrix<double> operator +(const ImmutableMatrix<double> & A, const ImmutableMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
@@ -92,7 +92,7 @@ namespace Utilities
 			return C;
 		}
 
-		Matrix<double> operator -(const Matrix<double> & A, const Matrix<double> & B)
+		Matrix<double> operator -(const ImmutableMatrix<double> & A, const ImmutableMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
 			int m = A.NumberOfRows();
@@ -104,7 +104,7 @@ namespace Utilities
 			return C;
 		}
 
-		Matrix<double> Transpose(const Matrix<double> & A)
+		Matrix<double> Transpose(const ImmutableMatrix<double> & A)
 		{
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
@@ -132,7 +132,7 @@ namespace Utilities
 			return A;
 		}
 
-		Vector<double> Diagonal(const Matrix<double> & A)
+		Vector<double> Diagonal(const ImmutableMatrix<double> & A)
 		{
 			int n = A.NumberOfRows();
 			Vector<double> v(n);
@@ -141,7 +141,7 @@ namespace Utilities
 			return v;
 		}
 
-		Vector<double> RowSums(const Matrix<double> & A)
+		Vector<double> RowSums(const ImmutableMatrix<double> & A)
 		{
 			Vector<double> y(A.NumberOfRows());
 			for (int i = 0; i < A.NumberOfRows(); ++i)
@@ -150,7 +150,7 @@ namespace Utilities
 			return y;
 		}
 
-		Vector<double> ColumnSums(Matrix<const double> A)
+		Vector<double> ColumnSums(const ImmutableMatrix<double> & A)
 		{
 			Vector<double> y(A.NumberOfColumns());
 			for (int j = 0; j < A.NumberOfColumns(); ++j)
@@ -159,7 +159,7 @@ namespace Utilities
 			return y;
 		}
 		
-		double MaxAbs(const Matrix<double> & A)
+		double MaxAbs(const ImmutableMatrix<double> & A)
 		{
 			double norm = 0.0;
 			const int m = A.NumberOfRows();
@@ -174,7 +174,7 @@ namespace Utilities
 			return norm;
 		}
 
-		double Trace(const Matrix<double> & A)
+		double Trace(const ImmutableMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			double tr = 0.0;
@@ -183,7 +183,7 @@ namespace Utilities
 			return tr;
 		}
 
-		TriangularMatrix<double> Lower(const Matrix<double> & A)
+		TriangularMatrix<double> Lower(const ImmutableMatrix<double> & A)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
 			const int n = A.NumberOfRows();
@@ -194,7 +194,7 @@ namespace Utilities
 			return Y;
 		}
 
-		TriangularMatrix<double> Upper(const Matrix<double> & A)
+		TriangularMatrix<double> Upper(const ImmutableMatrix<double> & A)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
 			const int n = A.NumberOfRows();
@@ -205,7 +205,7 @@ namespace Utilities
 			return Y;
 		}
 
-		TriangularMatrix<double> Symmetric(const Matrix<double> & A)
+		TriangularMatrix<double> Symmetric(const ImmutableMatrix<double> & A)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
 			const int n = A.NumberOfRows();

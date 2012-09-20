@@ -10,7 +10,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				ICovarianceModel::ICovarianceModel(int npars, Matrix<const double> S)
+				ICovarianceModel::ICovarianceModel(int npars, const ImmutableMatrix<double> & S)
 					: theta(npars), constant(S.NumberOfRows() > 0)
 				{
 				}
@@ -31,7 +31,7 @@ namespace GlmmGS
 				}
 
 				// Implementation
-				int ICovarianceModel::Update(const TriangularMatrix<double> & minus_hessian,
+				int ICovarianceModel::Update(const ImmutableTriangularMatrix<double> & minus_hessian,
 						const ImmutableVector<double> & jacobian, const Controls & controls)
 				{
 					if (!this->constant)

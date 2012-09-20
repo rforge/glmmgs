@@ -9,7 +9,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Weighted square norm of vector
-				double Square(Matrix<const double> m, const ImmutableVector<double> & x)
+				double Square(const ImmutableMatrix<double> & m, const ImmutableVector<double> & x)
 				{
 					_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 					const int size = x.Size();
@@ -24,7 +24,7 @@ namespace GlmmGS
 				}
 
 				// Trace
-				double Trace(const Matrix<double> & a)
+				double Trace(const ImmutableMatrix<double> & a)
 				{
 					const int size = a.NumberOfColumns();
 					double sum = 0.0;
@@ -34,7 +34,7 @@ namespace GlmmGS
 				}
 
 				// Trace of square product
-				double SquareTrace(const Matrix<double> & a)
+				double SquareTrace(const ImmutableMatrix<double> & a)
 				{
 					const int size = a.NumberOfColumns();
 					double sum = 0.0;
@@ -45,7 +45,7 @@ namespace GlmmGS
 				}
 
 				// Matrix-vector product
-				double MatrixProduct(int k, Matrix<const double> m, const ImmutableVector<double> & x)
+				double MatrixProduct(int k, const ImmutableMatrix<double> & m, const ImmutableVector<double> & x)
 				{
 					const int size = m.NumberOfRows();
 					double sum = 0.0;

@@ -20,7 +20,7 @@ namespace GlmmGS
 				private:
 					// Fields
 					int nvars;
-					Matrix<const double> R;
+					ImmutableMatrix<double> R;
 					CholeskyDecomposition beta_precision_chol;
 					Boosters::RemoveWeightedMean remove_weighted_mean;
 
@@ -33,7 +33,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					PrecisionModel(int nvars, Matrix<const double> R, Matrix<const double> S);
+					PrecisionModel(int nvars, const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
 					~PrecisionModel();
 				};
 			}

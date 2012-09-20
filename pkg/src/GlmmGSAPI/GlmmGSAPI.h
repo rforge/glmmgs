@@ -55,9 +55,9 @@ namespace GlmmGSAPI
 		void AddCovariate(const ImmutableVector<double> & values, int duplicate);
 
 		// Covariance models
-		void AddIdentityCovarianceModel(Matrix<const double> S);
-		void AddPrecisionModel(Matrix<const double> R, Matrix<const double> S);
-		void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S);
+		void AddIdentityCovarianceModel(const ImmutableMatrix<double> & S);
+		void AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
+		void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableMatrix<double> & S);
 
 		// Fit
 		void Fit(GlmmGS::Controls controls);

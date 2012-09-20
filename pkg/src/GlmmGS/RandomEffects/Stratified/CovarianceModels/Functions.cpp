@@ -9,7 +9,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Weighted square norm of vector
-				double Square(Matrix<const double> m, const ImmutableVector<double> & x)
+				double Square(const ImmutableMatrix<double> & m, const ImmutableVector<double> & x)
 				{
 					_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 					const int size = x.Size();
@@ -50,7 +50,7 @@ namespace GlmmGS
 				}
 
 				// Trace of diagonal blocks
-				double BlockTrace(int row, int nlevels, const Matrix<double> & a)
+				double BlockTrace(int row, int nlevels, const ImmutableMatrix<double> & a)
 				{
 					const int offset = row * nlevels;
 					double sum = 0.0;
@@ -60,7 +60,7 @@ namespace GlmmGS
 				}
 
 				// Trace of diagonal blocks product
-				double BlockSquareTrace(int row, int col, int nlevels, const Matrix<double> & a)
+				double BlockSquareTrace(int row, int col, int nlevels, const ImmutableMatrix<double> & a)
 				{
 					const int offset_row = row * nlevels;
 					const int offset_col = col * nlevels;
@@ -74,7 +74,7 @@ namespace GlmmGS
 
 
 				// Matrix product
-				double MatrixProduct(int k, Matrix<const double> m, const ImmutableVector<double> & x)
+				double MatrixProduct(int k, const ImmutableMatrix<double> & m, const ImmutableVector<double> & x)
 				{
 					const int size = m.NumberOfRows();
 					double sum = 0.0;

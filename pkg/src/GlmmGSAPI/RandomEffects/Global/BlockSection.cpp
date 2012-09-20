@@ -47,7 +47,7 @@ namespace GlmmGSAPI
 				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
-			void BlockSection::AddIdentityCovarianceModel(Matrix<const double> S)
+			void BlockSection::AddIdentityCovarianceModel(const ImmutableMatrix<double> & S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();
@@ -57,7 +57,7 @@ namespace GlmmGSAPI
 				this->covariance_model.Reset(new(bl) T(this->variables.Size(), S));
 			}
 
-			void BlockSection::AddPrecisionModel(Matrix<const double> R, Matrix<const double> S)
+			void BlockSection::AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::MultipleCovarianceModelsException();

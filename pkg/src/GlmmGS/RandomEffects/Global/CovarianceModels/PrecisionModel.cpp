@@ -11,7 +11,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				PrecisionModel::PrecisionModel(Matrix<const double> R, Matrix<const double> S)
+				PrecisionModel::PrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S)
 					: ICovarianceModel(1, S), R(R)
 				{
 					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == 1);
@@ -23,16 +23,16 @@ namespace GlmmGS
 				}
 
 				// Methods
-				void PrecisionModel::Decompose(const TriangularMatrix<double> & design_precision)
+				void PrecisionModel::Decompose(const ImmutableTriangularMatrix<double> & design_precision)
 				{
 					// Add diagonal to precision
-					TriangularMatrix<double> prec = design_precision;
 					const int size = this->R.NumberOfRows();
+					TriangularMatrix<double> prec(size);
 					for (int i = 0; i < size; ++i)
 					{
-						prec(i, i) += this->theta(0) * this->R(i, i);
+						prec(i, i) = design_precision(i, i) + this->theta(0) * this->R(i, i);
 						for (int j = 0; j < i; ++j)
-							prec(i, j) += this->R(i, j);
+							prec(i, j) = design_precision(i, j) + this->R(i, j);
 					}
 
 					// Decompose

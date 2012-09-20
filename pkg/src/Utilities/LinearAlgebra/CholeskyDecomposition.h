@@ -17,13 +17,13 @@ namespace Utilities
 		public:
 			// Construction
 			CholeskyDecomposition();
-			explicit CholeskyDecomposition(const TriangularMatrix<double> & A);
+			explicit CholeskyDecomposition(const ImmutableTriangularMatrix<double> & A);
 
 			// Properties
-			const TriangularMatrix<double> & Lower() const;
+			const ImmutableTriangularMatrix<double> & Lower() const;
 
 			// Methods
-			void Decompose(const TriangularMatrix<double> & A);
+			void Decompose(const ImmutableTriangularMatrix<double> & A);
 			Vector<double> Solve(const ImmutableVector<double> & b) const;
 			TriangularMatrix<double> Inverse() const;
 			double Determinant() const;
@@ -31,7 +31,7 @@ namespace Utilities
 
 		// Properties
 		inline
-		const TriangularMatrix<double> & CholeskyDecomposition::Lower() const
+		const ImmutableTriangularMatrix<double> & CholeskyDecomposition::Lower() const
 		{
 			return this->lower;
 		}

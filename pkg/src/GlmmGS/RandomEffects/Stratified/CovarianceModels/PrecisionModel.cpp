@@ -13,7 +13,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				PrecisionModel::PrecisionModel(int nvars, Matrix<const double> R, Matrix<const double> S)
+				PrecisionModel::PrecisionModel(int nvars, const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S)
 					: ICovarianceModel(nvars, S), nvars(nvars), R(R), remove_weighted_mean(R)
 				{
 					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == nvars);

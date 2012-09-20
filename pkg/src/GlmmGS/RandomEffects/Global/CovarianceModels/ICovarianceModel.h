@@ -23,11 +23,11 @@ namespace GlmmGS
 					CholeskyDecomposition beta_precision_chol;
 
 					// Implementation
-					int Update(const TriangularMatrix<double> & minus_hessian,
+					int Update(const ImmutableTriangularMatrix<double> & minus_hessian,
 							const ImmutableVector<double> & jacobian, const Controls & controls);
 				public:
 					// Construction
-					ICovarianceModel(int npars, Matrix<const double> S);
+					ICovarianceModel(int npars, const ImmutableMatrix<double> & S);
 					virtual ~ICovarianceModel();
 
 					// Properties
@@ -36,7 +36,7 @@ namespace GlmmGS
 					TriangularMatrix<double> CoefficientCovariance() const;
 
 					// Methods
-					virtual void Decompose(const TriangularMatrix<double> & precision) = 0;
+					virtual void Decompose(const ImmutableTriangularMatrix<double> & precision) = 0;
 					virtual int Update(const ImmutableVector<double> & beta, const Controls & controls) = 0;
 					virtual Vector<double> UpdateCoefficients(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const = 0;
 				};

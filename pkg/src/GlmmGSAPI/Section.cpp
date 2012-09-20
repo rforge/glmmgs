@@ -148,17 +148,17 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: AddCovariate");
 	}
 
-	void Section::AddIdentityCovarianceModel(Matrix<const double>)
+	void Section::AddIdentityCovarianceModel(const ImmutableMatrix<double> &)
 	{
 		throw Exception("Invalid call: AddIdentityCovarianceModel");
 	}
 
-	void Section::AddPrecisionModel(Matrix<const double>, Matrix<const double>)
+	void Section::AddPrecisionModel(const ImmutableMatrix<double> &, const ImmutableMatrix<double> &)
 	{
 		throw Exception("Invalid call: AddPrecisionModel");
 	}
 
-	void Section::AddSparsePrecisionModel(const LDL::SparseMatrix<double> &, Matrix<const double>)
+	void Section::AddSparsePrecisionModel(const LDL::SparseMatrix<double> &, const ImmutableMatrix<double> &)
 	{
 		throw Exception("Invalid call: AddSparsePrecisionModel");
 	}

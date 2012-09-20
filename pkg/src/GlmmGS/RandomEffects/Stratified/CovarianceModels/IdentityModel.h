@@ -33,7 +33,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					IdentityModel(int nvars, int nlevels, Matrix<const double> S);
+					IdentityModel(int nvars, int nlevels, const ImmutableMatrix<double> & S);
 					~IdentityModel();
 				};
 			}

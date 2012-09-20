@@ -11,12 +11,12 @@ namespace Utilities
 		{
 		}
 
-		CholeskyDecomposition::CholeskyDecomposition(const TriangularMatrix<double> & A)
+		CholeskyDecomposition::CholeskyDecomposition(const ImmutableTriangularMatrix<double> & A)
 		{
 			this->Decompose(A);
 		}
 		
-		void CholeskyDecomposition::Decompose(const TriangularMatrix<double> & A)
+		void CholeskyDecomposition::Decompose(const ImmutableTriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			this->lower = TriangularMatrix<double>(n);

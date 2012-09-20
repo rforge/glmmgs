@@ -17,16 +17,16 @@ namespace GlmmGS
 				{
 				private:
 					// Fields
-					Matrix<const double> R;
+					ImmutableMatrix<double> R;
 
 					// Implementation
-					void Decompose(const TriangularMatrix<double> & precision);
+					void Decompose(const ImmutableTriangularMatrix<double> & precision);
 					int Update(const ImmutableVector<double> & beta, const Controls & controls);
 					Vector<double> UpdateCoefficients(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const;
 
 				public:
 					// Construction
-					PrecisionModel(Matrix<const double> R, Matrix<const double> S);
+					PrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
 					~PrecisionModel();
 
 					// Properties

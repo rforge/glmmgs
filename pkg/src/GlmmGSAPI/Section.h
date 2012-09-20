@@ -60,9 +60,9 @@ namespace GlmmGSAPI
 		virtual void EndFixedEffects();
 
 		// Random effect methods
-		virtual void AddIdentityCovarianceModel(Matrix<const double> S);
-		virtual void AddPrecisionModel(Matrix<const double> R, Matrix<const double> S);
-		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S);
+		virtual void AddIdentityCovarianceModel(const ImmutableMatrix<double> & S);
+		virtual void AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
+		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableMatrix<double> & S);
 		virtual void EndRandomEffects();
 	};
 }

@@ -20,13 +20,13 @@ namespace GlmmGS
 					const int size;
 
 					// Implementation
-					void Decompose(const TriangularMatrix<double> & precision);
+					void Decompose(const ImmutableTriangularMatrix<double> & precision);
 					int Update(const ImmutableVector<double> & beta, const Controls & controls);
 					Vector<double> UpdateCoefficients(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const;
 
 				public:
 					// Construction
-					IdentityModel(int nvars, Matrix<const double> S);
+					IdentityModel(int nvars, const ImmutableMatrix<double> & S);
 					~IdentityModel();
 				};
 			}

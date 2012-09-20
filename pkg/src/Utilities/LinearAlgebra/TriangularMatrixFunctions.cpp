@@ -16,7 +16,7 @@ namespace Utilities
 			return A;
 		}
 		
-		TriangularMatrix<double> & operator +=(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
+		TriangularMatrix<double> & operator +=(TriangularMatrix<double> & A, const ImmutableTriangularMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
@@ -26,7 +26,7 @@ namespace Utilities
 			return A;
 		}
 		
-		TriangularMatrix<double> & operator -=(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
+		TriangularMatrix<double> & operator -=(TriangularMatrix<double> & A, const ImmutableTriangularMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
@@ -36,7 +36,7 @@ namespace Utilities
 			return A;
 		}
 		
-		TriangularMatrix<double> operator +(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
+		TriangularMatrix<double> operator +(TriangularMatrix<double> & A, const ImmutableTriangularMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
@@ -48,7 +48,7 @@ namespace Utilities
 
 		}
 		
-		TriangularMatrix<double> operator -(TriangularMatrix<double> & A, const TriangularMatrix<double> & B)
+		TriangularMatrix<double> operator -(TriangularMatrix<double> & A, const ImmutableTriangularMatrix<double> & B)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfRows() == B.NumberOfRows())
 			const int m = A.NumberOfRows();
@@ -60,7 +60,7 @@ namespace Utilities
 
 		}
 
-		TriangularMatrix<double> operator *(double a, const TriangularMatrix<double> & A)
+		TriangularMatrix<double> operator *(double a, const ImmutableTriangularMatrix<double> & A)
 		{
 			int m = A.NumberOfRows();
 			TriangularMatrix<double> B(m);
@@ -71,7 +71,7 @@ namespace Utilities
 		}
 
 		// Functions
-		Vector<double> Diagonal(const TriangularMatrix<double> & A)
+		Vector<double> Diagonal(const ImmutableTriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			Vector<double> d(n);
@@ -80,7 +80,7 @@ namespace Utilities
 			return d;
 		}
 
-		double Trace(const TriangularMatrix<double> & A)
+		double Trace(const ImmutableTriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			double sum = 0.0;
@@ -89,7 +89,7 @@ namespace Utilities
 			return sum;
 		}
 
-		double SquareTrace(const TriangularMatrix<double> & A)
+		double SquareTrace(const ImmutableTriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			double sum = 0.0;
@@ -103,7 +103,7 @@ namespace Utilities
 		}
 
 		// Conversion
-		Matrix<double> ToLower(const TriangularMatrix<double> & A)
+		Matrix<double> ToLower(const ImmutableTriangularMatrix<double> & A)
 		{
 			int n = A.NumberOfRows();
 			Matrix<double> L(n, n);
@@ -113,7 +113,7 @@ namespace Utilities
 			return L;
 		}
 
-		Matrix<double> ToUpper(const TriangularMatrix<double> & A)
+		Matrix<double> ToUpper(const ImmutableTriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			Matrix<double> U(n, n);
@@ -123,7 +123,7 @@ namespace Utilities
 			return U;
 		}
 
-		Matrix<double> ToSymmetric(const TriangularMatrix<double> & A)
+		Matrix<double> ToSymmetric(const ImmutableTriangularMatrix<double> & A)
 		{
 			const int n = A.NumberOfRows();
 			Matrix<double> S(n, n);

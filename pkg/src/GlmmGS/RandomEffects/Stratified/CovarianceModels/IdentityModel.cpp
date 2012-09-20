@@ -12,7 +12,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				IdentityModel::IdentityModel(int nvars, int nlevels, Matrix<const double> S)
+				IdentityModel::IdentityModel(int nvars, int nlevels, const ImmutableMatrix<double> & S)
 					: ICovarianceModel(nvars, S), nvars(nvars), nlevels(nlevels)
 				{
 					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == nvars);
