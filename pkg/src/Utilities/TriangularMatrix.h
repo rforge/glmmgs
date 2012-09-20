@@ -27,7 +27,6 @@ namespace Utilities
 		// Construction
 		TriangularMatrix();	// Default
 		explicit TriangularMatrix(int nrows);	// Size
-		TriangularMatrix(TYPE * ptr, const ReferenceCounter & counter, int nrows); // From another ref-counted pointer
 		TriangularMatrix(External<TYPE> ptr, int nrows); // From an external pointer
 		~TriangularMatrix();
 
@@ -56,12 +55,6 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	TriangularMatrix<TYPE>::TriangularMatrix(TYPE * ptr, const ReferenceCounter & counter, int nrows)
-		: ptr(ptr), counter(counter), nrows(nrows)
-	{
-	}
-
-	template <class TYPE> inline
 	TriangularMatrix<TYPE>::TriangularMatrix(External<TYPE> ptr, int nrows)
 		: ptr(ptr), counter(NULL), nrows(nrows)
 	{
@@ -70,7 +63,7 @@ namespace Utilities
 	template <class TYPE> inline
 	TriangularMatrix<TYPE>::~TriangularMatrix()
 	{
-		if (this->counter.Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			NewAllocator<TYPE>::Delete(this->ptr);
 	}
 
@@ -88,9 +81,9 @@ namespace Utilities
 		if (this->ptr != src.ptr)
 		{
 			// Copy reference counter
-			if (this->counter.Decrement() == 0)
+			if (this->counter.Detach() == 0)
 				NewAllocator<TYPE>::Delete(this->ptr);
-			this->counter.Increment(src.counter);
+			this->counter.Attach(src.counter);
 
 			// Copy members
 			this->ptr = src.ptr;

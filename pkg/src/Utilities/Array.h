@@ -72,7 +72,7 @@ namespace Utilities
 	template <class TYPE> inline
 	Array<TYPE>::~Array()
 	{
-		if (this->counter.Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			delete [] this->ptr;
 	}
 
@@ -102,9 +102,9 @@ namespace Utilities
 		if (this->ptr != src.ptr)
 		{
 			// Copy reference counter
-			if (this->counter.Decrement() == 0)
+			if (this->counter.Detach() == 0)
 				delete [] this->ptr;
-			this->counter.Increment(src.counter);
+			this->counter.Attach(src.counter);
 
 			// Copy members
 			this->ptr = src.ptr;

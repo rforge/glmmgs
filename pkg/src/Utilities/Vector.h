@@ -54,14 +54,14 @@ namespace Utilities
 
 	template <class TYPE> inline
 	ImmutableVector<TYPE>::ImmutableVector(External<TYPE> ext, int size)
-		: ptr(ext), counter((const TYPE *)NULL), size(size) // const_cast is safe since the object is immutable
+		: ptr(ext), counter(NULL), size(size) // const_cast is safe since the object is immutable
 	{
 	}
 
 	template <class TYPE> inline
 	ImmutableVector<TYPE>::~ImmutableVector()
 	{
-		if (this->counter.Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			NewAllocator<TYPE>::Delete(this->ptr);
 	}
 
@@ -79,9 +79,9 @@ namespace Utilities
 		if (this->ptr != src.ptr)
 		{
 			// Copy references
-			if (this->counter.Decrement() == 0)
+			if (this->counter.Detach() == 0)
 				NewAllocator<TYPE>::Delete(this->ptr);
-			this->counter.Increment(src.counter);
+			this->counter.Attach(src.counter);
 
 			// Copy members
 			this->ptr = src.ptr;

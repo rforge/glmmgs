@@ -19,16 +19,16 @@ namespace Utilities
 	public:
 		// Construction
 		ReferenceCounter();
-		explicit ReferenceCounter(const void * ptr);
 		ReferenceCounter(const ReferenceCounter & counter);
+		explicit ReferenceCounter(void * ptr);
 
 		// Attributes
 		int Count() const;
 		
 		// Methods
-		void Reset(void * ptr);
-		void Increment(const ReferenceCounter & counter);
-		int Decrement();
+		void Initialize(void * ptr);
+		void Attach(const ReferenceCounter & counter);
+		int Detach();
 	};
 
 	// Construction
@@ -39,17 +39,17 @@ namespace Utilities
 	}
 
 	inline
-	ReferenceCounter::ReferenceCounter(const void * ptr)
-		: count(ptr != NULL ? new(bl) int(1) : NULL)
-	{
-	}
-
-	inline
 	ReferenceCounter::ReferenceCounter(const ReferenceCounter & refCounter)
 		: count(refCounter.count)
 	{
 		if (this->count != NULL)
 			++(*this->count);
+	}
+
+	inline
+	ReferenceCounter::ReferenceCounter(void * ptr)
+		: count(ptr != NULL ? new(bl) int(1) : NULL)
+	{
 	}
 
 	// Attributes

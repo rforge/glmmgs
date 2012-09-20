@@ -3,7 +3,7 @@
 
 namespace Utilities
 {
-	void ReferenceCounter::Reset(void * ptr)
+	void ReferenceCounter::Initialize(void * ptr)
 	{
 		// This method should be called only after Decrement
 		_ASSERT_ARGUMENT(this->count == NULL);
@@ -11,7 +11,7 @@ namespace Utilities
 			this->count = new(bl) int(1);
 	}
 
-	void ReferenceCounter::Increment(const ReferenceCounter & counter)
+	void ReferenceCounter::Attach(const ReferenceCounter & counter)
 	{
 		// This method should only be called after Decrement
 		_ASSERT_ARGUMENT(this->count == NULL);
@@ -22,7 +22,7 @@ namespace Utilities
 		}
 	}
 	
-	int ReferenceCounter::Decrement()
+	int ReferenceCounter::Detach()
 	{
 		if (this->count != NULL)
 		{

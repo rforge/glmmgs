@@ -25,7 +25,6 @@ namespace Utilities
 		// Construction
 		Matrix();	// Default
 		Matrix(int nrows, int ncols);	// Size
-		Matrix(TYPE * ptr, const ReferenceCounter & counter, int nrows, int ncols); // From another ref-counted pointer
 		Matrix(External<TYPE> ptr, int nrows, int ncols); // From an external pointer
 		~Matrix();
 
@@ -58,12 +57,6 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	Matrix<TYPE>::Matrix(TYPE * ptr, const ReferenceCounter & counter, int nrows, int ncols)
-		: ptr(ptr), counter(counter), nrows(nrows), ncols(ncols)
-	{
-	}
-
-	template <class TYPE> inline
 	Matrix<TYPE>::Matrix(External<TYPE> ptr, int nrows, int ncols)
 		: ptr(ptr), counter(NULL), nrows(nrows), ncols(ncols)
 	{
@@ -72,7 +65,7 @@ namespace Utilities
 	template <class TYPE> inline
 	Matrix<TYPE>::~Matrix()
 	{
-		if (this->counter.Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			NewAllocator<TYPE>::Delete(this->ptr);
 	}
 
@@ -96,9 +89,9 @@ namespace Utilities
 		if (this->ptr != src.ptr)
 		{
 			// Copy reference counter
-			if (this->counter.Decrement() == 0)
+			if (this->counter.Detach() == 0)
 				NewAllocator<TYPE>::Delete(this->ptr);
-			this->counter.Increment(src.counter);
+			this->counter.Attach(src.counter);
 
 			// Copy members
 			this->ptr = src.ptr;

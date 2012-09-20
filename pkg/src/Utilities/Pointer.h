@@ -7,13 +7,14 @@ namespace Utilities
 {
 	// Pointer
 	template <class TYPE>
-	class Pointer : public ReferenceCounter
+	class Pointer
 	{
 	private:
 		// Friend class
 		template <class OTHER> friend class Pointer;
 		
 		// Fields
+		ReferenceCounter counter;
 		TYPE * ptr;
 
 	public:
@@ -59,28 +60,28 @@ namespace Utilities
 
 	template <class TYPE> inline
 	Pointer<TYPE>::Pointer(const Pointer<TYPE> & src)
-		: ReferenceCounter(src), ptr(src.ptr)
+		: counter(src.counter), ptr(src.ptr)
 	{
 	}
 		
 	template <class TYPE>
 	template <class OTHER> inline
 	Pointer<TYPE>::Pointer(const Pointer<OTHER> & src)
-		: ReferenceCounter(src), ptr(src.ptr)
+		: counter(src.counter), ptr(src.ptr)
 	{
 	}
 
 	template <class TYPE>
 	template <class OTHER> inline
 	Pointer<TYPE>::Pointer(OTHER * ptr)
-		: ReferenceCounter(ptr), ptr(ptr)
+		: counter(ptr), ptr(ptr)
 	{
 	}
 
 	template <class TYPE> inline
 	Pointer<TYPE>::~Pointer()
 	{
-		if (ReferenceCounter::Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			delete this->ptr;
 	}
 
@@ -93,7 +94,7 @@ namespace Utilities
 	template <class TYPE>
 	void Pointer<TYPE>::Reset()
 	{
-		if (ReferenceCounter::Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			delete this->ptr;
 		this->ptr = NULL;
 	}
@@ -102,10 +103,10 @@ namespace Utilities
 	template <class OTHER>
 	void Pointer<TYPE>::Reset(OTHER * ptr)
 	{
-		if (ReferenceCounter::Decrement() == 0)
+		if (this->counter.Detach() == 0)
 			delete this->ptr;
 		this->ptr = ptr;
-		ReferenceCounter::Reset(ptr);
+		this->counter.Initialize(ptr);
 	}
 
 	template <class TYPE>
@@ -113,10 +114,11 @@ namespace Utilities
 	{
 		if (this->ptr != src.ptr)
 		{
-			if (ReferenceCounter::Decrement() == 0)
+			if (this->counter.Detach() == 0)
 				delete this->ptr;
+			this->counter.Attach(src.counter);
+
 			this->ptr = src.ptr;
-			ReferenceCounter::Increment(src);
 		}
 		return *this;
 	}
@@ -127,10 +129,10 @@ namespace Utilities
 	{
 		if (this->ptr != src.ptr)
 		{
-			if (ReferenceCounter::Decrement() == 0)
+			if (this->counter.Detach() == 0)
 				delete this->ptr;
+			this->counter.Attach(src);
 			this->ptr = src.ptr;
-			ReferenceCounter::Increment(src);
 		}
 		return *this;
 	}
