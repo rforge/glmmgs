@@ -63,7 +63,7 @@ namespace Utilities
 			// Back-substitution algorithm
 			for (int i = 0; i < n; ++i)
 			{
-				const Vector<double> & diag = this->lower(i, i);
+				const ImmutableVector<double> & diag = this->lower(i, i);
 				Vector<double> sum = b(i);
 				const int L = sum.Size();
 				for (int k = i - 1; k >= 0; --k)
@@ -75,7 +75,7 @@ namespace Utilities
 			}
 			for (int i = n - 1; i >= 0; --i)
 			{
-				const Vector<double> & diag = this->lower(i, i);
+				const ImmutableVector<double> & diag = this->lower(i, i);
 				Vector<double> sum = x(i);
 				const int L = sum.Size();
 				for (int k = i + 1; k < n; ++k)
@@ -98,7 +98,7 @@ namespace Utilities
 				// Back-substitution algorithm with b = delta(j)
 				for (int i = j; i < n; ++i)
 				{
-					const Vector<double> & diag = this->lower(i, i);
+					const ImmutableVector<double> & diag = this->lower(i, i);
 					const int L = diag.Size();
 					Vector<double> sum(L);
 					if (i == j)
@@ -112,7 +112,7 @@ namespace Utilities
 				}
 				for (int i = n - 1; i >= j; --i)
 				{
-					const Vector<double> & diag = this->lower(i, i);
+					const ImmutableVector<double> & diag = this->lower(i, i);
 					const int L = diag.Size();
 					Vector<double> sum = X(i, j);
 					for (int k = i + 1; k < n; ++k)
@@ -131,7 +131,7 @@ namespace Utilities
 			double det = 1.0;
 			for (int j = 0; j < n; ++j)
 			{
-				const Vector<double> & diag = this->lower(j, j);
+				const ImmutableVector<double> & diag = this->lower(j, j);
 				const int L = diag.Size();
 				for (int l = 0; l < L; ++l)
 					det *= diag(l);

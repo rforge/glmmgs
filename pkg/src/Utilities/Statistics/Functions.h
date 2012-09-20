@@ -7,7 +7,7 @@ namespace Utilities
 {
 	namespace Statistics
 	{
-		double Mean(const Vector<double> & x);
+		double Mean(const ImmutableVector<double> & x);
 	}
 }
 

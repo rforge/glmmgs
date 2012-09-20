@@ -12,11 +12,11 @@ namespace GlmmGS
 		class VectorOffset : public IOffset
 		{
 		private:
-			Vector<TYPE> values;
+			ImmutableVector<TYPE> values;
 
 		public:
 			// Construction
-			VectorOffset(Vector<TYPE> values);
+			VectorOffset(const ImmutableVector<TYPE> & values);
 			~VectorOffset();
 
 			// Methods
@@ -25,7 +25,7 @@ namespace GlmmGS
 
 		// Construction
 		template <class TYPE>
-		VectorOffset<TYPE>::VectorOffset(Vector<TYPE> values)
+		VectorOffset<TYPE>::VectorOffset(const ImmutableVector<TYPE> & values)
 			: values(values)
 		{
 		}

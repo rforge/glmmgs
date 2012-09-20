@@ -13,18 +13,18 @@ namespace GlmmGS
 		{
 		private:
 			// Fields
-			Vector<const int> response;
+			ImmutableVector<int> response;
 
 		public:
 			// Construction
-			PoissonResponse(Vector<const int> response);
+			PoissonResponse(const ImmutableVector<int> & response);
 			~PoissonResponse();
 
 			// Properties
 			int NumberOfObservations() const;
 
 			// Methods
-			void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const;
+			void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const;
 		};
 	}
 }

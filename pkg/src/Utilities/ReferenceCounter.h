@@ -19,7 +19,7 @@ namespace Utilities
 	public:
 		// Construction
 		ReferenceCounter();
-		explicit ReferenceCounter(void * ptr);
+		explicit ReferenceCounter(const void * ptr);
 		ReferenceCounter(const ReferenceCounter & counter);
 
 		// Attributes
@@ -39,7 +39,7 @@ namespace Utilities
 	}
 
 	inline
-	ReferenceCounter::ReferenceCounter(void * ptr)
+	ReferenceCounter::ReferenceCounter(const void * ptr)
 		: count(ptr != NULL ? new(bl) int(1) : NULL)
 	{
 	}

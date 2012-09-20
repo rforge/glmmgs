@@ -49,7 +49,7 @@ namespace GlmmGS
 		template <class BOOSTER>
 		void Reparameterize(
 				Vector<Vector<double> > & beta,
-				const Vector<Pointer<Variables::IVariable> > variables,
+				const ImmutableVector<Pointer<Variables::IVariable> > & variables,
 				const BOOSTER & booster)
 		{
 			for (int j = 0; j < variables.Size(); ++j)

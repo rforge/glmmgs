@@ -20,7 +20,7 @@ namespace GlmmGS
 				}
 
 				// Properties
-				const Vector<double> & ICovarianceModel::Components() const
+				const ImmutableVector<double> & ICovarianceModel::Components() const
 				{
 					return this->theta;
 				}
@@ -32,7 +32,7 @@ namespace GlmmGS
 
 				// Implementation
 				int ICovarianceModel::Update(const TriangularMatrix<double> & minus_hessian,
-						const Vector<double> & jacobian, const Controls & controls)
+						const ImmutableVector<double> & jacobian, const Controls & controls)
 				{
 					if (!this->constant)
 					{

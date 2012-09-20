@@ -4,7 +4,7 @@ namespace Utilities
 {
 	namespace Statistics
 	{
-		double Mean(const Vector<double> & x)
+		double Mean(const ImmutableVector<double> & x)
 		{
 			_VALIDATE_ARGUMENT(x.Size() > 0);
 			const int n = x.Size();

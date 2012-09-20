@@ -12,7 +12,7 @@ namespace GlmmGSAPI
 		{
 		}
 
-		void NormalResponseSection::AddResponse(Vector<const double> values)
+		void NormalResponseSection::AddResponse(const ImmutableVector<double> & values)
 		{
 			this->values = values;
 		}

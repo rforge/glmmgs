@@ -29,7 +29,7 @@ namespace Utilities
 
 	public:
 		// Cast vector
-		Cast(const Vector<TYPE> & src)
+		Cast(const ImmutableVector<TYPE> & src)
 				: To(src.ptr, src.counter, src.size)
 		{
 		}

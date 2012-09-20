@@ -20,7 +20,7 @@ namespace GlmmGS
 			}
 
 			// Properties
-			const Vector<double> & Block::Coefficients() const
+			const ImmutableVector<double> & Block::Coefficients() const
 			{
 				return this->beta;
 			}
@@ -38,7 +38,7 @@ namespace GlmmGS
 					this->variables(j)->UpdatePredictor(eta, this->beta(j));
 			}
 
-			int Block::UpdateCoefficients(const Vector<double> & weights, const Vector<double> & values, const Controls & controls)
+			int Block::UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Controls & controls)
 			{
 				const int nvars = this->variables.Size();
 				Vector<double> jacobian(nvars);

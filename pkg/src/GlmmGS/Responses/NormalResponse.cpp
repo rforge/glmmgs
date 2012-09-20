@@ -6,7 +6,7 @@ namespace GlmmGS
 	namespace Responses
 	{
 		// BinomialResponse
-		NormalResponse::NormalResponse(Vector<const double> response)
+		NormalResponse::NormalResponse(const ImmutableVector<double> & response)
 			: response(response), dispersion(1.0)
 		{
 		}
@@ -20,7 +20,7 @@ namespace GlmmGS
 			return this->response.Size();
 		}
 
-		void NormalResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const
+		void NormalResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const
 		{
 			_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
 				this->response.Size() == values.Size() &&

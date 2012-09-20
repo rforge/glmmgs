@@ -19,7 +19,7 @@ namespace GlmmGS
 
 			// Methods
 			virtual void UpdatePredictor(Vector<double> & eta) const = 0;
-			virtual int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls) = 0;
+			virtual int Update(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls) = 0;
 		};
 	}
 }

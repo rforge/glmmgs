@@ -14,23 +14,23 @@ namespace GlmmGS
 			friend class Intercept;
 			friend class StratifiedIntercept;
 			template <class TYPE> friend class VectorVariable;
-			friend double ScalarProduct(Pointer<IVariable> variable, const Vector<double> & values);
-			friend double ScalarProduct(Pointer<IVariable> variable1, const Vector<double> & weights, Pointer<IVariable> variable2);
-			friend Utilities::Vector<double> ScalarProduct(Pointer<IVariable> variable, const Vector<double> & values, WeakFactor factor);
-			friend Utilities::Vector<double> ScalarProduct(Pointer<IVariable> variable1, const Vector<double> & weights, Pointer<IVariable> variable2, WeakFactor factor);
+			friend double ScalarProduct(const Pointer<IVariable> & variable, const ImmutableVector<double> & values);
+			friend double ScalarProduct(const Pointer<IVariable> & variable1, const ImmutableVector<double> & weights, const Pointer<IVariable> & variable2);
+			friend Utilities::Vector<double> ScalarProduct(const Pointer<IVariable> & variable, const ImmutableVector<double> & values, WeakFactor factor);
+			friend Utilities::Vector<double> ScalarProduct(const Pointer<IVariable> & variable1, const ImmutableVector<double> & weights, const Pointer<IVariable> & variable2, WeakFactor factor);
 
 		private:
 			// Operations
-			virtual double ScalarProduct(const Vector<double> & values) const = 0;
-			virtual double ScalarProduct(const Vector<double> & weights, Pointer<IVariable> variable) const = 0;
-			virtual double ScalarProduct(const Vector<double> & weights, Vector<const int> values) const = 0;
-			virtual double ScalarProduct(const Vector<double> & weights, Vector<const double> values) const = 0;
+			virtual double ScalarProduct(const ImmutableVector<double> & values) const = 0;
+			virtual double ScalarProduct(const ImmutableVector<double> & weights, const Pointer<IVariable> & variable) const = 0;
+			virtual double ScalarProduct(const ImmutableVector<double> & weights, const ImmutableVector<int> & values) const = 0;
+			virtual double ScalarProduct(const ImmutableVector<double> & weights, const ImmutableVector<double> & values) const = 0;
 
 			// Stratified Operations
-			virtual Vector<double> ScalarProduct(const Vector<double> & values, WeakFactor factor) const = 0;
-			virtual Vector<double> ScalarProduct(const Vector<double> & weights, Pointer<IVariable> variable, WeakFactor factor) const = 0;
-			virtual Vector<double> ScalarProduct(const Vector<double> & weights, Vector<const int> values, WeakFactor factor) const = 0;
-			virtual Vector<double> ScalarProduct(const Vector<double> & weights, Vector<const double> values, WeakFactor factor) const = 0;
+			virtual Vector<double> ScalarProduct(const ImmutableVector<double> & values, WeakFactor factor) const = 0;
+			virtual Vector<double> ScalarProduct(const ImmutableVector<double> & weights, const Pointer<IVariable> & variable, WeakFactor factor) const = 0;
+			virtual Vector<double> ScalarProduct(const ImmutableVector<double> & weights, const ImmutableVector<int> & values, WeakFactor factor) const = 0;
+			virtual Vector<double> ScalarProduct(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, WeakFactor factor) const = 0;
 
 		public:
 			// Properties
@@ -46,31 +46,31 @@ namespace GlmmGS
 			// Methods
 			virtual void UpdatePredictor(Vector<double> & eta, double beta) const = 0;
 			// Stratified methods
-			virtual void UpdatePredictor(Vector<double> & eta, const Vector<double> & beta, WeakFactor factor) const = 0;
+			virtual void UpdatePredictor(Vector<double> & eta, const ImmutableVector<double> & beta, WeakFactor factor) const = 0;
 		};
 
 		// Operations (friend functions)
 		inline
-		double ScalarProduct(Pointer<IVariable> variable, const Vector<double> & values)
+		double ScalarProduct(const Pointer<IVariable> & variable, const ImmutableVector<double> & values)
 		{
 			return variable->ScalarProduct(values);
 		}
 	
 		inline
-		double ScalarProduct(Pointer<IVariable> variable1, const Vector<double> & weights, Pointer<IVariable> variable2)
+		double ScalarProduct(const Pointer<IVariable> & variable1, const ImmutableVector<double> & weights, const Pointer<IVariable> & variable2)
 		{
 			return variable1->ScalarProduct(weights, variable2);
 		}
 	
 		// Stratified Operations (friend functions)
 		inline
-		Vector<double> ScalarProduct(Pointer<IVariable> variable, const Vector<double> & values, WeakFactor factor)
+		Vector<double> ScalarProduct(const Pointer<IVariable> & variable, const ImmutableVector<double> & values, WeakFactor factor)
 		{
 			return variable->ScalarProduct(values, factor);
 		}
 
 		inline
-		Vector<double> ScalarProduct(Pointer<IVariable> variable1, const Vector<double> & weights, Pointer<IVariable> variable2, WeakFactor factor)
+		Vector<double> ScalarProduct(const Pointer<IVariable> & variable1, const ImmutableVector<double> & weights, const Pointer<IVariable> & variable2, WeakFactor factor)
 		{
 			return variable1->ScalarProduct(weights, variable2, factor);
 		}

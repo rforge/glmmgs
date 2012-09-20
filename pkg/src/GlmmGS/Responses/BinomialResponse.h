@@ -13,19 +13,19 @@ namespace GlmmGS
 		{
 		private:
 			// Fields
-			Vector<const int> response;
-			Vector<const int> counts;
+			ImmutableVector<int> response;
+			ImmutableVector<int> counts;
 
 		public:
 			// Construction
-			BinomialResponse(Vector<const int> response, Vector<const int> counts);
+			BinomialResponse(const ImmutableVector<int> & response, const ImmutableVector<int> & counts);
 			~BinomialResponse();
 
 			// Properties
 			int NumberOfObservations() const;
 
 			// Methods
-			void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const;
+			void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const;
 		};
 	}
 }

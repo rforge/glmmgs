@@ -12,7 +12,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Weighted square norm of vector
-				double Square(Matrix<const double> m, const Vector<double> & x);
+				double Square(Matrix<const double> m, const ImmutableVector<double> & x);
 
 				// Trace
 				double Trace(const Matrix<double> & a);
@@ -20,7 +20,7 @@ namespace GlmmGS
 				double SquareTrace(const Matrix<double> & a);
 
 				// Matrix-vector product
-				double MatrixProduct(int k, Matrix<const double> m, const Vector<double> & x);
+				double MatrixProduct(int k, Matrix<const double> m, const ImmutableVector<double> & x);
 			}
 		}
 	}

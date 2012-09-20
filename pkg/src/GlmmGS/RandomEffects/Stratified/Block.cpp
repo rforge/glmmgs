@@ -40,7 +40,7 @@ namespace GlmmGS
 					this->variables(j)->UpdatePredictor(eta, this->beta(j), this->factor);
 			}
 
-			int Block::Update(const Vector<double> & weights, const Vector<double> & values, const Controls & controls)
+			int Block::Update(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Controls & controls)
 			{
 				const int nvars = this->variables.Size();
 				TriangularMatrix<Vector<double> >precision(nvars);

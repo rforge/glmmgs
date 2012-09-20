@@ -24,7 +24,7 @@ namespace GlmmGS
 
 				// Implementation
 				void UpdatePredictor(Vector<double> & eta) const;
-				int Update(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
+				int Update(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls);
 
 			public:
 				// Construction

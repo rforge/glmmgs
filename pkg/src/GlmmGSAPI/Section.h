@@ -36,15 +36,15 @@ namespace GlmmGSAPI
 		static Pointer<Section> BeginModel();
 		void EndModel();
 		Pointer<Section> BeginResponse(WeakString<const char> family);
-		void AddOffset(Vector<const int> values);
-		void AddOffset(Vector<const double> values);
+		void AddOffset(const ImmutableVector<int> & values);
+		void AddOffset(const ImmutableVector<double> & values);
 		Pointer<Section> BeginFixedEffects();
 		Pointer<Section> BeginRandomEffects();
 
 		// Response section methods
-		virtual void AddResponse(Vector<const int> values);
-		virtual void AddResponse(Vector<const double> values);
-		virtual void AddCounts(Vector<const int> values);
+		virtual void AddResponse(const ImmutableVector<int> & values);
+		virtual void AddResponse(const ImmutableVector<double> & values);
+		virtual void AddCounts(const ImmutableVector<int> & values);
 		virtual void EndResponse();
 
 		// Fixed and random effect common methods
@@ -53,8 +53,8 @@ namespace GlmmGSAPI
 		virtual Pointer<Section> BeginStratifiedBlock(WeakFactor factor);
 		virtual void EndStratifiedBlock();
 		virtual void AddIntercept(int duplicate);
-		virtual void AddCovariate(Vector<const int> values, int duplicate);
-		virtual void AddCovariate(Vector<const double> values, int duplicate);
+		virtual void AddCovariate(const ImmutableVector<int> & values, int duplicate);
+		virtual void AddCovariate(const ImmutableVector<double> & values, int duplicate);
 
 		// Fixed effect methods
 		virtual void EndFixedEffects();

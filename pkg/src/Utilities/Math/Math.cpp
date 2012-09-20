@@ -67,7 +67,7 @@ namespace Utilities
 		}
 
 		// Vector functions
-		Vector<double> Sqrt(const Vector<double> & x)
+		Vector<double> Sqrt(const ImmutableVector<double> & x)
 		{
 			const int n = x.Size();
 			Vector<double> y(n);

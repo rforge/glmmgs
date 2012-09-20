@@ -45,14 +45,14 @@ namespace GlmmGSAPI
 		void EndStratifiedBlock();
 
 		// Variables
-		void AddResponse(Vector<const int> values);
-		void AddResponse(Vector<const double> values);
-		void AddCounts(Vector<const int> values);
-		void AddOffset(Vector<const int> values);
-		void AddOffset(Vector<const double> values);
+		void AddResponse(const ImmutableVector<int> & values);
+		void AddResponse(const ImmutableVector<double> & values);
+		void AddCounts(const ImmutableVector<int> & values);
+		void AddOffset(const ImmutableVector<int> & values);
+		void AddOffset(const ImmutableVector<double> & values);
 		void AddIntercept(int duplicate);
-		void AddCovariate(Vector<const int> values, int duplicate);
-		void AddCovariate(Vector<const double> values, int duplicate);
+		void AddCovariate(const ImmutableVector<int> & values, int duplicate);
+		void AddCovariate(const ImmutableVector<double> & values, int duplicate);
 
 		// Covariance models
 		void AddIdentityCovarianceModel(Matrix<const double> S);

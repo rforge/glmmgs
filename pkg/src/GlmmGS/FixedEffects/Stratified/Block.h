@@ -23,7 +23,7 @@ namespace GlmmGS
 				VectorialCholeskyDecomposition chol;
 
 				// Implementation
-				int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
+				int UpdateCoefficients(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls);
 				void UpdatePredictor(Vector<double> & eta) const;
 
 			public:

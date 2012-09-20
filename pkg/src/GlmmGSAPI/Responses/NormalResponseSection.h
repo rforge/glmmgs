@@ -13,10 +13,10 @@ namespace GlmmGSAPI
 		{
 		private:
 			// Fields
-			Vector<const double> values;
+			ImmutableVector<double> values;
 
 			// Implementation
-			void AddResponse(Vector<const double> values);
+			void AddResponse(const ImmutableVector<double> & values);
 			void EndResponse();
 
 		public:

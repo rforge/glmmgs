@@ -6,7 +6,7 @@ namespace GlmmGS
 	namespace Responses
 	{
 		// BinomialResponse
-		PoissonResponse::PoissonResponse(Vector<const int> response)
+		PoissonResponse::PoissonResponse(const ImmutableVector<int> & response)
 			: response(response)
 		{
 		}
@@ -20,7 +20,7 @@ namespace GlmmGS
 			return this->response.Size();
 		}
 
-		void PoissonResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const
+		void PoissonResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const
 		{
 			_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
 				this->response.Size() == values.Size() &&

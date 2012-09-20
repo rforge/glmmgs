@@ -48,7 +48,7 @@ namespace Utilities
 
 	// Copy vector to vector
 	template <class TYPE>
-	void Copy(Vector<TYPE> & dst, const Vector<TYPE> & src)
+	void Copy(Vector<TYPE> & dst, const ImmutableVector<TYPE> & src)
 	{
 		_VALIDATE_ARGUMENT(dst.Size() == src.Size());
 		for (int i = 0; i < dst.Size(); ++i)
@@ -69,7 +69,7 @@ namespace Utilities
 
 	// Copy vector to raw vector
 	template <class TYPE>
-	void Copy(TYPE * dst, int size, const Vector<TYPE> & src)
+	void Copy(TYPE * dst, int size, const ImmutableVector<TYPE> & src)
 	{
 		_VALIDATE_ARGUMENT(size == src.Size());
 		for (int i = 0; i < size; ++i, ++dst)

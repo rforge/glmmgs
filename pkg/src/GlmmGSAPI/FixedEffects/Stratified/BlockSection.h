@@ -20,8 +20,8 @@ namespace GlmmGSAPI
 
 				// Implementation
 				void AddIntercept(int duplicate);
-				void AddCovariate(Vector<const int> values, int duplicate);
-				void AddCovariate(Vector<const double> values, int duplicate);
+				void AddCovariate(const ImmutableVector<int> & values, int duplicate);
+				void AddCovariate(const ImmutableVector<double> & values, int duplicate);
 				void EndStratifiedBlock();
 	
 			public:

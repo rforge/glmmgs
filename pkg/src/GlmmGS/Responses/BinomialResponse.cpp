@@ -6,7 +6,7 @@ namespace GlmmGS
 	namespace Responses
 	{
 		// BinomialResponse
-		BinomialResponse::BinomialResponse(Vector<const int> response, Vector<const int> counts)
+		BinomialResponse::BinomialResponse(const ImmutableVector<int> & response, const ImmutableVector<int> & counts)
 			: response(response), counts(counts)
 		{
 			_VALIDATE_ARGUMENT(this->response.Size() == this->counts.Size());
@@ -21,7 +21,7 @@ namespace GlmmGS
 			return this->response.Size();
 		}
 
-		void BinomialResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const
+		void BinomialResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const
 		{
 			_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
 				this->response.Size() == values.Size() &&

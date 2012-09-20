@@ -24,7 +24,7 @@ namespace GlmmGS
 				eta(i) += beta;
 		}
 
-		double Intercept::ScalarProduct(const Vector<double> & values) const
+		double Intercept::ScalarProduct(const ImmutableVector<double> & values) const
 		{
 			const int n = values.Size();
 			double sum = 0.0;
@@ -34,7 +34,7 @@ namespace GlmmGS
 		}
 
 		// Stratified operations
-		void Intercept::UpdatePredictor(Vector<double> & eta, const Vector<double> & beta, WeakFactor factor) const
+		void Intercept::UpdatePredictor(Vector<double> & eta, const ImmutableVector<double> & beta, WeakFactor factor) const
 		{
 			_ASSERT_ARGUMENT(eta.Size() == factor.Size() && beta.Size() == factor.NumberOfLevels());
 			const int n = eta.Size();
@@ -45,7 +45,7 @@ namespace GlmmGS
 			}
 		}
 
-		Vector<double> Intercept::ScalarProduct(const Vector<double> & values, WeakFactor factor) const
+		Vector<double> Intercept::ScalarProduct(const ImmutableVector<double> & values, WeakFactor factor) const
 		{
 			_ASSERT_ARGUMENT(values.Size() == factor.Size());
 			const int n = values.Size();

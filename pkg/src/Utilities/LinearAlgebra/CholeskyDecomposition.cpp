@@ -47,7 +47,7 @@ namespace Utilities
 			}
 		}
 		
-		Vector<double> CholeskyDecomposition::Solve(const Vector<double> & b) const
+		Vector<double> CholeskyDecomposition::Solve(const ImmutableVector<double> & b) const
 		{
 			_ASSERT_ARGUMENT(b.Size() == this->lower.NumberOfRows())
 			const int n = this->lower.NumberOfRows();

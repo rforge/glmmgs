@@ -24,7 +24,7 @@ namespace Utilities
 		int Pow(int base, int n);
 
 		// Vector functions
-		Vector<double> Sqrt(const Vector<double> & x);
+		Vector<double> Sqrt(const ImmutableVector<double> & x);
 
 		// Definition
 		inline

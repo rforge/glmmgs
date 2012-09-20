@@ -8,6 +8,7 @@ namespace Utilities
 	{
 	private:
 		TYPE * ptr;
+
 	public:
 		External(TYPE * ptr) : ptr(ptr) {}
 		operator TYPE *() {return this->ptr;}

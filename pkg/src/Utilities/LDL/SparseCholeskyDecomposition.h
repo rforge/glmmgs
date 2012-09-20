@@ -23,11 +23,11 @@ namespace Utilities
 
 			// Properties
 			const SparseMatrix<double> Lower() const;
-			const Vector<double> Diagonal() const;
+			const ImmutableVector<double> & Diagonal() const;
 
 			// Methods
 			void Decompose(const SparseMatrix<double> upper);
-			Vector<double> Solve(const Vector<double> b) const;
+			Vector<double> Solve(const ImmutableVector<double> & b) const;
 			//TriangularMatrix<double> Inverse() const;
 			//double Determinant() const;
 		};
@@ -39,7 +39,7 @@ namespace Utilities
 		}
 
 		inline
-		const Vector<double> SparseCholeskyDecomposition::Diagonal() const
+		const ImmutableVector<double> & SparseCholeskyDecomposition::Diagonal() const
 		{
 			return this->diagonal;
 		}

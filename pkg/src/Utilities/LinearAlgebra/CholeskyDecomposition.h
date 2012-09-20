@@ -24,7 +24,7 @@ namespace Utilities
 
 			// Methods
 			void Decompose(const TriangularMatrix<double> & A);
-			Vector<double> Solve(const Vector<double> & b) const;
+			Vector<double> Solve(const ImmutableVector<double> & b) const;
 			TriangularMatrix<double> Inverse() const;
 			double Determinant() const;
 		};

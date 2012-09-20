@@ -21,8 +21,8 @@ namespace GlmmGS
 
 					// Implementation
 					void Decompose(const TriangularMatrix<double> & precision);
-					int Update(const Vector<double> & beta, const Controls & controls);
-					Vector<double> UpdateCoefficients(const Vector<double> & jacobian, const Vector<double> & beta) const;
+					int Update(const ImmutableVector<double> & beta, const Controls & controls);
+					Vector<double> UpdateCoefficients(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const;
 
 				public:
 					// Construction

@@ -13,19 +13,19 @@ namespace GlmmGS
 		{
 		private:
 			// Fields
-			Vector<const double> response;
+			ImmutableVector<double> response;
 			double dispersion;
 
 		public:
 			// Construction
-			NormalResponse(Vector<const double> response);
+			NormalResponse(const ImmutableVector<double> & response);
 			~NormalResponse();
 
 			// Properties
 			int NumberOfObservations() const;
 
 			// Methods
-			void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const;
+			void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const;
 		};
 	}
 }

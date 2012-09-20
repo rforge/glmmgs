@@ -27,9 +27,9 @@ namespace Utilities
 			TYPE Value(int index) const;
 			int Index(int index) const;
 			int Count(int col) const;
-			const Vector<TYPE> Values() const;
-			const Vector<int> Indices() const;
-			const Vector<int> Counts() const;
+			const ImmutableVector<TYPE> & Values() const;
+			const ImmutableVector<int> & Indices() const;
+			const ImmutableVector<int> & Counts() const;
 		};
 
 		// Construction
@@ -79,19 +79,19 @@ namespace Utilities
 		}
 
 		template <class TYPE> inline
-		const Vector<TYPE> SparseMatrix<TYPE>::Values() const
+		const ImmutableVector<TYPE> & SparseMatrix<TYPE>::Values() const
 		{
 			return this->values;
 		}
 
 		template <class TYPE> inline
-		const Vector<int> SparseMatrix<TYPE>::Indices() const
+		const ImmutableVector<int> & SparseMatrix<TYPE>::Indices() const
 		{
 			return this->indices;
 		}
 
 		template <class TYPE> inline
-		const Vector<int> SparseMatrix<TYPE>::Counts() const
+		const ImmutableVector<int> & SparseMatrix<TYPE>::Counts() const
 		{
 			return this->counts;
 		}

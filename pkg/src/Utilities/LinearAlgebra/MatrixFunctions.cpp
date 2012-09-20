@@ -50,7 +50,7 @@ namespace Utilities
 			return Y;
 		}
 
-		Vector<double> operator *(const Matrix<double> & A, const Vector<double> & v)
+		Vector<double> operator *(const Matrix<double> & A, const ImmutableVector<double> & v)
 		{
 			_ASSERT_ARGUMENT(A.NumberOfColumns() == v.Size())
 			int m = A.NumberOfRows();
@@ -123,7 +123,7 @@ namespace Utilities
 			return I;
 		}
 
-		Matrix<double> Diagonal(const Vector<double> & v)
+		Matrix<double> Diagonal(const ImmutableVector<double> & v)
 		{
 			int n = v.Size();
 			Matrix<double> A(n, n);

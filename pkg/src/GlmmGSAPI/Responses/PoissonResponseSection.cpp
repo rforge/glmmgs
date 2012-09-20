@@ -13,7 +13,7 @@ namespace GlmmGSAPI
 
 		}
 
-		void PoissonResponseSection::AddResponse(Vector<const int> values)
+		void PoissonResponseSection::AddResponse(const ImmutableVector<int> & values)
 		{
 			this->values = values;
 		}

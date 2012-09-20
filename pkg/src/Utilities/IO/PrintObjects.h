@@ -10,7 +10,7 @@ namespace Utilities
 	namespace IO
 	{
 		// Declaration
-		template <class TYPE> void Print(const char * format, const Vector<TYPE> & values);
+		template <class TYPE> void Print(const char * format, const ImmutableVector<TYPE> & values);
 		template <class TYPE> void Print(const char * format, const Vector<Vector<TYPE> > & values);
 		template <class TYPE> void Print(const char * format, const Matrix<TYPE> matrix);
 		template <class TYPE> void Print(const char * format, const TriangularMatrix<TYPE> & matrix);
@@ -19,7 +19,7 @@ namespace Utilities
 
 		// Print vector
 		template <class TYPE>
-		void Print(const char * format, const Vector<TYPE> & values)
+		void Print(const char * format, const ImmutableVector<TYPE> & values)
 		{
 			for (int j = 0; j < values.Size(); ++j)
 				Print(format, values(j));

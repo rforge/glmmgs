@@ -21,8 +21,8 @@ namespace GlmmGSAPI
 
 				// Implementation
 				void AddIntercept(int duplicate);
-				void AddCovariate(Vector<const int> values, int duplicate);
-				void AddCovariate(Vector<const double> values, int duplicate);
+				void AddCovariate(const ImmutableVector<int> & values, int duplicate);
+				void AddCovariate(const ImmutableVector<double> & values, int duplicate);
 				void AddIdentityCovarianceModel(Matrix<const double> S);
 				void AddPrecisionModel(Matrix<const double> R, Matrix<const double> S);
 				void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, Matrix<const double> S);

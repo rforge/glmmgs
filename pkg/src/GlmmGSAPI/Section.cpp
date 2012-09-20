@@ -60,19 +60,19 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: EndResponse");
 	}
 
-	void Section::AddOffset(Vector<const int> values)
+	void Section::AddOffset(const ImmutableVector<int> & values)
 	{
 		if (this->data->offset.IsNull() == false)
 			throw Exception("Multiple offsets");
-		typedef GlmmGS::Offsets::VectorOffset<const int>  T;
+		typedef GlmmGS::Offsets::VectorOffset<int>  T;
 		this->data->offset.Reset(new(bl) T(values));
 	}
 
-	void Section::AddOffset(Vector<const double> values)
+	void Section::AddOffset(const ImmutableVector<double> & values)
 	{
 		if (this->data->offset.IsNull() == false)
 			throw Exception("Multiple offsets");
-		typedef GlmmGS::Offsets::VectorOffset<const double>  T;
+		typedef GlmmGS::Offsets::VectorOffset<double>  T;
 		this->data->offset.Reset(new(bl) T(values));
 	}
 
@@ -118,17 +118,17 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: EndStratifiedBlock");
 	}
 
-	void Section::AddResponse(Vector<const int>)
+	void Section::AddResponse(const ImmutableVector<int> &)
 	{
 		throw Exception("Invalid call: AddResponse");
 	}
 
-	void Section::AddResponse(Vector<const double>)
+	void Section::AddResponse(const ImmutableVector<double> &)
 	{
 		throw Exception("Invalid call: AddResponse");
 	}
 
-	void Section::AddCounts(Vector<const int>)
+	void Section::AddCounts(const ImmutableVector<int> &)
 	{
 		throw Exception("Invalid call: AddCounts");
 	}
@@ -138,12 +138,12 @@ namespace GlmmGSAPI
 		throw Exception("Invalid call: AddIntercept");
 	}
 
-	void Section::AddCovariate(Vector<const int>, int)
+	void Section::AddCovariate(const ImmutableVector<int> &, int)
 	{
 		throw Exception("Invalid call: AddCovariate");
 	}
 
-	void Section::AddCovariate(Vector<const double>, int)
+	void Section::AddCovariate(const ImmutableVector<double> &, int)
 	{
 		throw Exception("Invalid call: AddCovariate");
 	}

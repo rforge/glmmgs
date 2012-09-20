@@ -135,27 +135,27 @@ namespace GlmmGSAPI
 		this->sections.Pop();
 	}
 
-	void GlmmGSAPI::AddResponse(Vector<const int> values)
+	void GlmmGSAPI::AddResponse(const ImmutableVector<int> & values)
 	{
 		this->sections.Top()->AddResponse(values);
 	}
 
-	void GlmmGSAPI::AddResponse(Vector<const double> values)
+	void GlmmGSAPI::AddResponse(const ImmutableVector<double> & values)
 	{
 		this->sections.Top()->AddResponse(values);
 	}
 
-	void GlmmGSAPI::AddCounts(Vector<const int> values)
+	void GlmmGSAPI::AddCounts(const ImmutableVector<int> & values)
 	{
 		this->sections.Top()->AddCounts(values);
 	}
 	
-	void GlmmGSAPI::AddOffset(Vector<const int> values)
+	void GlmmGSAPI::AddOffset(const ImmutableVector<int> & values)
 	{
 		this->sections.Top()->AddOffset(values);
 	}
 
-	void GlmmGSAPI::AddOffset(Vector<const double> values)
+	void GlmmGSAPI::AddOffset(const ImmutableVector<double> & values)
 	{
 		this->sections.Top()->AddOffset(values);
 	}
@@ -165,12 +165,12 @@ namespace GlmmGSAPI
 		this->sections.Top()->AddIntercept(duplicate);
 	}
 
-	void GlmmGSAPI::AddCovariate(Vector<const int> values, int duplicate)
+	void GlmmGSAPI::AddCovariate(const ImmutableVector<int> & values, int duplicate)
 	{
 		this->sections.Top()->AddCovariate(values, duplicate);
 	}
 	
-	void GlmmGSAPI::AddCovariate(Vector<const double> values, int duplicate)
+	void GlmmGSAPI::AddCovariate(const ImmutableVector<double> & values, int duplicate)
 	{
 		this->sections.Top()->AddCovariate(values, duplicate);
 	}

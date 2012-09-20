@@ -79,7 +79,7 @@ namespace Utilities
 			this->diagonal = d;
 		}
 
-		Vector<double> SparseCholeskyDecomposition::Solve(const Vector<double> b) const
+		Vector<double> SparseCholeskyDecomposition::Solve(const ImmutableVector<double> & b) const
 		{
 			_VALIDATE_ARGUMENT(b.Size() == this->lower.NumberOfColumns());
 

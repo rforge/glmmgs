@@ -24,14 +24,14 @@ namespace GlmmGS
 
 					// Implementation
 					int Update(const TriangularMatrix<double> & minus_hessian,
-							const Vector<double> & jacobian, const Controls & controls);
+							const ImmutableVector<double> & jacobian, const Controls & controls);
 				public:
 					// Construction
 					ICovarianceModel(int npars, Matrix<const double> S);
 					virtual ~ICovarianceModel();
 
 					// Properties
-					const Vector<double> & Components() const;
+					const ImmutableVector<double> & Components() const;
 					TriangularMatrix<double> Covariance() const;
 
 					// Methods

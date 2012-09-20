@@ -22,7 +22,7 @@ namespace GlmmGS
 				CholeskyDecomposition chol;
 
 				// Implementation
-				int UpdateCoefficients(const Vector<double> & w, const Vector<double> & z, const Controls & controls);
+				int UpdateCoefficients(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls);
 				void UpdatePredictor(Vector<double> & eta) const;
 
 			public:
@@ -31,7 +31,7 @@ namespace GlmmGS
 				~Block();
 
 				// Properties
-				const Vector<double> & Coefficients() const;
+				const ImmutableVector<double> & Coefficients() const;
 				TriangularMatrix<double> Covariance() const;
 			};
 		}

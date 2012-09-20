@@ -9,7 +9,7 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Weighted square norm of vector
-				double Square(Matrix<const double> m, const Vector<double> & x)
+				double Square(Matrix<const double> m, const ImmutableVector<double> & x)
 				{
 					_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 					const int size = x.Size();
@@ -29,7 +29,7 @@ namespace GlmmGS
 				}
 
 				// Weighted square norm of vector
-				double Square(const LDL::SparseMatrix<double> & R, const Vector<double> & x)
+				double Square(const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & x)
 				{
 					_ASSERT_ARGUMENT(R.NumberOfColumns() == x.Size());
 					const int ncols = R.NumberOfColumns();
@@ -74,7 +74,7 @@ namespace GlmmGS
 
 
 				// Matrix product
-				double MatrixProduct(int k, Matrix<const double> m, const Vector<double> & x)
+				double MatrixProduct(int k, Matrix<const double> m, const ImmutableVector<double> & x)
 				{
 					const int size = m.NumberOfRows();
 					double sum = 0.0;
@@ -84,7 +84,7 @@ namespace GlmmGS
 				}
 
 				// Transposed-matrix product
-				double TMatrixProduct(int k, const LDL::SparseMatrix<double> & R, const Vector<double> & x)
+				double TMatrixProduct(int k, const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & x)
 				{
 					double sum = 0.0;
 					const int p2 = R.Count(k + 1);

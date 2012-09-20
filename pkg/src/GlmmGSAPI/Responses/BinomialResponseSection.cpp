@@ -12,12 +12,12 @@ namespace GlmmGSAPI
 		{
 		}
 
-		void BinomialResponseSection::AddResponse(Vector<const int> values)
+		void BinomialResponseSection::AddResponse(const ImmutableVector<int> & values)
 		{
 			this->values = values;
 		}
 
-		void BinomialResponseSection::AddCounts(Vector<const int> counts)
+		void BinomialResponseSection::AddCounts(const ImmutableVector<int> & counts)
 		{
 			this->counts= counts;
 		}

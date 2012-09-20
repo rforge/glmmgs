@@ -20,7 +20,7 @@ namespace GlmmGS
 			virtual int NumberOfObservations() const = 0;
 
 			// Methods
-			virtual void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const Vector<double> & eta) const = 0;
+			virtual void EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const = 0;
 		};
 	}
 }

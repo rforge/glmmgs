@@ -39,7 +39,7 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				int PrecisionModel::Update(const Vector<double> & beta, const Controls & controls)
+				int PrecisionModel::Update(const ImmutableVector<double> & beta, const Controls & controls)
 				{
 					// Calulate T^{-1} R
 					const int ncols = this->R.NumberOfColumns();
@@ -71,7 +71,7 @@ namespace GlmmGS
 					return ICovarianceModel::Update(minus_hessian, jac, controls);
 				}
 
-				Vector<double> PrecisionModel::UpdateCoefficients(const Vector<double> & design_jacobian, const Vector<double> & beta) const
+				Vector<double> PrecisionModel::UpdateCoefficients(const ImmutableVector<double> & design_jacobian, const ImmutableVector<double> & beta) const
 				{
 					// Add diagonal terms
 					const int size = this->R.NumberOfRows();

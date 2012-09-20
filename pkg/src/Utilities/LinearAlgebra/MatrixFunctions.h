@@ -12,7 +12,7 @@ namespace Utilities
 		Matrix<double> & operator +=(Matrix<double> & A, const Matrix<double> & B);
 		Matrix<double> & operator -=(Matrix<double> & A, const Matrix<double> & B);
 		Matrix<double> operator *(double a, const Matrix<double> & A);
-		Vector<double> operator *(const Matrix<double> & A, const Vector<double> & v);
+		Vector<double> operator *(const Matrix<double> & A, const ImmutableVector<double> & v);
 		Matrix<double> operator *(const Matrix<double> & A, const Matrix<double> & B);
 		Matrix<double> operator +(const Matrix<double> & A, const Matrix<double> & B);
 		Matrix<double> operator -(const Matrix<double> & A, const Matrix<double> & B);
@@ -20,7 +20,7 @@ namespace Utilities
 		// Functions
 		Matrix<double> Transpose(const Matrix<double> & A);
 		Matrix<double> Identity(int n);
-		Matrix<double> Diagonal(const Vector<double> & v);
+		Matrix<double> Diagonal(const ImmutableVector<double> & v);
 		Vector<double> Diagonal(const Matrix<double> & A);
 		Vector<double> RowSums(const Matrix<double> & A);
 		Vector<double> ColumnSums(Matrix<const double> A);

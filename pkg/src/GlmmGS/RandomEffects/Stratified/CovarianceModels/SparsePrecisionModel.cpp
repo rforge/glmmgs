@@ -57,7 +57,7 @@ namespace GlmmGS
 					for (int index = 0, i = 0; i < this->nvars; ++i)
 					{
 						const double tau_i = this->theta(i);
-						const Vector<double> & design_precision_i = design_precision(i, i);
+						const ImmutableVector<double> & design_precision_i = design_precision(i, i);
 						const int offset_i = i * nlevels;
 
 						for (int k = 0; k < nlevels; ++k)

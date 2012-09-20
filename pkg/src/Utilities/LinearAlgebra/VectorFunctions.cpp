@@ -15,7 +15,7 @@ namespace Utilities
 			return v;
 		}
 
-		Vector<double> & operator -=(Vector<double> & v, const Vector<double> & w)
+		Vector<double> & operator -=(Vector<double> & v, const ImmutableVector<double> & w)
 		{
 			_ASSERT_ARGUMENT(v.Size() == w.Size());
 			const int n = v.Size();
@@ -24,7 +24,7 @@ namespace Utilities
 			return v;
 		}
 
-		Vector<double> operator *(double a, const Vector<double> & v)
+		Vector<double> operator *(double a, const ImmutableVector<double> & v)
 		{
 			const int n = v.Size();
 			Vector<double> y(n);
@@ -33,7 +33,7 @@ namespace Utilities
 			return y;
 		}
 
-		Vector<double> operator +(const Vector<double> & v, const Vector<double> & w)
+		Vector<double> operator +(const ImmutableVector<double> & v, const ImmutableVector<double> & w)
 		{
 			_ASSERT_ARGUMENT(v.Size() == w.Size());
 			const int n = v.Size();
@@ -43,7 +43,7 @@ namespace Utilities
 			return y;
 		}
 
-		Vector<double> operator -(const Vector<double> & v, const Vector<double> & w)
+		Vector<double> operator -(const ImmutableVector<double> & v, const ImmutableVector<double> & w)
 		{
 			_ASSERT_ARGUMENT(v.Size() == w.Size());
 			const int n = v.Size();
@@ -54,7 +54,7 @@ namespace Utilities
 		}
 
 		// Functions
-		double Sum(const Vector<double> & v)
+		double Sum(const ImmutableVector<double> & v)
 		{
 			const int n = v.Size();
 			double sum = 0.0;
@@ -63,7 +63,7 @@ namespace Utilities
 			return sum;
 		}
 
-		double ScalarProduct(const Vector<double> & v, const Vector<double> & w)
+		double ScalarProduct(const ImmutableVector<double> & v, const ImmutableVector<double> & w)
 		{
 			_ASSERT_ARGUMENT(v.Size() == w.Size())
 			const int n = v.Size();
@@ -73,7 +73,7 @@ namespace Utilities
 			return sum;
 		}
 
-		double Square(const Vector<double> & v)
+		double Square(const ImmutableVector<double> & v)
 		{
 			const int n = v.Size();
 			double sum = 0.0;
@@ -94,7 +94,7 @@ namespace Utilities
 		}
 
 		template <class TYPE>
-		double MaxAbsImpl(const Vector<TYPE> & v)
+		double MaxAbsImpl(const ImmutableVector<TYPE> & v)
 		{
 			const int n = v.Size();
 			_VALIDATE_ARGUMENT(n > 0);
@@ -109,7 +109,7 @@ namespace Utilities
 		}
 
 		template <class TYPE>
-		double MinAbsImpl(const Vector<TYPE> & v)
+		double MinAbsImpl(const ImmutableVector<TYPE> & v)
 		{
 			const int n = v.Size();
 			_VALIDATE_ARGUMENT(n > 0);
@@ -124,12 +124,12 @@ namespace Utilities
 		}
 
 		// Min-Max Abs
-		double MaxAbs(const Vector<double> & v)
+		double MaxAbs(const ImmutableVector<double> & v)
 		{
 			return MaxAbsImpl(v);
 		}
 
-		double MinAbs(const Vector<double> & v)
+		double MinAbs(const ImmutableVector<double> & v)
 		{
 			return MinAbsImpl(v);
 		}

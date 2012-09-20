@@ -168,7 +168,8 @@ void GlmmGSRAPI_AddResponseInt(const int * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddResponse(Vector<const int>(External<const int>(values), *size));
+		External<int> ext(const_cast<int *>(values));
+		GlmmGSAPI::theApi.AddResponse(ImmutableVector<int>(ext, *size));
 	}
 	catch (Exception & e)
 	{
@@ -180,7 +181,8 @@ void GlmmGSRAPI_AddResponseDbl(const double * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddResponse(Vector<const double>(External<const double>(values), *size));
+		External<double> ext(const_cast<double *>(values));
+		GlmmGSAPI::theApi.AddResponse(ImmutableVector<double>(ext, *size));
 	}
 	catch (Exception & e)
 	{
@@ -192,7 +194,8 @@ void GlmmGSRAPI_AddCountsInt(const int * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddCounts(Vector<const int>(External<const int>(values), *size));
+		External<int> ext(const_cast<int *>(values));
+		GlmmGSAPI::theApi.AddCounts(ImmutableVector<int>(ext, *size));
 	}
 	catch (Exception & e)
 	{
@@ -205,7 +208,8 @@ void GlmmGSRAPI_AddOffsetImpl(const TYPE * values, const int * size)
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddOffset(Vector<const TYPE>(External<const TYPE>(values), *size));
+		External<TYPE> ext(const_cast<TYPE *>(values));
+		GlmmGSAPI::theApi.AddOffset(ImmutableVector<TYPE>(ext, *size));
 	}
 	catch (Exception & e)
 	{
@@ -240,7 +244,8 @@ void GlmmGSRAPI_AddCovariateImpl(const TYPE * values, const int * size, const in
 {
 	try
 	{
-		GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values), *size), *duplicate);
+		External<TYPE> ext(const_cast<TYPE *>(values));
+		GlmmGSAPI::theApi.AddCovariate(ImmutableVector<TYPE>(ext, *size), *duplicate);
 	}
 	catch (Exception & e)
 	{
@@ -266,7 +271,10 @@ void GlmmGSRAPI_AddCovariatesImpl(const TYPE * values, const int * dim, const in
 		const int nrows = dim[0];
 		const int ncols = dim[1];
 		for (int j = 0; j < ncols; ++j)
-			GlmmGSAPI::theApi.AddCovariate(Vector<const TYPE>(External<const TYPE>(values + j * nrows), nrows), *duplicate);
+		{
+			External<TYPE> ext(const_cast<TYPE *>(values + j * nrows));
+			GlmmGSAPI::theApi.AddCovariate(ImmutableVector<TYPE>(ext, nrows), *duplicate);
+		}
 	}
 	catch (Exception & e)
 	{

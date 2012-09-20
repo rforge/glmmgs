@@ -20,13 +20,13 @@ namespace Utilities
 		bool AreEqual(double x, double y) const;
 		bool IsZero(double eps, double x) const;
 
-		template <class TYPE> bool AreEqual(const Vector<TYPE> & x, const Vector<TYPE> & y) const;
-		template <class TYPE> bool IsZero(const Vector<TYPE> & eps, const Vector<TYPE> & x) const;
+		template <class TYPE> bool AreEqual(const ImmutableVector<TYPE> & x, const ImmutableVector<TYPE> & y) const;
+		template <class TYPE> bool IsZero(const ImmutableVector<TYPE> & eps, const ImmutableVector<TYPE> & x) const;
 	};
 
 
 	template <class TYPE>
-	bool Comparer::AreEqual(const Vector<TYPE> & x, const Vector<TYPE> & y) const
+	bool Comparer::AreEqual(const ImmutableVector<TYPE> & x, const ImmutableVector<TYPE> & y) const
 	{
 		_VALIDATE_ARGUMENT(x.Size() == y.Size());
 		const int n = x.Size();
@@ -37,7 +37,7 @@ namespace Utilities
 	}
 
 	template <class TYPE>
-	bool Comparer::IsZero(const Vector<TYPE> & eps, const Vector<TYPE> & x) const
+	bool Comparer::IsZero(const ImmutableVector<TYPE> & eps, const ImmutableVector<TYPE> & x) const
 	{
 		_ASSERT_ARGUMENT(eps.Size() == x.Size())
 		const int n = x.Size();

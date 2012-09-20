@@ -9,7 +9,7 @@ namespace Utilities
 {
 	// Min
 	template <class TYPE>
-	TYPE Min(const Vector<TYPE> & v)
+	TYPE Min(const ImmutableVector<TYPE> & v)
 	{
 		_VALIDATE_ARGUMENT(v.Size() > 0);
 		const int n = v.Size();
@@ -22,7 +22,7 @@ namespace Utilities
 
 	// Max
 	template <class TYPE>
-	TYPE Max(const Vector<TYPE> & v)
+	TYPE Max(const ImmutableVector<TYPE> & v)
 	{
 		_VALIDATE_ARGUMENT(v.Size() > 0);
 		const int n = v.Size();
@@ -47,7 +47,7 @@ namespace Utilities
 
 	// IsSorted
 	template <class TYPE>
-	bool IsSorted(const Vector<TYPE> & v)
+	bool IsSorted(const ImmutableVector<TYPE> & v)
 	{
 		const int n = v.Size();
 		for (int i = 1; i < n; ++i)

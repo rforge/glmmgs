@@ -27,23 +27,23 @@ namespace GlmmGSAPI
 				this->variables.Add(Pointer<T>(new(bl) T(duplicate)));
 			}
 
-			void BlockSection::AddCovariate(Vector<const int> values, int duplicate)
+			void BlockSection::AddCovariate(const ImmutableVector<int> & values, int duplicate)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				// Add covariate
-				typedef GlmmGS::Variables::VectorVariable<const int> T;
+				typedef GlmmGS::Variables::VectorVariable<int> T;
 				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
-			void BlockSection::AddCovariate(Vector<const double> values, int duplicate)
+			void BlockSection::AddCovariate(const ImmutableVector<double> & values, int duplicate)
 			{
 				if (this->covariance_model.IsNull() == false)
 					throw Exceptions::NoVariableAfterCovarianceModelException();
 
 				// Add covariate
-				typedef GlmmGS::Variables::VectorVariable<const double> T;
+				typedef GlmmGS::Variables::VectorVariable<double> T;
 				this->variables.Add(Pointer<T>(new(bl) T(values, duplicate)));
 			}
 
