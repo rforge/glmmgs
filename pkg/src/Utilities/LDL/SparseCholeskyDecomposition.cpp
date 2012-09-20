@@ -26,9 +26,9 @@ namespace Utilities
 
 			// Find permutation
 			int amd_retval = amd_order(ncols,
-					Cast<const Array<int> >(upper.Counts()).pointer(),
-					Cast<const Array<int> >(upper.Indices()).pointer(),
-					Cast<const Array<int> >(this->permutation).pointer(),
+					Cast<const int *>(upper.Counts()),
+					Cast<const int *>(upper.Indices()),
+					Cast<int *>(this->permutation),
 					NULL,
 					NULL);
 
@@ -43,11 +43,13 @@ namespace Utilities
 			Array<int> null;
 
 			Internal::LDL_symbolic(ncols,
-					Cast<const Array<int> >(upper.Counts()),
-					Cast<const Array<int> >(upper.Indices()),
+					Cast<ImmutableArray<int> >(upper.Counts()),
+					Cast<ImmutableArray<int> >(upper.Indices()),
 					Cast<Array<int> >(lp),
-					parent, lnz, flag,
-					Cast<const Array<int> >(this->permutation),
+					parent,
+					lnz,
+					flag,
+					Cast<ImmutableArray<int> >(this->permutation),
 					Cast<Array<int> >(this->permutation_inverse));
 
 			// Numeric decomposition
@@ -59,17 +61,20 @@ namespace Utilities
 			Array<int> pattern(ncols);
 
 			const int ldl_retval = Internal::LDL_numeric(ncols,
-					Cast<const Array<int> >(upper.Counts()),
-					Cast<const Array<int> >(upper.Indices()),
-					Cast<const Array<double> >(upper.Values()),
-					Cast<const Array<int> >(lp),
-					parent, lnz,
-					Cast<const Array<int> >(li),
+					Cast<ImmutableArray<int> >(upper.Counts()),
+					Cast<ImmutableArray<int> >(upper.Indices()),
+					Cast<ImmutableArray<double> >(upper.Values()),
+					Cast<ImmutableArray<int> >(lp),
+					parent,
+					lnz,
+					Cast<Array<int> >(li),
 					Cast<Array<double> >(lx),
 					Cast<Array<double> >(d),
-					y, pattern, flag,
-					Cast<const Array<int> >(this->permutation),
-					Cast<const Array<int> >(this->permutation_inverse));
+					y,
+					pattern,
+					flag,
+					Cast<ImmutableArray<int> >(this->permutation),
+					Cast<ImmutableArray<int> >(this->permutation_inverse));
 
 			if (ldl_retval != ncols)
 				throw Exceptions::Exception("LDL failed");

@@ -33,21 +33,21 @@ namespace Utilities
 			using namespace Utilities;
 
 			void LDL_symbolic(int n,
-					const Array<int> Ap,
-					const Array<int> Ai,
+					const ImmutableArray<int> & Ap,
+					const ImmutableArray<int> & Ai,
 					Array<int> Lp,
 					Array<int> Parent,
 					Array<int> Lnz,
 					Array<int> Flag,
-					const Array<int> P,
+					const ImmutableArray<int> & P,
 					Array<int> Pinv);
 
 			int LDL_numeric(int n,
-					const Array<int> Ap,
-					const Array<int> Ai,
-					const Array<double> Ax,
-					const Array<int> Lp,
-					const Array<int> Parent,
+					const ImmutableArray<int> & Ap,
+					const ImmutableArray<int> & Ai,
+					const ImmutableArray<double> & Ax,
+					const ImmutableArray<int> & Lp,
+					const ImmutableArray<int> & Parent,
 					Array<int> Lnz,
 					Array<int> Li,
 					Array<double> Lx,
@@ -55,42 +55,42 @@ namespace Utilities
 					Array<double> Y,
 					Array<int> Pattern,
 					Array<int> Flag,
-					const Array<int> P,
-					const Array<int> Pinv);
+					const ImmutableArray<int> & P,
+					const ImmutableArray<int> & Pinv);
 
 			void LDL_lsolve(int n,
-					Array<double> X,
-					const Array<int> Lp,
-					const Array<int> Li,
-					const Array<double> Lx);
+					Array<double> &  X,
+					const ImmutableArray<int> & Lp,
+					const ImmutableArray<int> & Li,
+					const ImmutableArray<double> & Lx);
 
 			void LDL_dsolve(int n,
 					Array<double> X,
-					const Array<double> D);
+					const ImmutableArray<double> & D);
 
 			void LDL_ltsolve(int n,
-					Array<double> X,
-					const Array<int> Lp,
-					const Array<int> Li,
-					const Array<double> Lx);
+					Array<double> & X,
+					const ImmutableArray<int> & Lp,
+					const ImmutableArray<int> & Li,
+					const ImmutableArray<double> & Lx);
 
 			void LDL_perm(int n,
-					Array<double> X,
-					const Array<double> B,
-					const Array<int> P);
+					Array<double> & X,
+					const ImmutableArray<double> & B,
+					const ImmutableArray<int> & P);
 
 			void LDL_permt(int n,
-					Array<double> X,
-					const Array<double> B,
-					const Array<int> P);
+					Array<double> & X,
+					const ImmutableArray<double> & B,
+					const ImmutableArray<int> & P);
 
 			int LDL_valid_perm (int n,
-					const Array<int> P,
+					const ImmutableArray<int> & P,
 					Array<int> Flag);
 
 			int LDL_valid_matrix (int n,
-					const Array<int> Ap,
-					const Array<int> Ai);
+					const ImmutableArray<int> & Ap,
+					const ImmutableArray<int> & Ai);
 		}
 	}
 }

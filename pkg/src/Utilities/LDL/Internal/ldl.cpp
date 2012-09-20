@@ -194,13 +194,13 @@ namespace Utilities
 			void LDL_symbolic
 			(
 				int n,		/* A and L are n-by-n, where n >= 0 */
-				const Array<int> Ap,	/* input of size n+1, not modified */
-				const Array<int> Ai,	/* input of size nz=Ap[n], not modified */
+				const ImmutableArray<int> & Ap,	/* input of size n+1, not modified */
+				const ImmutableArray<int> & Ai,	/* input of size nz=Ap[n], not modified */
 				Array<int> Lp,	/* output of size n+1, not defined on input */
 				Array<int> Parent,	/* output of size n, not defined on input */
 				Array<int> Lnz,	/* output of size n, not defined on input */
 				Array<int> Flag,	/* workspace of size n, not defn. on input or output */
-				const Array<int> P,	/* optional input of size n */
+				const ImmutableArray<int> & P,	/* optional input of size n */
 				Array<int> Pinv	/* optional output of size n (used if P is not NULL) */
 			)
 			{
@@ -260,11 +260,11 @@ namespace Utilities
 			int LDL_numeric	/* returns n if successful, k if D (k,k) is zero */
 			(
 				int n,		/* A and L are n-by-n, where n >= 0 */
-				const Array<int> Ap,	/* input of size n+1, not modified */
-				const Array<int> Ai,	/* input of size nz=Ap[n], not modified */
-				const Array<double> Ax,	/* input of size nz=Ap[n], not modified */
-				const Array<int> Lp,	/* input of size n+1, not modified */
-				const Array<int> Parent,	/* input of size n, not modified */
+				const ImmutableArray<int> & Ap,	/* input of size n+1, not modified */
+				const ImmutableArray<int> & Ai,	/* input of size nz=Ap[n], not modified */
+				const ImmutableArray<double> & Ax,	/* input of size nz=Ap[n], not modified */
+				const ImmutableArray<int> & Lp,	/* input of size n+1, not modified */
+				const ImmutableArray<int> & Parent,	/* input of size n, not modified */
 				Array<int> Lnz,	/* output of size n, not defn. on input */
 				Array<int> Li,	/* output of size lnz=Lp[n], not defined on input */
 				Array<double> Lx,	/* output of size lnz=Lp[n], not defined on input */
@@ -272,8 +272,8 @@ namespace Utilities
 				Array<double> Y,	/* workspace of size n, not defn. on input or output */
 				Array<int> Pattern,/* workspace of size n, not defn. on input or output */
 				Array<int> Flag,	/* workspace of size n, not defn. on input or output */
-				const Array<int> P,	/* optional input of size n */
-				const Array<int> Pinv	/* optional input of size n */
+				const ImmutableArray<int> & P,	/* optional input of size n */
+				const ImmutableArray<int> & Pinv	/* optional input of size n */
 			)
 			{
 				double yi, l_ki ;
@@ -334,9 +334,9 @@ namespace Utilities
 			(
 				int n,		/* L is n-by-n, where n >= 0 */
 				Array<double> X,	/* size n.  right-hand-side on input, soln. on output */
-				const Array<int> Lp,	/* input of size n+1, not modified */
-				const Array<int> Li,	/* input of size lnz=Lp[n], not modified */
-				const Array<double> Lx	/* input of size lnz=Lp[n], not modified */
+				const ImmutableArray<int> & Lp,	/* input of size n+1, not modified */
+				const ImmutableArray<int> & Li,	/* input of size lnz=Lp[n], not modified */
+				const ImmutableArray<double> & Lx	/* input of size lnz=Lp[n], not modified */
 			)
 			{
 				int j, p, p2 ;
@@ -359,7 +359,7 @@ namespace Utilities
 			(
 				int n,		/* D is n-by-n, where n >= 0 */
 				Array<double> X,	/* size n.  right-hand-side on input, soln. on output */
-				const Array<double> D	/* input of size n, not modified */
+				const ImmutableArray<double> & D	/* input of size n, not modified */
 			)
 			{
 				int j ;
@@ -378,9 +378,9 @@ namespace Utilities
 			(
 				int n,		/* L is n-by-n, where n >= 0 */
 				Array<double> X,	/* size n.  right-hand-side on input, soln. on output */
-				const Array<int> Lp,	/* input of size n+1, not modified */
-				const Array<int> Li,	/* input of size lnz=Lp[n], not modified */
-				const Array<double> Lx	/* input of size lnz=Lp[n], not modified */
+				const ImmutableArray<int> & Lp,	/* input of size n+1, not modified */
+				const ImmutableArray<int> & Li,	/* input of size lnz=Lp[n], not modified */
+				const ImmutableArray<double> & Lx	/* input of size lnz=Lp[n], not modified */
 			)
 			{
 				int j, p, p2 ;
@@ -403,8 +403,8 @@ namespace Utilities
 			(
 				int n,		/* size of X, B, and P */
 				Array<double> X,	/* output of size n. */
-				const Array<double> B,	/* input of size n. */
-				const Array<int> P	/* input permutation array of size n. */
+				const ImmutableArray<double> & B,	/* input of size n. */
+				const ImmutableArray<int> & P	/* input permutation array of size n. */
 			)
 			{
 				int j ;
@@ -423,8 +423,8 @@ namespace Utilities
 			(
 				int n,		/* size of X, B, and P */
 				Array<double> X,	/* output of size n. */
-				const Array<double> B,	/* input of size n. */
-				const Array<int> P	/* input permutation array of size n. */
+				const ImmutableArray<double> & B,	/* input of size n. */
+				const ImmutableArray<int> & P	/* input permutation array of size n. */
 			)
 			{
 				int j ;
@@ -442,7 +442,7 @@ namespace Utilities
 			int LDL_valid_perm	    /* returns 1 if valid, 0 otherwise */
 			(
 				int n,
-				const Array<int> P,	    /* input of size n, a permutation of 0:n-1 */
+				const ImmutableArray<int> & P,	    /* input of size n, a permutation of 0:n-1 */
 				Array<int> Flag	    /* workspace of size n */
 			)
 			{
@@ -486,8 +486,8 @@ namespace Utilities
 			int LDL_valid_matrix
 			(
 				int n,
-				const Array<int> Ap,
-				const Array<int> Ai
+				const ImmutableArray<int> & Ap,
+				const ImmutableArray<int> & Ai
 			)
 			{
 				int j, p ;

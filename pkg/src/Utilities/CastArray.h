@@ -9,6 +9,40 @@ namespace Utilities
 {
 	// Cast class
 	template <class TYPE>
+	class Cast<TYPE *>
+	{
+	private:
+		TYPE * ptr;
+
+	public:
+		// Cast vector
+		Cast(Vector<TYPE> & src)
+			: ptr(src.ptr)
+		{
+		}
+
+		operator TYPE *() {return ptr;}
+	};
+
+	// Cast class
+	template <class TYPE>
+	class Cast<const TYPE *>
+	{
+	private:
+		const TYPE * ptr;
+
+	public:
+		// Cast vector
+		Cast(const ImmutableVector<TYPE> & src)
+			: ptr(src.ptr)
+		{
+		}
+
+		operator const TYPE *() const {return ptr;}
+	};
+
+	// Cast class
+	template <class TYPE>
 	class Cast<Array<TYPE> > : public Array<TYPE>
 	{
 		typedef Array<TYPE> To;
@@ -16,21 +50,21 @@ namespace Utilities
 	public:
 		// Cast vector
 		Cast(Vector<TYPE> & src)
-				: To(src.ptr, src.counter, src.size)
+			: To(src.ptr, src.counter, src.size)
 		{
 		}
 	};
 
 	// Const cast class
 	template <class TYPE>
-	class Cast<const Array<TYPE> > : public Array<TYPE>
+	class Cast<ImmutableArray<TYPE> > : public ImmutableArray<TYPE>
 	{
-		typedef const Array<TYPE> To;
+		typedef const ImmutableArray<TYPE> To;
 
 	public:
 		// Cast vector
 		Cast(const ImmutableVector<TYPE> & src)
-				: To(src.ptr, src.counter, src.size)
+			: To(src.ptr, src.counter, src.size)
 		{
 		}
 	};

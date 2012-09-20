@@ -47,8 +47,8 @@ namespace Utilities
 			_ASSERT(values.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid values size"));
 			_ASSERT(indices.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid indices size"));
 			_ASSERT(Internal::LDL_valid_matrix(ncols,
-					Cast<const Array<int> >(counts),
-					Cast<const Array<int> >(indices)) == 1,
+					Cast<ImmutableArray<int> >(counts),
+					Cast<ImmutableArray<int> >(indices)) == 1,
 					Utilities::Exceptions::Exception("SparseMatrix: invalid matrix"));
 #endif
 		}
