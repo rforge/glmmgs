@@ -40,9 +40,14 @@ namespace GlmmGS
 			const double sum = Sum(this->weights);
 			const double eps = 1.e-7;
 			if (Abs(sum) < eps)
-				Set(this->weights, 1.0);
+			{
+				const double w = 1.0 / this->weights.Size();
+				Set(this->weights, w);
+			}
 			else
+			{
 				this->weights *= 1.0 / sum;
+			}
 		}
 
 		// Reparameterize
