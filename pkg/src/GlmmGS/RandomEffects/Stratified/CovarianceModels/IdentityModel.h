@@ -29,7 +29,7 @@ namespace GlmmGS
 					int Update(const Vector<Vector<double> > & beta, const Controls & controls);
 					Vector<Vector<double> > CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const;
 					void ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-							const Vector<Pointer<Variables::IVariable> > variables) const;
+							const ImmutableVector<Pointer<Variables::IVariable> > & variables) const;
 
 				public:
 					// Construction

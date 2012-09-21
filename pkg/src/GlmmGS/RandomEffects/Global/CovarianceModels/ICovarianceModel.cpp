@@ -42,22 +42,19 @@ namespace GlmmGS
 					if (!this->constant)
 					{
 						// Calculate update
-						try
-						{
-							this->chol.Decompose(minus_hessian);
-							Vector<double> h = chol.Solve(jacobian);
-							const int update = controls.Comparer().IsZero(h, this->theta) ? 0 : 1;
-							if (controls.Verbose())
-								Print("Max update covariance components: %g\n", MaxAbs(h));
-							this->theta += h;
-							return update;
-						}
-						catch(Exceptions::Exception &)
-						{
-							//throw Exceptions::Exception("Failed to update covariance components");
-							Print("Warning: Failed to update covariance components\n");
-							return 1;
-						}
+						this->chol.Decompose(minus_hessian);
+						Vector<double> h = chol.Solve(jacobian);
+						const int update = controls.Comparer().IsZero(h, this->theta) ? 0 : 1;
+
+						// Scale updates
+						const double max = MaxAbs(h);
+						if (controls.Verbose())
+							Print("Max update covariance components: %g\n", max);
+						if (max > 1.0)
+							h *= 1.0 / max;
+
+						this->theta += h;
+						return update;
 					}
 
 					return 0;

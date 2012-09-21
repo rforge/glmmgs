@@ -72,7 +72,7 @@ namespace GlmmGS
 				}
 
 				void IdentityModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-						const Vector<Pointer<Variables::IVariable> > variables) const
+						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
 				{
 					Boosters::Reparameterize(beta, variables, this->remove_mean);
 				}

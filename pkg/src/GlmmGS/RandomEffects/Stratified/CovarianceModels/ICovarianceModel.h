@@ -40,7 +40,7 @@ namespace GlmmGS
 					virtual Vector<Vector<double> > CoefficientsUpdate(	const Vector<Vector<double> > & jacobian,
 							const Vector<Vector<double> > & beta) const = 0;
 					virtual void ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-							const Vector<Pointer<Variables::IVariable> > variables) const = 0;
+							const ImmutableVector<Pointer<Variables::IVariable> > & variables) const = 0;
 				};
 			}
 		}

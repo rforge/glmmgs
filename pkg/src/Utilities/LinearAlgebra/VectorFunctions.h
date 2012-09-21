@@ -40,7 +40,14 @@ namespace Utilities
 			return v;
 		}
 
-		// Vectorial functions
+		template <class TYPE>
+		Vector<TYPE> & operator *=(Vector<TYPE> & v, double a)
+		{
+			const int n = v.Size();
+			for (int i = 0; i < n; ++i)
+				v(i) *= a;
+			return v;
+		}
 	}
 }
 

@@ -71,9 +71,12 @@ namespace GlmmGS
 				// Check if update is significant
 				int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;
 
-				// Print
+				// Scale updates
+				const double max = MaxAbs(h);
 				if (controls.Verbose())
-					Print("Max update random effects: %g\n", MaxAbs(h));
+					Print("Max update random effects: %g\n", max);
+				if (max > 1.0)
+					h *= 1.0 / max;
 
 				// Update
 				this->beta += h;
