@@ -4,7 +4,7 @@
 #ifdef _STANDALONE
 #include <stdio.h>
 #else
-#include "C:/Program Files/R/R-2.15.1/include/R_ext/Print.h"
+#include "R_ext/Print.h"
 #endif
 
 namespace Utilities
