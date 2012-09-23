@@ -76,7 +76,7 @@
 	the estimated random effects to be retrieved using the generic function \code{\link{ranef}}; 
 	the estimated parameters of the random effect covariance models used to calculated the variance
 	components of the random effects displayed by the generic function \code{print.glmmGS};
-	the number of GS iterations taken to converge.
+	the number of iterations taken to converge.
 }
 
 \references{

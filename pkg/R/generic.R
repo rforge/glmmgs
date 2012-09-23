@@ -347,5 +347,6 @@ print.glmmGS <- function(x, ...)
 	
 	cat("\nNumber of coefficient updates: ", glmmGS$iterations$coef)
 	cat("\nNumber of variance component updates: ", glmmGS$iterations$vcomp)
-	cat("\nProcess time: ", glmmGS$proc.time, "\n")
+	cat("\nNumber of coefficient-variance iterations: ", glmmGS$iterations$outer)
+	cat("\nProcess time: ", glmmGS$proc.time, "\n\n")
 }

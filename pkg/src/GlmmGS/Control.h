@@ -24,10 +24,10 @@ namespace GlmmGS
 
 		struct MaxIter
 		{
-			const int inner;
 			const int outer;
+			const int inner;
 
-			MaxIter(int inner, int outer);
+			MaxIter(int outer, int inner);
 			MaxIter(const int maxiter[2]);
 		};
 

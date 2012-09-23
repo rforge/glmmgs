@@ -21,16 +21,16 @@ namespace GlmmGS
 
 	}
 
-	Control::MaxIter::MaxIter(int inner, int outer)
-	: inner(inner),
-	  outer(outer)
+	Control::MaxIter::MaxIter(int outer, int inner)
+	: outer(outer),
+	  inner(inner)
 	{
 
 	}
 
 	Control::MaxIter::MaxIter(const int maxiter[2])
-	: inner(maxiter[0]),
-	  outer(maxiter[1])
+	: outer(maxiter[0]),
+	  inner(maxiter[1])
 	{
 
 	}

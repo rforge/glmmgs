@@ -38,7 +38,7 @@ namespace GlmmGS
 		{
 			// Check sum of weights
 			const double sum = Sum(this->weights);
-			const double eps = 1.e-7;
+			const double eps = 1.e-6;
 			if (Abs(sum) < eps)
 			{
 				const double w = 1.0 / this->weights.Size();

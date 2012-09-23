@@ -3,8 +3,10 @@
 
 #ifdef _STANDALONE
 #include <stdio.h>
+#define _printf printf
 #else
 #include "R_ext/Print.h"
+#define _printf Rprintf
 #endif
 
 namespace Utilities
@@ -13,36 +15,34 @@ namespace Utilities
 	{
 		// Basic print functions
 		void Print(const char * format);
-		template <class TYPE> void Print(const char * format, TYPE value);
+		template <class T> void Print(const char * format, T value);
+		template <class T1, class T2> void Print(const char * format, T1 value1, T2 value2);
+		template <class T1, class T2, class T3> void Print(const char * format, T1 value1, T2 value2, T3 value3);
 
-#ifdef _STANDALONE
 		// Definition
 		inline
 		void Print(const char * format)
 		{
-			fprintf(stdout, format);
-			fflush(stdout);
+			_printf(format);
 		}
 
-		template <class TYPE> inline
-		void Print(const char * format, TYPE value)
+		template <class T> inline
+		void Print(const char * format, T value)
 		{
-			fprintf(stdout, format, value);
-			fflush(stdout);
-		}
-#else
-		inline
-		void Print(const char * format)
-		{
-			Rprintf(format);
+			_printf(format, value);
 		}
 
-		template <class TYPE> inline
-		void Print(const char * format, TYPE value)
+		template <class T1, class T2> inline
+		void Print(const char * format, T1 value1, T2 value2)
 		{
-			Rprintf(format, value);
+			_printf(format, value1, value2);
 		}
-#endif
+
+		template <class T1, class T2, class T3> inline
+		void Print(const char * format, T1 value1, T2 value2, T3 value3)
+		{
+			_printf(format, value1, value2, value3);
+		}
 	}
 }
 #endif

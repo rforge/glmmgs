@@ -12,7 +12,7 @@ Construct control list for \code{glmmGS} function
 	glmmGS.Control(
 		reltol = 1e-06, 
 		abstol = 1e-06, 
-		maxit = list(200L, 200L), 
+		maxit = list(200L, 1L), 
 		verbose = FALSE,
 		max.update = c(0, 0, 0),
 		max.value = c(0, 0, 0))
@@ -27,8 +27,8 @@ Construct control list for \code{glmmGS} function
 	}
   	\item{maxit}{
 		maximum number of outer and inner iterations for the parameter update
-		(see Details). If only one number is provided, then the number of outer and inner 
-		iterations is assumed to be identical.
+		(see Details). If only one number is provided, then the number of
+		inner iterations is assumed to be 1.
 	}
   	\item{verbose}{
 		logical scalar. If TRUE, then verbose output is generated during the 
@@ -51,15 +51,18 @@ Construct control list for \code{glmmGS} function
 	The Gauss-Seidel iterative algorithm stops when the magnitude of every 
 	parameter update is less than \code{abstol} or less than \code{reltol} 
 	times the magnitude of the current parameter.
-	The \emph{inner iterations} are consecutive updates 
+	We indicate with \emph{inner iterations} both the consecutive updates 
 	of the regression coefficients (fixed and random effects) assuming 
-	the variance components fixed and vice versa. 
-	The \emph{outer iterations} are alternate updates 
+	the variance components fixed, and the consecutive updates 
+	of variance components assuming	the the regression coefficients fixed. 
+	We indicate with \emph{outer iterations} the alternated updates 
 	of coefficients and variance components respectively.
-	If the algorithm reaches \code{maxit$inner} number of inner iterations without
+	If the algorithm reaches \code{maxit[2]} number of inner iterations without
 	converging, then it moves on to update the next set of parameters; 
-	if it reaches \code{maxit$outer} number	of outer iterations without converging, 
-	then it stops and returns an error.
+	if it reaches \code{maxit[1]} number of outer iterations without converging, 
+	then it stops and returns an error. Initial values for the coefficients are always
+	calculated by performing consecutive coefficient updates, regardless of 
+	the value of the maximum number of inner iterations parameter.
 }
 
 \value{

@@ -31,37 +31,52 @@ namespace GlmmGS
 		this->working_values = Vector<double>(nrecords);
 		this->EvaluateWorkingWeightsAndValues();
 
-		// Gauss-Seidel loop
+
+		// Initialize counters
 		Set(this->iterations, 0);
+
+		// Fit initial coefficients
+		const double maxit = Max(control.maxiter.outer, control.maxiter.inner);
 		for (;;)
 		{
-			int updates = 0;
-			for (int inner = 0; inner < control.maxiter.inner; ++inner)
-			{
-				// Update
-				if (this->UpdateCoefficients(control) == 0)
-					break;
-				++updates;
+			// Increase coefficient updates
+			if (this->UpdateCoefficients(control) == 0)
+				break;
+			++this->iterations(1);
 
-				// Increase gs updates
-				++this->iterations(0);
+			// Check number of iterations
+			if (this->iterations(1) >= maxit)
+			{
+				throw MaxIterationsException();
+				break;
 			}
+		}
+
+		// Update variance components and coefficients
+		int updates = 0;
+		for (;;)
+		{
+			// Update variance components
 			for (int inner = 0; inner < control.maxiter.inner; ++inner)
 			{
 				// Update
 				if (this->UpdateCovarianceComponents(control) == 0)
 					break;
 				++updates;
-				++this->iterations(1);
+				// Increase variance component updates
+				++this->iterations(2);
 			}
+
+			// Check and reset updates
 			if (updates == 0)
 				break;
+			updates = 0;
 
-			// Increase iterations
-			++this->iterations(2);
+			// Increase outer iterations
+			++this->iterations(0);
 
 			// Check number of iterations
-			if (this->iterations(2) >= control.maxiter.outer)
+			if (this->iterations(0) >= control.maxiter.outer)
 			{
 				throw MaxIterationsException();
 				break;
@@ -69,7 +84,18 @@ namespace GlmmGS
 
 			// Print iterations
 			if (control.verbose)
-				Print("Iterations: %d\n", this->iterations(2));
+				Print("Iterations: %d (%d, %d)\n", this->iterations(0), this->iterations(1), this->iterations(2));
+
+			// Update coefficients
+			for (int inner = 0; inner < control.maxiter.inner; ++inner)
+			{
+				// Update
+				if (this->UpdateCoefficients(control) == 0)
+					break;
+				++updates;
+				// Increase coefficient updates
+				++this->iterations(1);
+			}
 		}
 	}
 

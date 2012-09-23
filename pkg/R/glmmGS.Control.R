@@ -13,7 +13,7 @@ ValidateControl <-function(reltol, abstol, maxit, verbose, max.update, max.value
 glmmGS.Control <- function(
 		reltol = 1.e-6, 
 		abstol = 1.e-6,
-		maxit = list(200L, 200L),
+		maxit = list(200L, 1L),
 		verbose = FALSE,
 		max.update = c(0, 0, 0),
 		max.value = c(0, 0, 0))
@@ -23,7 +23,7 @@ glmmGS.Control <- function(
 	abstol <- as.double(abstol)
 	if (length(maxit) == 1L)
 	{
-		maxit <- as.integer(c(maxit, maxit))
+		maxit <- as.integer(c(maxit, 1L))
 	}
 	else
 	{

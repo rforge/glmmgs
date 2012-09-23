@@ -205,9 +205,7 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGS$fixef <- glmmGSAPI.GetFixef(predictors$fixef)
 	glmmGS$ranef <- glmmGSAPI.GetRanef(predictors$ranef)
 	iterations <- glmmGSAPI.GetIterations()
-	iterations <- list(coef = iterations[1], 
-			vcomp = iterations[2], 
-			outer = iterations[3])
+	iterations <- list(outer = iterations[1], coef = iterations[2], vcomp = iterations[3])
 	glmmGS$iterations <- iterations;
 	glmmGS$proc.time <- time[3];
 	glmmGS
