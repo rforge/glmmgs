@@ -7,23 +7,6 @@ namespace Utilities
 	namespace LinearAlgebra
 	{
 		// Operators
-		Vector<double> & operator *=(Vector<double> & v, double a)
-		{
-			const int n = v.Size();
-			for (int i = 0; i < n; ++i)
-				v(i) *= a;
-			return v;
-		}
-
-		Vector<double> & operator -=(Vector<double> & v, const ImmutableVector<double> & w)
-		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size());
-			const int n = v.Size();
-			for (int i = 0; i < n; ++i)
-				v(i) -= w(i);
-			return v;
-		}
-
 		Vector<double> operator *(double a, const ImmutableVector<double> & v)
 		{
 			const int n = v.Size();

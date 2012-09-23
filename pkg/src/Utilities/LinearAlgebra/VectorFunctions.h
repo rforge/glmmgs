@@ -8,9 +8,11 @@ namespace Utilities
 	namespace LinearAlgebra
 	{
 		// Operators
-		Vector<double> & operator *=(Vector<double> & v, double a);
+		template <class TYPE> Vector<TYPE> & operator *=(Vector<TYPE> & v, double a);
+		template <class TYPE> Vector<TYPE> & operator +=(Vector<TYPE> & v, double a);
 		template <class TYPE> Vector<TYPE> & operator +=(Vector<TYPE> & v, const ImmutableVector<TYPE> & w);
-		Vector<double> & operator -=(Vector<double> & v, const ImmutableVector<double> & w);
+		template <class TYPE> Vector<TYPE> & operator -=(Vector<TYPE> & v, double a);
+		template <class TYPE> Vector<TYPE> & operator -=(Vector<TYPE> & v, const ImmutableVector<TYPE> & w);
 		Vector<double> operator *(double a, const ImmutableVector<double> & v);
 		Vector<double> operator +(const ImmutableVector<double> & v, const ImmutableVector<double> & w);
 		Vector<double> operator -(const ImmutableVector<double> & v, const ImmutableVector<double> & w);
@@ -28,8 +30,27 @@ namespace Utilities
 		double MinAbs(const Vector<Vector<double> > & v);
 
 
-	// Definition
+		// Definition
+
 		// Operators
+		template <class TYPE>
+		Vector<TYPE> & operator *=(Vector<TYPE> & v, double a)
+		{
+			const int n = v.Size();
+			for (int i = 0; i < n; ++i)
+				v(i) *= a;
+			return v;
+		}
+
+		template <class TYPE>
+		Vector<TYPE> & operator +=(Vector<TYPE> & v, double a)
+		{
+			const int n = v.Size();
+			for (int i = 0; i < n; ++i)
+				v(i) += a;
+			return v;
+		}
+
 		template <class TYPE>
 		Vector<TYPE> & operator +=(Vector<TYPE> & v, const ImmutableVector<TYPE> & w)
 		{
@@ -41,11 +62,21 @@ namespace Utilities
 		}
 
 		template <class TYPE>
-		Vector<TYPE> & operator *=(Vector<TYPE> & v, double a)
+		Vector<TYPE> & operator -=(Vector<TYPE> & v, double a)
 		{
 			const int n = v.Size();
 			for (int i = 0; i < n; ++i)
-				v(i) *= a;
+				v(i) -= a;
+			return v;
+		}
+
+		template <class TYPE>
+		Vector<TYPE> & operator -=(Vector<TYPE> & v, const ImmutableVector<TYPE> & w)
+		{
+			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			const int n = v.Size();
+			for (int i = 0; i < n; ++i)
+				v(i) -= w(i);
 			return v;
 		}
 	}
