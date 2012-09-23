@@ -56,9 +56,6 @@ namespace GlmmGS
 				// Decompose full precision
 				this->covariance_model->Decompose(design_precision);
 
-				// Re-parameterize coefficients
-				this->covariance_model->ReparameterizeCoefficients(this->beta, this->variables);
-
 				// Evaluate coefficients update
 				Vector<Vector<double> > h = this->covariance_model->CoefficientsUpdate(design_jacobian, this->beta);
 
@@ -74,6 +71,9 @@ namespace GlmmGS
 
 				// Update
 				this->beta += h;
+
+				// Re-parameterize coefficients
+				this->covariance_model->ReparameterizeCoefficients(this->beta, this->variables);
 
 				// Print
 				if (control.verbose)
