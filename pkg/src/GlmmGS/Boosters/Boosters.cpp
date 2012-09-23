@@ -18,16 +18,14 @@ namespace GlmmGS
 		void RemoveMean::Reparameterize(Vector<double> & beta) const
 		{
 			const double mean = Mean(beta);
-			for (int i = 0; i < beta.Size(); ++i)
-				beta(i) -= mean;
+			beta -= mean;
 		}
 
 		// RemoveWeightedMean
 		void RemoveWeightedMean::Reparameterize(Vector<double> & beta) const
 		{
 			const double mean = ScalarProduct(beta, this->weights);
-			for (int i = 0; i < beta.Size(); ++i)
-				beta(i) -= mean;
+			beta -= mean;
 		}
 	}
 }
