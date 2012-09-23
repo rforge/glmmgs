@@ -95,11 +95,12 @@ glmmGS.Predictors <- function(formula, data, covariance.models)
 		}
 	}
 	
-	# Set 'is.duplicate' flags
+	# Set 'duplicate' flags
 	nfixef <- length(predictors$fixef)
+	dense.fixef.varnames <- character()
+	stratified.fixef.varnames <- character()
 	if (nfixef > 0L)
 	{
-		dense.fixef.varnames <- character()
 		for (i in 1:nfixef)
 		{
 			block <- predictors$fixef[[i]]$block
@@ -113,7 +114,6 @@ glmmGS.Predictors <- function(formula, data, covariance.models)
 				}
 			}
 		}
-		stratified.fixef.varnames <- character()
 		for (i in 1:nfixef)
 		{
 			block <- predictors$fixef[[i]]$block
@@ -124,34 +124,22 @@ glmmGS.Predictors <- function(formula, data, covariance.models)
 					varname <- block$covariates[[j]]$name
 					stratified.fixef.varnames[length(stratified.fixef.varnames) + 1L] <- varname
 					block$covariates[[j]]$duplicate <- ifelse(varname %in% dense.fixef.varnames, 1L, 0L)
-					# Debug
-#					if (block$covariates[[j]]$duplicate > 0L)
-#					{
-#						print(block$name)
-#						print(block$covariates[[j]]$name)
-#					}
 				}
 			}
 		}
-		
-		nranef <- length(predictors$ranef)
-		if (nranef > 0L)
+	}
+	fixef.varnames <- c(dense.fixef.varnames, stratified.fixef.varnames)
+	
+	nranef <- length(predictors$ranef)
+	if (nranef > 0L)
+	{
+		for (i in 1:nranef)
 		{
-			fixef.varnames <- c(dense.fixef.varnames, stratified.fixef.varnames)
-			for (i in 1:nranef)
+			block <- predictors$ranef[[i]]$block
+			for (j in 1L:length(block$covariates))
 			{
-				block <- predictors$ranef[[i]]$block
-				for (j in 1L:length(block$covariates))
-				{
-					varname <- block$covariates[[j]]$name
-					block$covariates[[j]]$duplicate <- ifelse(varname %in% fixef.varnames, 1L, 0L)
-					# Debug
-#					if (block$covariates[[j]]$duplicate > 0L)
-#					{
-#						print(block$name)
-#						print(block$covariates[[j]]$name)
-#					}
-				}
+				varname <- block$covariates[[j]]$name
+				block$covariates[[j]]$duplicate <- ifelse(varname %in% fixef.varnames, 1L, 0L)
 			}
 		}
 	}
