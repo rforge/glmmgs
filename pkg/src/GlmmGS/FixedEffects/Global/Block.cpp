@@ -1,6 +1,6 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Controls.h"
+#include "../../Control.h"
 #include "Block.h"
 
 namespace GlmmGS
@@ -38,7 +38,7 @@ namespace GlmmGS
 					this->variables(j)->UpdatePredictor(eta, this->beta(j));
 			}
 
-			int Block::UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Controls & controls)
+			int Block::UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control)
 			{
 				const int nvars = this->variables.Size();
 				Vector<double> jacobian(nvars);
@@ -58,17 +58,21 @@ namespace GlmmGS
 				// Evaluate update
 				Vector<double> h = this->chol.Solve(jacobian);
 
-				// Print
-				if (controls.Verbose())
-					Print("Max update fixed effects: %g\n", MaxAbs(h));
-
 				// Check if update is significant
-				const int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;
+				if (control.comparer.IsZero(h, this->beta))
+					return 0;
+
+				// Scale update
+				ScaleUpdate(h, control.max_updates.fixef);
 
 				// Update
 				this->beta += h;
 
-				return update;
+				// Print
+				if (control.verbose)
+					Print("Max update fixed effects: %g\n", MaxAbs(h));
+
+				return 1;
 			}
 		}
 	}

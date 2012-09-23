@@ -6,7 +6,7 @@
 #include "../Utilities/Exceptions/Exceptions.h"
 
 // Types
-#include "../GlmmGS/Controls.h"
+#include "../GlmmGS/Control.h"
 
 // Response
 #include "../GlmmGS/Responses/IResponse.h"

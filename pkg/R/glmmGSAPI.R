@@ -43,8 +43,7 @@ glmmGSAPI.EndModel <- function()
 # Begin response
 glmmGSAPI.BeginResponse <- function(family)
 {
-	if (class(family) != "character" || length(family) != 1L)
-		stop("Invalid argument")
+	ValidateCharacter(family, 1L)
 	size = nchar(family)
 	.C("GlmmGSRAPI_BeginResponse", family, size, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
@@ -159,7 +158,7 @@ glmmGSAPI.AddCounts <- function(values)
 # Add offset
 glmmGSAPI.AddOffset <- function(values)
 {
-	size <- as.integer(length(values))
+	size <- length(values)
 	if (class(values) == "integer")
 	{
 		.C("GlmmGSRAPI_AddOffsetInt", values, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
@@ -179,8 +178,7 @@ glmmGSAPI.AddOffset <- function(values)
 # Add intercept
 glmmGSAPI.AddIntercept <- function(duplicate)
 {
-	if (class(duplicate) != "integer")
-		stop("Invalid argument")
+	ValidateInteger(duplicate, 1L)
 	
 	.C("GlmmGSRAPI_AddIntercept", duplicate, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
@@ -189,8 +187,7 @@ glmmGSAPI.AddIntercept <- function(duplicate)
 # Add a covariate
 glmmGSAPI.AddCovariate <- function(values, duplicate)
 {
-	if (class(duplicate) != "integer")
-		stop("Invalid argument")
+	ValidateInteger(duplicate, 1L)
 	
 	if (is.vector(values))
 	{
@@ -237,56 +234,55 @@ glmmGSAPI.AddCovariate <- function(values, duplicate)
 # Add identity covariance model
 glmmGSAPI.AddIdentityCovarianceModel <- function(S)
 {
-	if (is.matrix(S) && is.double(S))
-	{
-		dimS <- dim(S)
-		.C("GlmmGSRAPI_AddIdentityCovarianceModel", S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
-		glmmGSAPI.GetLastError()
-	}
-	else
-	{
-		stop("Invalid argument")
-	}
+	ValidateMatrixDouble(S)
+	dimS <- dim(S)
+	.C("GlmmGSRAPI_AddIdentityCovarianceModel", S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	glmmGSAPI.GetLastError()
 }
 
 # Add precision model
 glmmGSAPI.AddPrecisionModel <- function(R, S)
 {
-	if (is.matrix(R) && is.double(R) && is.matrix(S) && is.double(S))
-	{
-		dimR <- dim(R)
-		dimS <- dim(S)
-		.C("GlmmGSRAPI_AddPrecisionModel", R, dimR, S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
-		glmmGSAPI.GetLastError()
-	}
-	else
-	{
-		stop("Invalid argument")
-	}
+	ValidateMatrixDouble(R)
+	ValidateMatrixDouble(S)
+	dimR <- dim(R)
+	dimS <- dim(S)
+	.C("GlmmGSRAPI_AddPrecisionModel", R, dimR, S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	glmmGSAPI.GetLastError()
 }
 
 # Add sparse-precision model
 glmmGSAPI.AddSparsePrecisionModel <- function(R, S)
 {
-	if (class(R) == "glmmGS.SparseMatrix" && is.matrix(S) && is.double(S))
-	{
-		ncols = length(R$counts) - 1L
-		dimS <- dim(S)
-		.C("GlmmGSRAPI_AddSparsePrecisionModel", R$values, R$indices, R$counts, ncols, S, dimS, 
-				DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
-		glmmGSAPI.GetLastError()
-	}
-	else
-	{
-		stop("Invalid argument")
-	}
+	ValidateSparseMatrix(R)
+	ValidateMatrixDouble(S)
+	
+	ncols = length(R$counts) - 1L
+	dimS <- dim(S)
+	.C("GlmmGSRAPI_AddSparsePrecisionModel", R$values, R$indices, R$counts, ncols, S, dimS, 
+			DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	glmmGSAPI.GetLastError()
 }
 
 # Fit current model
-glmmGSAPI.Fit <- function(relative.tolerance, absolute.tolerance, maxiter, verbose)
+glmmGSAPI.Fit <- function(control)
 {
-	.C("GlmmGSRAPI_Fit", as.double(relative.tolerance), as.double(absolute.tolerance), 
-			as.integer(maxiter), as.integer(verbose), PACKAGE = "glmmGS")
+	ValidateControl(
+			control$reltol, 
+			control$abstol, 
+			control$max.update, 
+			control$max.value, 
+			control$maxit, 
+			control$verbose)
+
+	.C("GlmmGSRAPI_Fit", 
+			control$reltol, 
+			control$abstol, 
+			control$max.update, 
+			control$max.value, 
+			control$maxit, 
+			control$verbose, 
+			PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
@@ -317,7 +313,7 @@ glmmGSAPI.GetFixef <- function(fixef)
 						vcov,
 						nvars,
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
-				
+				glmmGSAPI.GetLastError()
 				coef$estm <- estm
 				coef$vcov <- vcov
 			}
@@ -336,7 +332,7 @@ glmmGSAPI.GetFixef <- function(fixef)
 						nvars,
 						nlevels,
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
-				
+				glmmGSAPI.GetLastError()
 				coef$estm <- estm
 				coef$vcov <- vcov
 			}
@@ -354,7 +350,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 	
 	if (n > 0L)
 	{
-		for (i in 1L:length(ranef))
+		for (i in 1L:n)
 		{
 			block <- ranef[[i]]$block
 			if (class(block) != "glmmGS.Block" || attr(block, "effects") != "random") 
@@ -374,6 +370,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 						estm,
 						nvars,
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				glmmGSAPI.GetLastError()
 				coef$estm <- estm
 				
 				size <- GetNumberOfVarianceComponents(block)
@@ -385,6 +382,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 						vcov,
 						size,
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				glmmGSAPI.GetLastError()
 				vcomp$estm <- estm
 				vcomp$vcov <- vcov
 			}
@@ -401,6 +399,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 						nvars,
 						nlevels,
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				glmmGSAPI.GetLastError()
 				coef$estm <- estm
 				
 				size <- GetNumberOfVarianceComponents(block)
@@ -412,6 +411,7 @@ glmmGSAPI.GetRanef <- function(ranef)
 						vcov,
 						size,
 						DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+				glmmGSAPI.GetLastError()
 				vcomp$estm <- estm
 				vcomp$vcov <- vcov
 			}
@@ -427,8 +427,9 @@ glmmGSAPI.GetRanef <- function(ranef)
 # Get number of iterations
 glmmGSAPI.GetIterations <- function()
 {
-	iterations <- integer(1L)
-	.C("GlmmGSRAPI_GetIterations", iterations, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	size <- 3L
+	iterations <- integer(size)
+	.C("GlmmGSRAPI_GetIterations", iterations, size, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 	
 	iterations

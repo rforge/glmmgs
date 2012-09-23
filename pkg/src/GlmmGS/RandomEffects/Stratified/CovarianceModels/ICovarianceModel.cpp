@@ -1,5 +1,5 @@
 #include "ICovarianceModel.h"
-#include "../../../Controls.h"
+#include "../../../Control.h"
 
 namespace GlmmGS
 {
@@ -30,28 +30,42 @@ namespace GlmmGS
 					return this->constant ? TriangularMatrix<double>(this->theta.Size()) : this->chol.Inverse();
 				}
 
-				// Implementation
-				int ICovarianceModel::Update(const ImmutableTriangularMatrix<double> & minus_hessian,
-						const ImmutableVector<double> & jacobian, const Controls & controls)
+				// Covariance components
+				int ICovarianceModel::UpdateComponents(const Vector<Vector<double> > & beta, const Control & control)
 				{
-					if (!this->constant)
-					{
-						// Calculate update
-						this->chol.Decompose(minus_hessian);
-						Vector<double> h = chol.Solve(jacobian);
-						const int update = controls.Comparer().IsZero(h, this->theta) ? 0 : 1;
+					return this->constant ? 0 : this->UpdateComponentsImpl(beta, control);
+				}
 
-						// Scale updates
-						const double max = MaxAbs(h);
-						if (controls.Verbose())
-							Print("Max update covariance components: %g\n", max);
-						if (max > 1.0)
-							h *= 1.0 / max;
+				int ICovarianceModel::UpdateComponents(const ImmutableTriangularMatrix<double> & minus_hessian,
+						const ImmutableVector<double> & jacobian, const Control & control)
+				{
+					// Decomponse precision
+					this->chol.Decompose(minus_hessian);
 
-						this->theta += h;
-						return update;
-					}
-					return 0;
+					// Calculate update
+					Vector<double> h = chol.Solve(jacobian);
+
+					// Constrain update
+					ConstrainUpdate(h, this->theta, control.max_values.vcomp);
+
+					// Check if update is significant
+					if (control.comparer.IsZero(h, this->theta))
+						return 0;
+
+					// Scale update
+					ScaleUpdate(h, control.max_updates.vcomp);
+
+					// Update
+					this->theta += h;
+
+					// Constrain value
+					ConstrainValue(this->theta, control.max_values.vcomp);
+
+					// Print
+					if (control.verbose)
+						Print("Max update variance components: %g\n", MaxAbs(h));
+
+					return 1;
 				}
 			}
 		}

@@ -21,7 +21,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Methods
+				// Coefficients
 				void IdentityModel::Decompose(const ImmutableTriangularMatrix<double> & design_precision)
 				{
 					// Add diagonal to precision
@@ -37,7 +37,19 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				int IdentityModel::Update(const ImmutableVector<double> & beta, const Controls & controls)
+				Vector<double> IdentityModel::CoefficientsUpdate(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const
+				{
+					// Add diagonal terms
+					Vector<double> jac(this->size);
+					for (int i = 0; i < this->size; ++i)
+						jac(i) = jacobian(i) - this->theta(0) * beta(i);
+
+					// Decomposes
+					return this->beta_precision_chol.Solve(jac);
+				}
+
+				// Components
+				int IdentityModel::UpdateComponentsImpl(const ImmutableVector<double> & beta, const Control & control)
 				{
 					// Calculate variance
 					const TriangularMatrix<double> covariance = this->beta_precision_chol.Inverse();
@@ -51,18 +63,7 @@ namespace GlmmGS
 					minus_hessian(0, 0) = this->size / Math::Square(this->theta(0)) - LinearAlgebra::SquareTrace(covariance);
 
 					// Update covariance components
-					return ICovarianceModel::Update(minus_hessian, jac, controls);
-				}
-
-				Vector<double> IdentityModel::UpdateCoefficients(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const
-				{
-					// Add diagonal terms
-					Vector<double> jac(this->size);
-					for (int i = 0; i < this->size; ++i)
-						jac(i) = jacobian(i) - this->theta(0) * beta(i);
-
-					// Decomposes
-					return this->beta_precision_chol.Solve(jac);
+					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);
 				}
 			}
 		}

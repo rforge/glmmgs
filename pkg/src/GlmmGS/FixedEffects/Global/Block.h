@@ -3,7 +3,7 @@
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Controls.h"
+#include "../../Control.h"
 #include "../IBlock.h"
 
 namespace GlmmGS
@@ -22,7 +22,7 @@ namespace GlmmGS
 				CholeskyDecomposition chol;
 
 				// Implementation
-				int UpdateCoefficients(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls);
+				int UpdateCoefficients(const ImmutableVector<double> & weight, const ImmutableVector<double> & values, const Control & control);
 				void UpdatePredictor(Vector<double> & eta) const;
 
 			public:

@@ -24,12 +24,14 @@ namespace GlmmGS
 					VectorialCholeskyDecomposition beta_precision_chol;
 					Boosters::RemoveMean remove_mean;
 
-					// Implementation
+					// Coefficients
 					void Decompose(const TriangularMatrix<Vector<double> > & precision);
-					int Update(const Vector<Vector<double> > & beta, const Controls & controls);
 					Vector<Vector<double> > CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const;
 					void ReparameterizeCoefficients(Vector<Vector<double> > & beta,
 							const ImmutableVector<Pointer<Variables::IVariable> > & variables) const;
+
+					// Components
+					int UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control);
 
 				public:
 					// Construction

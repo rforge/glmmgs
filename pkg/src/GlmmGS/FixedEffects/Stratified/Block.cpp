@@ -1,6 +1,6 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "../../Controls.h"
+#include "../../Control.h"
 #include "../../Boosters/Boosters.h"
 #include "Block.h"
 
@@ -40,7 +40,7 @@ namespace GlmmGS
 					this->variables(j)->UpdatePredictor(eta, this->beta(j), this->factor);
 			}
 
-			int Block::UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Controls & controls)
+			int Block::UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control)
 			{
 				const int nvars = this->variables.Size();
 				Vector<Vector<double> > jacobian(nvars);
@@ -53,29 +53,28 @@ namespace GlmmGS
 					for (int k = 0; k <= j; ++k)
 						precision(j, k) =  Variables::ScalarProduct(this->variables(j), weights, this->variables(k), this->factor);
 				}
+
 				// Decompose precision
 				this->chol.Decompose(precision);
 
 				// Evaluate update
 				Vector<Vector<double> > h = this->chol.Solve(jacobian);
 
-				// Re-parameterize updates
-				//Boosters::Reparameterize(h, this->variables, Boosters::RemoveFirstComponent());
-
-				// Print
-				if (controls.Verbose())
-					Print("Max update fixed effects: %g\n", MaxAbs(h));
-
 				// Check if update is significant
-				const int update = controls.Comparer().IsZero(h, this->beta) ? 0 : 1;
+				if (control.comparer.IsZero(h, this->beta))
+					return 0;
+
+				// Scale update
+				ScaleUpdate(h, control.max_updates.fixef);
 
 				// Update
 				this->beta += h;
 
-				// Re-parameterize coefficients
-				//Boosters::Reparameterize(this->beta, this->variables, Boosters::RemoveFirstComponent());
+				// Print
+				if (control.verbose)
+					Print("Max update fixed effects: %g\n", MaxAbs(h));
 
-				return update;
+				return 1;
 			}
 		}
 	}

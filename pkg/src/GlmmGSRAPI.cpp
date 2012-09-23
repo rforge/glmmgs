@@ -1,6 +1,6 @@
 #include "GlmmGSRAPI.h"
 #include "GlmmGSAPI/GlmmGSAPI.h"
-#include "GlmmGS/Controls.h"
+#include "GlmmGS/Control.h"
 #include "Utilities/Exceptions/Exceptions.h"
 #include "GlmmGSAPI/Exceptions/Exceptions.h"
 
@@ -367,13 +367,24 @@ void GlmmGSRAPI_AddSparsePrecisionModel(
 	}
 }
 
-void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance,
-		const int * maxiter, const int * verbose)
+void GlmmGSRAPI_Fit(
+		const double * relative_tolerance,
+		const double * absolute_tolerance,
+		const double * max_updates,
+		const double * max_values,
+		const int * maxiter,
+		const int * verbose)
 {
 	try
 	{
-		GlmmGS::Controls controls(*relative_tolerance, *absolute_tolerance, *maxiter, (*verbose) != 0);
-		GlmmGSAPI::theApi.Fit(controls);
+		GlmmGS::Control control(
+				Comparer(*relative_tolerance, *absolute_tolerance),
+				GlmmGS::Control::UpperBounds(max_updates),
+				GlmmGS::Control::UpperBounds(max_values),
+				GlmmGS::Control::MaxIter(maxiter),
+				(*verbose) != 0);
+
+		GlmmGSAPI::theApi.Fit(control);
 	}
 	catch (Exception & e)
 	{
@@ -538,11 +549,11 @@ void GlmmGSRAPI_GetVCompStratifiedBlock(
 	}
 }
 
-void GlmmGSRAPI_GetIterations(int * iterations)
+void GlmmGSRAPI_GetIterations(int * iterations, const int * size)
 {
 	try
 	{
-		*iterations = GlmmGSAPI::theApi.GlmmGS().Iterations();
+		Copy(iterations, *size, GlmmGSAPI::theApi.GlmmGS().Iterations());
 	}
 	catch (Exception & e)
 	{

@@ -1,3 +1,10 @@
+ValidateSparseMatrix <- function(x)
+{
+	ValidateDouble(x$values)
+	ValidateInteger(x$indices)
+	ValidateInteger(x$counts)
+}
+
 # Generic function
 glmmGS.SparseMatrix <- function(object, ...)
 {
@@ -12,40 +19,21 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 	indices <- list[[1L]]
 	counts <- list[[2L]]
 	
-	# Check argument
-	if (!is.double(values) || !is.vector(values))
-	{
-		stop("\'values\' must be a vector of doubles")
-	}
-	if (!is.integer(indices) || !is.vector(indices))
-	{
-		stop("\'indices\' must be a vector of integers")
-	}
-	if (!is.integer(counts) || !is.vector(counts))
-	{
-		stop("\'counts\' must be a vector of integers")
-	}
+	# Validate arguments
+	ValidateDouble(values)
+	ValidateInteger(indices)
+	ValidateInteger(counts)
 	
-	# Check length of counts
+	# Check counts
 	if (length(counts) == 0L)
-	{
 		stop("\'counts\' must have length greater than zero")
-	}
-	
-	# Set number of columns
-	ncols <- length(counts) - 1L
-	
-	# Check values of counts
 	if (counts[1L] != 0L)
-	{
 		stop("\'counts[1]\' must be equal to zero")
-	}
+	ncols <- length(counts) - 1L
 	for (j in 1L:ncols)
 	{
 		if (counts[j + 1L] < counts[j])
-		{
 			stop("\'counts\' must be monotonic non-descending")
-		}
 	}
 
 	# Retrieve total number of non-zero entries
@@ -53,13 +41,9 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 	
 	# Check length of values and indices
 	if (length(values) != nz)
-	{
 		stop("Wrong length of \'values\'")
-	}
 	if (length(indices) != nz)
-	{
 		stop("Wrong length of \'indices\'")
-	}
 	
 	# Check indices
 	for (j in 1L:ncols)
@@ -68,9 +52,7 @@ glmmGS.SparseMatrix.numeric <- function(object, ...)
 		{
 			# Notice that p is zero-based
 			if ((indices[p + 1L] < 0L) || (indices[p + 1L] >= ncols))
-			{
 				stop("\'indices\' values must be in [0, ncols - 1]")
-			}
 		}
 	}
 	
@@ -89,7 +71,7 @@ glmmGS.SparseMatrix.matrix <- function(object, ...)
 	matrix <- object
 	
 	# Validate argument
-	if (is.null(matrix) || !is.matrix(matrix) || (nrow(matrix) != ncol(matrix)))
+	if (is.null(matrix) || !is.matrix(matrix))
 		stop("Invalid input")
 	
 	# Build sparse matrix

@@ -113,13 +113,17 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	# Add response
 	glmmGSAPI.BeginResponse(family$family)
 	glmmGSAPI.AddResponse(response$value)
-	if (family$family == "binomial") 
+	if (family$family == "binomial")
+	{
 		glmmGSAPI.AddCounts(response$size)
+	}
 	glmmGSAPI.EndResponse()
 
 	# Add offset
 	if (!is.null(predictors$offset))
+	{
 		glmmGSAPI.AddOffset(predictors$offset$value)
+	}
 	
 	# Fixed effects
 	if (length(predictors$fixef) > 0L)
@@ -190,14 +194,21 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGSAPI.EndModel()
 	
 	# Fit model
-	glmmGSAPI.Fit(control$reltol, control$abstol, control$maxit, control$verbose)
-
+	start.time <- proc.time();
+	glmmGSAPI.Fit(control)
+	time <- proc.time() - start.time; 
+	
 	# Set results
 	# Avoid deep copies
 	glmmGS <- list()
 	class(glmmGS) <- "glmmGS"
 	glmmGS$fixef <- glmmGSAPI.GetFixef(predictors$fixef)
 	glmmGS$ranef <- glmmGSAPI.GetRanef(predictors$ranef)
-	glmmGS$iterations <- glmmGSAPI.GetIterations()
+	iterations <- glmmGSAPI.GetIterations()
+	iterations <- list(coef = iterations[1], 
+			vcomp = iterations[2], 
+			outer = iterations[3])
+	glmmGS$iterations <- iterations;
+	glmmGS$proc.time <- time[3];
 	glmmGS
 }

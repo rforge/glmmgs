@@ -6,7 +6,7 @@
 #include "Offsets/IOffset.h"
 #include "FixedEffects/IBlock.h"
 #include "RandomEffects/IBlock.h"
-#include "Controls.h"
+#include "Control.h"
 
 namespace GlmmGS
 {
@@ -19,7 +19,15 @@ namespace GlmmGS
 		Pointer<Offsets::IOffset> offset;
 		Vector<Pointer<FixedEffects::IBlock> > fixed_effects;
 		Vector<Pointer<RandomEffects::IBlock> > random_effects;
-		int iterations;
+		Vector<double> eta;
+		Vector<double> working_weights;
+		Vector<double> working_values;
+		Vector<int> iterations;
+
+		// Implementation
+		int UpdateCoefficients(const Control & control);
+		int UpdateCovarianceComponents(const Control & control);
+		void EvaluateWorkingWeightsAndValues();
 
 	public:
 		// Construction
@@ -31,10 +39,10 @@ namespace GlmmGS
 		// Properties
 		Vector<Pointer<FixedEffects::IBlock> > FixedEffects() const;
 		Vector<Pointer<RandomEffects::IBlock> > RandomEffects() const;
-		int Iterations() const;
+		const ImmutableVector<int> & Iterations() const;
 
 		// Methods
-		void Fit(const Controls & controls);
+		void Fit(const Control & control);
 	};
 
 	inline
@@ -50,7 +58,7 @@ namespace GlmmGS
 	}
 
 	inline
-	int GlmmGS::Iterations() const
+	const ImmutableVector<int> & GlmmGS::Iterations() const
 	{
 		return this->iterations;
 	}

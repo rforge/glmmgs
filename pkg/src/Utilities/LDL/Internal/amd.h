@@ -135,7 +135,7 @@ UF_long amd_l_order            /* see above for description of arguments */
  * pointer is passed, default values are used.  The Control array is not
  * modified.
  *
- *       Control [AMD_DENSE]:  controls the threshold for "dense" rows/columns.
+ *       Control [AMD_DENSE]:  control the threshold for "dense" rows/columns.
  *           A dense row/column in A+A' can cause AMD to spend a lot of time in
  *           ordering the matrix.  If Control [AMD_DENSE] >= 0, rows/columns
  *           with more than Control [AMD_DENSE] * sqrt (n) entries are ignored
@@ -144,7 +144,7 @@ UF_long amd_l_order            /* see above for description of arguments */
  *           rows/columns are treated as "dense".  Rows/columns with 16 or
  *           fewer off-diagonal entries are never considered "dense".
  *
- *       Control [AMD_AGGRESSIVE]: controls whether or not to use aggressive
+ *       Control [AMD_AGGRESSIVE]: control whether or not to use aggressive
  *           absorption, in which a prior element is absorbed into the current
  *           element if is a subset of the current element, even if it is not
  *           adjacent to the current pivot element (refer to Amestoy, Davis,

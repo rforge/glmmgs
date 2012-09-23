@@ -46,8 +46,13 @@ extern "C"
 			const double * S, const int * dimS);
 
 	// Fit
-	void GlmmGSRAPI_Fit(const double * relative_tolerance, const double * absolute_tolerance,
-			const int * maxiter, const int * verbose);
+	void GlmmGSRAPI_Fit(
+			const double * relative_tolerance,
+			const double * absolute_tolerance,
+			const double * max_updates,
+			const double * max_values,
+			const int * maxiter,
+			const int * verbose);
 
 	// Results - Fixed effects
 	void GlmmGSRAPI_GetFixefDenseBlock(
@@ -87,7 +92,7 @@ extern "C"
 			double * vcov,
 			const int * size);
 
-	void GlmmGSRAPI_GetIterations(int * iterations);
+	void GlmmGSRAPI_GetIterations(int * iterations, const int * size);
 }
 
 #endif

@@ -25,7 +25,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Implementation
+				// Coefficients
 				void SparsePrecisionModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Build an upper diagonal sparse-matrix equal to the design-precision plus the random-effects-precision
@@ -108,7 +108,42 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(upper);
 				}
 
-				int SparsePrecisionModel::Update(const Vector<Vector<double> > & beta, const Controls & controls)
+				Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
+				{
+					// Add diagonal terms
+					const int nlevels = this->R.NumberOfColumns();
+					Vector<double> jacobian(nlevels * this->nvars);
+					for (int index = 0, i = 0; i < this->nvars; ++i)
+						for (int k = 0; k < nlevels; ++k, ++index)
+						{
+							// Notice that since R = R^T, we can use a transpose matrix product
+							// optimized by the column-sparse structure of R
+							jacobian(index) = design_jacobian(i)(k) - this->theta(i) * TMatrixProduct(k, this->R, beta(i));
+						}
+
+					// Solve
+					Vector<double> h_tmp = this->beta_precision_chol.Solve(jacobian);
+
+					// Copy update. TODO: Change return type to NewType::Vector
+					Vector<Vector<double> > h(this->nvars);
+					for (int index = 0, i = 0; i < this->nvars; ++i)
+					{
+						h(i) = Vector<double>(nlevels);
+						for (int k = 0; k < nlevels; ++k, ++index)
+							h(i)(k) = h_tmp(index);
+					}
+
+					return h;
+				}
+
+				void SparsePrecisionModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
+						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
+				{
+					Boosters::Reparameterize(beta, variables, this->remove_weighted_mean);
+				}
+
+				// Components
+				int SparsePrecisionModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
 				{
 					// Calulate T^{-1} R
 					const int nlevels = this->R.NumberOfColumns();
@@ -151,41 +186,7 @@ namespace GlmmGS
 					}
 
 					// Update covariance components
-					return ICovarianceModel::Update(minus_hessian, jac, controls);
-				}
-
-				Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
-				{
-					// Add diagonal terms
-					const int nlevels = this->R.NumberOfColumns();
-					Vector<double> jac(nlevels * this->nvars);
-					for (int index = 0, i = 0; i < this->nvars; ++i)
-						for (int k = 0; k < nlevels; ++k, ++index)
-						{
-							// Notice that since R = R^T, we can use a transpose matrix product
-							// optimized by the column-sparse structure of R
-							jac(index) = design_jacobian(i)(k) - this->theta(i) * TMatrixProduct(k, this->R, beta(i));
-						}
-
-					// Solve
-					Vector<double> h_tmp = this->beta_precision_chol.Solve(jac);
-
-					// Copy update. TODO: Change return type to NewType::Vector
-					Vector<Vector<double> > h(this->nvars);
-					for (int index = 0, i = 0; i < this->nvars; ++i)
-					{
-						h(i) = Vector<double>(nlevels);
-						for (int k = 0; k < nlevels; ++k, ++index)
-							h(i)(k) = h_tmp(index);
-					}
-
-					return h;
-				}
-
-				void SparsePrecisionModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
-				{
-					Boosters::Reparameterize(beta, variables, this->remove_weighted_mean);
+					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);
 				}
 			}
 		}

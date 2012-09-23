@@ -25,7 +25,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Implementation
+				// Coefficients
 				void PrecisionModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Add diagonal to precision
@@ -56,7 +56,35 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				int PrecisionModel::Update(const Vector<Vector<double> > & beta, const Controls & controls)
+				Vector<Vector<double> > PrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
+				{
+					// Add diagonal terms
+					const int nlevels = this->R.NumberOfRows();
+					Vector<double> jac(nlevels * nvars);
+					for (int index = 0, i = 0; i < nvars; ++i)
+						for (int k = 0; k < nlevels; ++k, ++index)
+							jac(index) = design_jacobian(i)(k) - theta(i) * MatrixProduct(k, this->R, beta(i));
+
+					// Solve
+					Vector<double> h_tmp = this->beta_precision_chol.Solve(jac);
+					Vector<Vector<double> > h(this->nvars);
+					for (int index = 0, i = 0; i < this->nvars; ++i)
+					{
+						h(i) = Vector<double>(nlevels);
+						for (int k = 0; k < nlevels; ++k, ++index)
+							h(i)(k) = h_tmp(index);
+					}
+					return h;
+				}
+
+				void PrecisionModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
+						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
+				{
+					Boosters::Reparameterize(beta, variables, this->remove_weighted_mean);
+				}
+
+				// Components
+				int PrecisionModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
 				{
 					// Calulate T^{-1} R
 					const int nlevels = this->R.NumberOfColumns();
@@ -95,36 +123,8 @@ namespace GlmmGS
 					}
 
 					// Update covariance components
-					return ICovarianceModel::Update(minus_hessian, jac, controls);
+					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);
 				}
-
-				Vector<Vector<double> > PrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
-				{
-					// Add diagonal terms
-					const int nlevels = this->R.NumberOfRows();
-					Vector<double> jac(nlevels * nvars);
-					for (int index = 0, i = 0; i < nvars; ++i)
-						for (int k = 0; k < nlevels; ++k, ++index)
-							jac(index) = design_jacobian(i)(k) - theta(i) * MatrixProduct(k, this->R, beta(i));
-
-					// Solve
-					Vector<double> h_tmp = this->beta_precision_chol.Solve(jac);
-					Vector<Vector<double> > h(this->nvars);
-					for (int index = 0, i = 0; i < this->nvars; ++i)
-					{
-						h(i) = Vector<double>(nlevels);
-						for (int k = 0; k < nlevels; ++k, ++index)
-							h(i)(k) = h_tmp(index);
-					}
-					return h;
-				}
-
-				void PrecisionModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
-				{
-					Boosters::Reparameterize(beta, variables, this->remove_weighted_mean);
-				}
-
 			}
 		}
 	}

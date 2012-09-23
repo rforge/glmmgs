@@ -22,7 +22,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Methods
+				// Coefficients
 				void PrecisionModel::Decompose(const ImmutableTriangularMatrix<double> & design_precision)
 				{
 					// Add diagonal to precision
@@ -39,7 +39,20 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				int PrecisionModel::Update(const ImmutableVector<double> & beta, const Controls & controls)
+				Vector<double> PrecisionModel::CoefficientsUpdate(const ImmutableVector<double> & design_jacobian, const ImmutableVector<double> & beta) const
+				{
+					// Add diagonal terms
+					const int size = this->R.NumberOfRows();
+					Vector<double> jacobian(size);
+					for (int i = 0; i < size; ++i)
+						jacobian(i) = design_jacobian(i) - this->theta(0) * MatrixProduct(i, this->R, beta);
+
+					// Solve
+					return this->beta_precision_chol.Solve(jacobian);
+				}
+
+				// Components
+				int PrecisionModel::UpdateComponentsImpl(const ImmutableVector<double> & beta, const Control & control)
 				{
 					// Calulate T^{-1} R
 					const int ncols = this->R.NumberOfColumns();
@@ -68,19 +81,7 @@ namespace GlmmGS
 					minus_hessian(0, 0) = ncols / Math::Square(this->theta(0)) - SquareTrace(a);
 
 					// Update covariance components
-					return ICovarianceModel::Update(minus_hessian, jac, controls);
-				}
-
-				Vector<double> PrecisionModel::UpdateCoefficients(const ImmutableVector<double> & design_jacobian, const ImmutableVector<double> & beta) const
-				{
-					// Add diagonal terms
-					const int size = this->R.NumberOfRows();
-					Vector<double> jac(size);
-					for (int i = 0; i < size; ++i)
-						jac(i) = design_jacobian(i) - this->theta(0) * MatrixProduct(i, this->R, beta);
-
-					// Solve
-					return this->beta_precision_chol.Solve(jac);
+					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);
 				}
 			}
 		}

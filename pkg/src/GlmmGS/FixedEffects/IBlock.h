@@ -2,7 +2,7 @@
 #define GLMMGS_FIXEDEFFECTS_IBLOCK_H
 
 #include "../Standard.h"
-#include "../Controls.h"
+#include "../Control.h"
 
 namespace GlmmGS
 {
@@ -19,7 +19,7 @@ namespace GlmmGS
 
 			// Methods
 			virtual void UpdatePredictor(Vector<double> & eta) const = 0;
-			virtual int UpdateCoefficients(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls) = 0;
+			virtual int UpdateCoefficients(const ImmutableVector<double> & weight, const ImmutableVector<double> & values, const Control & control) = 0;
 		};
 	}
 }

@@ -24,7 +24,8 @@ namespace GlmmGS
 
 				// Implementation
 				void UpdatePredictor(Vector<double> & eta) const;
-				int Update(const ImmutableVector<double> & w, const ImmutableVector<double> & z, const Controls & controls);
+				int UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control);
+				int UpdateCovarianceComponents(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control);
 
 			public:
 				// Construction

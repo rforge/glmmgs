@@ -192,11 +192,11 @@ namespace GlmmGSAPI
 	}
 
 	// Fit
-	void GlmmGSAPI::Fit(GlmmGS::Controls controls)
+	void GlmmGSAPI::Fit(GlmmGS::Control control)
 	{
 		// Set offset to ZeroOffset if no offset was specified
 
 		// Fit the model
-		this->glmmGS->Fit(controls);
+		this->glmmGS->Fit(control);
 	}
 }

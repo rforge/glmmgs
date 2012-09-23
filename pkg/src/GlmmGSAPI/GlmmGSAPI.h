@@ -60,7 +60,7 @@ namespace GlmmGSAPI
 		void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableMatrix<double> & S);
 
 		// Fit
-		void Fit(GlmmGS::Controls controls);
+		void Fit(GlmmGS::Control control);
 
 		// Results
 		const GlmmGS::GlmmGS & GlmmGS() const;

@@ -2,7 +2,7 @@
 #define GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCEMODELS_ICOVARIANCEMODEL_H
 
 #include "../../../Standard.h"
-#include "../../../Controls.h"
+#include "../../../Control.h"
 #include "../../../Variables/IVariable.h"
 
 namespace GlmmGS
@@ -23,8 +23,9 @@ namespace GlmmGS
 					CholeskyDecomposition chol;
 
 					// Implementation
-					int Update(const ImmutableTriangularMatrix<double> & minus_hessian,
-							const ImmutableVector<double> & jacobian, const Controls & controls);
+					virtual int UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control) = 0;
+					int UpdateComponents(const ImmutableTriangularMatrix<double> & minus_hessian,
+							const ImmutableVector<double> & jacobian, const Control & control);
 				public:
 					// Construction
 					ICovarianceModel(int npars, const ImmutableMatrix<double> & S);
@@ -34,13 +35,13 @@ namespace GlmmGS
 					const ImmutableVector<double> & Components() const;
 					TriangularMatrix<double> Covariance() const;
 
-					// Methods
+					// Coefficients
 					virtual void Decompose(const TriangularMatrix<Vector<double> > & precision) = 0;
-					virtual int Update(const Vector<Vector<double> > & beta, const Controls & controls) = 0;
-					virtual Vector<Vector<double> > CoefficientsUpdate(	const Vector<Vector<double> > & jacobian,
-							const Vector<Vector<double> > & beta) const = 0;
-					virtual void ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-							const ImmutableVector<Pointer<Variables::IVariable> > & variables) const = 0;
+					virtual Vector<Vector<double> > CoefficientsUpdate(	const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const = 0;
+					virtual void ReparameterizeCoefficients(Vector<Vector<double> > & beta, const ImmutableVector<Pointer<Variables::IVariable> > & variables) const = 0;
+
+					// Covariance components
+					int UpdateComponents(const Vector<Vector<double> > & beta, const Control & control);
 				};
 			}
 		}

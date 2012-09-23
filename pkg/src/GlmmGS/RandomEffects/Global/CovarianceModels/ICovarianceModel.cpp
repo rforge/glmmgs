@@ -1,5 +1,5 @@
 #include "ICovarianceModel.h"
-#include "../../../Controls.h"
+#include "../../../Control.h"
 
 namespace GlmmGS
 {
@@ -30,34 +30,42 @@ namespace GlmmGS
 					return this->constant ? TriangularMatrix<double>(this->theta.Size()) : this->chol.Inverse();
 				}
 
-				TriangularMatrix<double> ICovarianceModel::CoefficientCovariance() const
+				// Covariance components
+				int ICovarianceModel::UpdateComponents(const ImmutableVector<double> & beta, const Control & control)
 				{
-					return this->beta_precision_chol.Inverse();
+					return this->constant ? 0 : this->UpdateComponentsImpl(beta, control);
 				}
 
-				// Implementation
-				int ICovarianceModel::Update(const ImmutableTriangularMatrix<double> & minus_hessian,
-						const ImmutableVector<double> & jacobian, const Controls & controls)
+				int ICovarianceModel::UpdateComponents(const ImmutableTriangularMatrix<double> & minus_hessian,
+						const ImmutableVector<double> & jacobian, const Control & control)
 				{
-					if (!this->constant)
-					{
-						// Calculate update
-						this->chol.Decompose(minus_hessian);
-						Vector<double> h = chol.Solve(jacobian);
-						const int update = controls.Comparer().IsZero(h, this->theta) ? 0 : 1;
+					// Decomponse precision
+					this->chol.Decompose(minus_hessian);
 
-						// Scale updates
-						const double max = MaxAbs(h);
-						if (controls.Verbose())
-							Print("Max update covariance components: %g\n", max);
-						if (max > 1.0)
-							h *= 1.0 / max;
+					// Calculate update
+					Vector<double> h = chol.Solve(jacobian);
 
-						this->theta += h;
-						return update;
-					}
+					// Constrain update
+					ConstrainUpdate(h, this->theta, control.max_values.vcomp);
 
-					return 0;
+					// Check if update is significant
+					if (control.comparer.IsZero(h, this->theta))
+						return 0;
+
+					// Scale update
+					ScaleUpdate(h, control.max_updates.vcomp);
+
+					// Update
+					this->theta += h;
+
+					// Constrain value
+					ConstrainValue(this->theta, control.max_values.vcomp);
+
+					// Print
+					if (control.verbose)
+						Print("Max update variance components: %g\n", MaxAbs(h));
+
+					return 1;
 				}
 			}
 		}

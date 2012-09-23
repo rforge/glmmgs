@@ -24,7 +24,7 @@ namespace GlmmGS
 				{
 				}
 
-				// Implementation
+				// Coefficients
 				void IdentityModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Add diagonal to precision
@@ -35,28 +35,6 @@ namespace GlmmGS
 
 					// Decompose
 					this->beta_precision_chol.Decompose(prec);
-				}
-
-				int IdentityModel::Update(const Vector<Vector<double> > & beta, const Controls & controls)
-				{
-					// Calculate variance
-					const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
-
-					// Calculate jacobian and minus the hessian
-					Vector<double> jac(this->nvars);
-					TriangularMatrix<double> minus_hessian(this->nvars);
-					for (int i = 0; i < this->nvars; ++i)
-					{
-						const double bsquare = Square(beta(i));
-						const double trace = Sum(covariance(i, i));
-						jac(i) = this->nlevels / this->theta(i) - bsquare - trace;
-						minus_hessian(i, i) = this->nlevels / Square(this->theta(i)) - Square(covariance(i, i));
-						for (int j = 0; j < i; ++j)
-							minus_hessian(i, j) = -Square(covariance(i, j));
-					}
-
-					// Update covariance components
-					return ICovarianceModel::Update(minus_hessian, jac, controls);
 				}
 
 				Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
@@ -75,6 +53,29 @@ namespace GlmmGS
 						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
 				{
 					Boosters::Reparameterize(beta, variables, this->remove_mean);
+				}
+
+				// Components
+				int IdentityModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
+				{
+					// Calculate variance
+					const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
+
+					// Calculate jacobian and minus the hessian
+					Vector<double> jac(this->nvars);
+					TriangularMatrix<double> minus_hessian(this->nvars);
+					for (int i = 0; i < this->nvars; ++i)
+					{
+						const double bsquare = Square(beta(i));
+						const double trace = Sum(covariance(i, i));
+						jac(i) = this->nlevels / this->theta(i) - bsquare - trace;
+						minus_hessian(i, i) = this->nlevels / Square(this->theta(i)) - Square(covariance(i, i));
+						for (int j = 0; j < i; ++j)
+							minus_hessian(i, j) = -Square(covariance(i, j));
+					}
+
+					// Update covariance components
+					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);
 				}
 			}
 		}
