@@ -64,11 +64,10 @@ namespace GlmmGS
 				{
 					const int offset_row = row * nlevels;
 					const int offset_col = col * nlevels;
-					const int size = a.NumberOfColumns();
 					double sum = 0.0;
 					for (int i = 0; i < nlevels; ++i)
-						for (int j = 0; j < size; ++j)
-							sum += a(offset_row + i, j) * a(j, offset_col + i);
+						for (int j = 0; j < nlevels; ++j)
+							sum += a(offset_row + i, offset_col + j) * a(offset_col + j, offset_row + i);
 					return sum;
 				}
 
