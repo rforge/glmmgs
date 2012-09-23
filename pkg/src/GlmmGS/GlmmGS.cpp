@@ -59,11 +59,9 @@ namespace GlmmGS
 			// Update variance components
 			for (int inner = 0; inner < control.maxiter.inner; ++inner)
 			{
-				// Update
 				if (this->UpdateCovarianceComponents(control) == 0)
 					break;
 				++updates;
-				// Increase variance component updates
 				++this->iterations(2);
 			}
 
@@ -89,11 +87,9 @@ namespace GlmmGS
 			// Update coefficients
 			for (int inner = 0; inner < control.maxiter.inner; ++inner)
 			{
-				// Update
 				if (this->UpdateCoefficients(control) == 0)
 					break;
 				++updates;
-				// Increase coefficient updates
 				++this->iterations(1);
 			}
 		}
