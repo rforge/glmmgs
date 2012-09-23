@@ -270,18 +270,18 @@ glmmGSAPI.Fit <- function(control)
 	ValidateControl(
 			control$reltol, 
 			control$abstol, 
-			control$max.update, 
-			control$max.value, 
 			control$maxit, 
-			control$verbose)
+			control$verbose,
+			control$max.update, 
+			control$max.value)
 
 	.C("GlmmGSRAPI_Fit", 
 			control$reltol, 
 			control$abstol, 
-			control$max.update, 
-			control$max.value, 
 			control$maxit, 
 			control$verbose, 
+			control$max.update, 
+			control$max.value, 
 			PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }

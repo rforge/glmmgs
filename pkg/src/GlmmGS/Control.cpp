@@ -36,15 +36,15 @@ namespace GlmmGS
 	}
 
 	Control::Control(const Utilities::Comparer & comparer,
-			const Control::UpperBounds & max_updates,
-			const Control::UpperBounds & max_values,
 			const Control::MaxIter & maxiter,
-			bool verbose)
+			bool verbose,
+			const Control::UpperBounds & max_updates,
+			const Control::UpperBounds & max_values)
 	: comparer(comparer),
-	  max_updates(max_updates),
-	  max_values(max_values),
 	  maxiter(maxiter),
-	  verbose(verbose)
+	  verbose(verbose),
+	  max_updates(max_updates),
+	  max_values(max_values)
 	{
 
 	}

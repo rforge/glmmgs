@@ -32,17 +32,17 @@ namespace GlmmGS
 		};
 
 		const Utilities::Comparer comparer;
-		const UpperBounds max_updates;
-		const UpperBounds max_values;
 		const MaxIter maxiter;
 		const bool verbose;
+		const UpperBounds max_updates;
+		const UpperBounds max_values;
 
 		// Construction
 		Control(const Utilities::Comparer & comparer = Utilities::Comparer(1.e-6, 1.e-6),
-				const struct Control::UpperBounds & max_updates = Control::UpperBounds(0, 0, 0),
-				const struct Control::UpperBounds & max_values = Control::UpperBounds(0, 0, 0),
 				const Control::MaxIter & maxiter = Control::MaxIter(100, 100),
-				bool verbose = false);
+				bool verbose = false,
+				const struct Control::UpperBounds & max_updates = Control::UpperBounds(0, 0, 0),
+				const struct Control::UpperBounds & max_values = Control::UpperBounds(0, 0, 0));
 	};
 
 	// Scale update

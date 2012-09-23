@@ -370,19 +370,19 @@ void GlmmGSRAPI_AddSparsePrecisionModel(
 void GlmmGSRAPI_Fit(
 		const double * relative_tolerance,
 		const double * absolute_tolerance,
-		const double * max_updates,
-		const double * max_values,
 		const int * maxiter,
-		const int * verbose)
+		const int * verbose,
+		const double * max_updates,
+		const double * max_values)
 {
 	try
 	{
 		GlmmGS::Control control(
 				Comparer(*relative_tolerance, *absolute_tolerance),
-				GlmmGS::Control::UpperBounds(max_updates),
-				GlmmGS::Control::UpperBounds(max_values),
 				GlmmGS::Control::MaxIter(maxiter),
-				(*verbose) != 0);
+				(*verbose) != 0,
+				GlmmGS::Control::UpperBounds(max_updates),
+				GlmmGS::Control::UpperBounds(max_values));
 
 		GlmmGSAPI::theApi.Fit(control);
 	}

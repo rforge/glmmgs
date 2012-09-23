@@ -49,10 +49,10 @@ extern "C"
 	void GlmmGSRAPI_Fit(
 			const double * relative_tolerance,
 			const double * absolute_tolerance,
-			const double * max_updates,
-			const double * max_values,
 			const int * maxiter,
-			const int * verbose);
+			const int * verbose,
+			const double * max_updates,
+			const double * max_values);
 
 	// Results - Fixed effects
 	void GlmmGSRAPI_GetFixefDenseBlock(
