@@ -16,10 +16,13 @@ namespace Utilities
 		// Construction
 		Comparer(double relative_tolerance, double absolute_tolerance);
 
+		// Properties
+		double RelativeTolerance() const {return relative_tolerance;}
+		double AbsoluteTolerance() const {return absolute_tolerance;}
+
 		// Methods
 		bool AreEqual(double x, double y) const;
 		bool IsZero(double eps, double x) const;
-
 		template <class TYPE> bool AreEqual(const ImmutableVector<TYPE> & x, const ImmutableVector<TYPE> & y) const;
 		template <class TYPE> bool IsZero(const ImmutableVector<TYPE> & eps, const ImmutableVector<TYPE> & x) const;
 	};
