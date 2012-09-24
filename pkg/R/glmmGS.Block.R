@@ -108,7 +108,8 @@ glmmGS.Block <- function(token, data, covariance.models)
 		# Avoid deep copies
 		block$factor <- new.env(hash = FALSE, parent = emptyenv())
 		block$factor$name <- factor.name
-		block$factor$value <- factor(get(factor.name, data))
+		value <- factor(get(factor.name, data))
+		block$factor$value <- value
 		block$factor$indices <- as.integer(value) - 1L 
 	}
 	
