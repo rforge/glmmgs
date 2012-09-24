@@ -12,7 +12,7 @@ Construct control list for \code{glmmGS} function
 	glmmGS.Control(
 		reltol = 1e-06, 
 		abstol = 1e-06, 
-		maxit = list(200L, 1L), 
+		maxit = c(200L, 1L), 
 		verbose = FALSE,
 		max.update = c(0, 0, 0),
 		max.value = c(0, 0, 0))
