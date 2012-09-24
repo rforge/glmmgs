@@ -1,9 +1,6 @@
 # glmmGS.Response
 glmmGS.Response <- function(formula, family, data)
 {
-#	print("Begin response")
-#	print(gc())
-	
 	if (class(formula) != "formula" || class(family) != "family")
 		stop("Invalid argument")
 	
@@ -62,9 +59,6 @@ glmmGS.Response <- function(formula, family, data)
 		value <- get(varname, data)
 		response$value <- value
 	}
-	
-#	print(gc())
-#	print("End response")
 	
 	response
 }

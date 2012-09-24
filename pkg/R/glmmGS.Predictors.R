@@ -1,9 +1,6 @@
 # glmmGS.Predictors S3 class constructor
 glmmGS.Predictors <- function(formula, data, covariance.models)
 {
-#	print("Begin predictors")
-#	print(gc())
-	
 	# Validate arguments
 	if (class(formula) != "formula")
 		stop("Invalid argument")
@@ -143,9 +140,6 @@ glmmGS.Predictors <- function(formula, data, covariance.models)
 			}
 		}
 	}
-	
-#	print(gc())
-#	print("End predictors")
 	
 	predictors
 }

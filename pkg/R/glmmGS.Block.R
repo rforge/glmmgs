@@ -64,12 +64,23 @@ GetNumberOfVarianceComponents <- function(block)
 # glmmGS.Block - S3 class constructor 
 glmmGS.Block <- function(token, data, covariance.models)
 {
-#	print("Begin block")
-#	print(gc())
-	
 	variable.names <- GetVariables(token)
 	factor.name <- GetFactor(token)
 	covariance.model.name <- GetCovarianceModel(token)
+	
+	# Check for duplicate variables
+	if (sum(duplicated(variable.names)) > 0L)
+		stop(paste("Duplicate variables not allowed in same GS block", token, sep = ": "))
+	
+	# If present, set intercept as first variable
+	i <- which(variable.names == "1")
+	if (length(i) > 0L && i > 1L)
+	{
+		# Rotate variable names
+		i0 <- (1L:i)
+		i1 <- (i0 %% i) + 1L
+		variable.names[i1] <- variable.names[i0] 
+	}
 	
 	# Initialize block
 	block <- new.env(hash = FALSE, parent = emptyenv())
@@ -97,8 +108,7 @@ glmmGS.Block <- function(token, data, covariance.models)
 		# Avoid deep copies
 		block$factor <- new.env(hash = FALSE, parent = emptyenv())
 		block$factor$name <- factor.name
-		value <- factor(get(factor.name, data))
-		block$factor$value <- value
+		block$factor$value <- factor(get(factor.name, data))
 		block$factor$indices <- as.integer(value) - 1L 
 	}
 	
@@ -106,7 +116,7 @@ glmmGS.Block <- function(token, data, covariance.models)
 	if (!is.na(covariance.model.name))
 	{
 		# Avoid deep copies
-		block$covariance.model <- list()
+		block$covariance.model <- new.env(hash = FALSE, parent = emptyenv())
 		block$covariance.model$name <- covariance.model.name
 		value <- get(covariance.model.name, covariance.models)
 		block$covariance.model$value <- value
@@ -129,9 +139,6 @@ glmmGS.Block <- function(token, data, covariance.models)
 	{
 		attr(block, "type") <- "stratified"
 	}
-	
-#	print(gc())
-#	print("End block")
 	
 	block
 }

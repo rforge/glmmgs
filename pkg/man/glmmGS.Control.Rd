@@ -92,7 +92,7 @@ Construct control list for \code{glmmGS} function
 }
 
 \examples{
-	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 500);
+	control <- glmmGS.Control(reltol = 1.e-8, abstol = 1.e-25, maxit = 500L)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
