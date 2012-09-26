@@ -174,13 +174,27 @@ namespace Utilities
 			return norm;
 		}
 
+		// Trace
 		double Trace(const ImmutableMatrix<double> & A)
 		{
-			const int n = A.NumberOfRows();
-			double tr = 0.0;
-			for (int i = 0; i < n; ++i)
-				tr += A(i, i);
-			return tr;
+			_ASSERT_ARGUMENT(A.NumberOfRows() == A.NumberOfColumns())
+			const int size = A.NumberOfRows();
+			double sum = 0.0;
+			for (int i = 0; i < size; ++i)
+				sum += A(i, i);
+			return sum;
+		}
+
+		// Trace of square product
+		double SquareTrace(const ImmutableMatrix<double> & A)
+		{
+			_ASSERT_ARGUMENT(A.NumberOfRows() == A.NumberOfColumns())
+			const int size = A.NumberOfRows();
+			double sum = 0.0;
+			for (int i = 0; i < size; ++i)
+				for (int j = 0; j < size; ++j)
+					sum += A(i, j) * A(j, i);
+			return sum;
 		}
 
 		TriangularMatrix<double> Lower(const ImmutableMatrix<double> & A)

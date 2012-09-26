@@ -26,6 +26,7 @@ namespace Utilities
 		Vector<double> ColumnSums(const ImmutableMatrix<double> & A);
 		double MaxAbs(const ImmutableMatrix<double> & A);
 		double Trace(const ImmutableMatrix<double> & A);
+		double SquareTrace(const ImmutableMatrix<double> & A);
 
 		// Conversions
 		TriangularMatrix<double> Lower(const ImmutableMatrix<double> & A);
