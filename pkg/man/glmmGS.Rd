@@ -70,7 +70,7 @@
 	%%  \item{comp2 }{Description of 'comp2'}
 	%% ...
 	an object of type \code{glmmGS} containing:
-	references to the input data blocks (for internal use only);   
+	references to the input blocks (for internal use);   
 	the estimated fixed effects to be retrieved using the generic functions \code{coef} or \code{\link{fixef}};
 	the fixed effect conditional covariance matrices to be retrieved using the generic function \code{vcov}; 
 	the estimated random effects to be retrieved using the generic function \code{\link{ranef}}; 
@@ -101,7 +101,7 @@
 	distribution of the parameters.
 	
 	Although it is possible to specify as many blocks of random effects as desired, the PQL update
-	of the covariance components is performed one block at a time. This yields to different
+	of the covariance components is performed one block at a time. This may yield to different
 	estimates compared to a joint PQL update of the covariance components.
 }
 

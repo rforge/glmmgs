@@ -22,13 +22,13 @@ GetNumberOfVariables <- function(block)
 {
 	nvars <- 0L
 	for (var in block$covariates)
-		nvars <- nvars + ifelse(is.matrix(var$value), ncol(var$value), 1L)
+		nvars <- nvars + var$dim
 	nvars
 }
 
 GetNumberOfLevels <- function(block)
 {
-	ifelse(attr(block, "type") == "stratified", nlevels(block$factor$value), 0L)
+	ifelse(attr(block, "type") == "stratified", length(block$factor$levels), 0L)
 }
 
 GetNumberOfVarianceComponents <- function(block)
@@ -36,11 +36,11 @@ GetNumberOfVarianceComponents <- function(block)
 	size <- 0L
 	if (attr(block, "effects") == "random")
 	{
-		covariance.model <- block$covariance.model$value
+		covariance.model <- block$covariance.model
 		
 		if (attr(block, "type") == "dense")
 		{
-			if (class(covariance.model) %in% c(
+			if (covariance.model$class %in% c(
 				"glmmGS.IdentityCovarianceModel",
 				"glmmGS.PrecisionModel"))
 			{
@@ -50,7 +50,7 @@ GetNumberOfVarianceComponents <- function(block)
 		}
 		else if (attr(block, "type") == "stratified")
 		{
-			if (class(covariance.model) %in% c(
+			if (covariance.model$class %in% c(
 					"glmmGS.IdentityCovarianceModel",
 					"glmmGS.PrecisionModel",
 					"glmmGS.SparsePrecisionModel"))
@@ -83,7 +83,7 @@ glmmGS.Block <- function(token, data, covariance.models)
 	}
 	
 	# Initialize block
-	block <- new.env(hash = FALSE, parent = emptyenv())
+	block <- list()
 	class(block) <- "glmmGS.Block"
 	block$name <- token
 	
@@ -92,35 +92,45 @@ glmmGS.Block <- function(token, data, covariance.models)
 	for (i in 1L:length(variable.names))
 	{
 		varname <- variable.names[i]
-		# Avoid deep copies
-		block$covariates[[i]] <- new.env(hash = FALSE, parent = emptyenv())
+		block$covariates[[i]] <- list()
 		block$covariates[[i]]$name <- varname
 		if (varname != "1")
 		{
-			value <- get(varname, data)
-			block$covariates[[i]]$value <- value
+			var <- get(varname, data)
+			block$covariates[[i]]$class <- class(var)
+			if (is.matrix(var))
+			{
+				block$covariates[[i]]$dim <- ncol(var)
+			}
+			else
+			{
+				block$covariates[[i]]$dim <- 1L
+			}
+		}
+		else
+		{
+			block$covariates[[i]]$class <- "intercept"
+			block$covariates[[i]]$dim <- 1L
 		}
 	}
 	
 	# Set factor
 	if (!is.na(factor.name))
 	{
-		# Avoid deep copies
-		block$factor <- new.env(hash = FALSE, parent = emptyenv())
+		g <- factor(get(factor.name, data))
+		block$factor <- list()
 		block$factor$name <- factor.name
-		value <- factor(get(factor.name, data))
-		block$factor$value <- value
-		block$factor$indices <- as.integer(value) - 1L 
+		block$factor$levels <- levels(g) 
+		block$factor$indices <- as.integer(g) - 1L 
 	}
 	
 	# Set covariance model
 	if (!is.na(covariance.model.name))
 	{
-		# Avoid deep copies
-		block$covariance.model <- new.env(hash = FALSE, parent = emptyenv())
+		cov.model <- get(covariance.model.name, covariance.models)
+		block$covariance.model <- list()
 		block$covariance.model$name <- covariance.model.name
-		value <- get(covariance.model.name, covariance.models)
-		block$covariance.model$value <- value
+		block$covariance.model$class <- class(cov.model)
 	}
 	
 	# Add attributes

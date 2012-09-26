@@ -11,6 +11,7 @@
 // Response
 #include "../GlmmGS/Responses/IResponse.h"
 #include "../GlmmGS/Responses/NormalResponse.h"
+#include "../GlmmGS/Responses/BernoulliResponse.h"
 #include "../GlmmGS/Responses/BinomialResponse.h"
 #include "../GlmmGS/Responses/PoissonResponse.h"
 

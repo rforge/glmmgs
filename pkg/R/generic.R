@@ -92,14 +92,14 @@ GetFixefNames <- function(fixef)
 				varnames[index] <- "(Intercept)"
 				index <- index + 1L
 			}
-			else if (class(var$value) %in% c("integer", "numeric"))
+			else if (var$class %in% c("integer", "numeric"))
 			{
 				varnames[index] <- var$name
 				index <- index + 1L
 			}
-			else if (class(var$value) == "matrix")
+			else if (var$class == "matrix")
 			{
-				ncols <- ncol(var$value)
+				ncols <- var$dim
 				if (ncols > 0L)
 				{
 					for (j in 1L:ncols)
@@ -118,7 +118,7 @@ GetFixefNames <- function(fixef)
 	else if (attr(block, "type") == "stratified")
 	{
 		nvars <- GetNumberOfVariables(block)
-		levels <- levels(block$factor$value)
+		levels <- block$factor$levels
 		nlevels <- length(levels)
 		varnames <- character(nvars * nlevels)
 		index <- 1L
@@ -132,16 +132,16 @@ GetFixefNames <- function(fixef)
 				varnames[index:upper] <- paste(varname, levels, sep = "=")
 				index <- index + nlevels
 			}
-			else if (class(var$value) %in% c("integer", "numeric"))
+			else if (var$class %in% c("integer", "numeric"))
 			{
 				upper <- index + nlevels - 1L
 				varname <- paste(var$name, block$factor$name, sep = "|")
 				varnames[index:upper] <- paste(varname, levels, sep = "=")
 				index <- index + nlevels
 			}
-			else if (class(var$value) == "matrix")
+			else if (var$class == "matrix")
 			{
-				ncols <- ncol(var$value)
+				ncols <- var$dim
 				if (ncols > 0L)
 				{
 					for (j in 1L:ncols)
@@ -177,7 +177,7 @@ GetFixefSE <- function(fixef)
 	else if (attr(block, "type") == "stratified")
 	{
 		nvars <- GetNumberOfVariables(block)
-		nlevels <- nlevels(block$factor$value)
+		nlevels <- length(block$factor$levels)
 		se <- double(nvars * nlevels)
 		for (j in 1L:nvars)
 		{
@@ -190,6 +190,7 @@ GetFixefSE <- function(fixef)
 	{
 		stop("Unsupported type")
 	}
+	
 	se
 }
 
@@ -212,14 +213,14 @@ GetVCompNames <- function(ranef)
 				varnames[index] <- "(Intercept)"
 				index <- index + 1L
 			}
-			else if (class(var$value) %in% c("integer", "numeric"))
+			else if (var$class %in% c("integer", "numeric"))
 			{
 				varnames[index] <- var$name
 				index <- index + 1L
 			}
-			else if (class(var$value) == "matrix")
+			else if (var$class == "matrix")
 			{
-				ncols <- ncol(var$value)
+				ncols <- var$dim
 				if (ncols > 0L)
 				{
 					for (j in 1L:ncols)
@@ -244,9 +245,8 @@ GetVCompNames <- function(ranef)
 
 GetVCompVariance <- function(ranef)
 {
-	covariance.model <- ranef$block$covariance.model$value
-	
-	if (class(covariance.model) %in% c(
+	covariance.model <- ranef$block$covariance.model
+	if (covariance.model$class %in% c(
 			"glmmGS.IdentityCovarianceModel",
 			"glmmGS.PrecisionModel",
 			"glmmGS.SparsePrecisionModel"))
@@ -265,8 +265,8 @@ GetVCompVariance <- function(ranef)
 GetVCompVarianceInterval <- function(ranef)
 {
 	interval <- list();
-	covariance.model <- ranef$block$covariance.model$value
-	if (class(covariance.model) %in% c(
+	covariance.model <- ranef$block$covariance.model
+	if (covariance.model$class %in% c(
 			"glmmGS.IdentityCovarianceModel",
 			"glmmGS.PrecisionModel",
 			"glmmGS.SparsePrecisionModel"))

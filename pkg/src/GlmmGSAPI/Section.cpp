@@ -2,6 +2,7 @@
 #include "Section.h"
 #include "GlmmGSAPI.h"
 #include "Responses/NormalResponseSection.h"
+#include "Responses/BernoulliResponseSection.h"
 #include "Responses/BinomialResponseSection.h"
 #include "Responses/PoissonResponseSection.h"
 #include "FixedEffects/FixedEffectsSection.h"
@@ -39,6 +40,11 @@ namespace GlmmGSAPI
 		if (family == "gaussian")
 		{
 			typedef Responses::NormalResponseSection T;
+			return Pointer<T>(new(bl) T(*this));
+		}
+		if (family == "bernoulli")
+		{
+			typedef Responses::BernoulliResponseSection T;
 			return Pointer<T>(new(bl) T(*this));
 		}
 		else if (family == "binomial")

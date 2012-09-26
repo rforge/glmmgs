@@ -1,5 +1,24 @@
+# Add response
+glmmGS.AddResponse <- function(response, data)
+{
+	values <- get(response$name[1L], data)
+	glmmGSAPI.AddResponse(values)
+	if (response$family == "binomial")
+	{
+		counts <- get(response$name[2L], data)
+		glmmGSAPI.AddCounts(counts)
+	}
+}
+
+# Add offset
+glmmGS.AddOffset <- function(offset, data)
+{
+	values <- get(offset$name, data)
+	glmmGSAPI.AddOffset(values)
+}
+
 # Add variables to block
-glmmGS.AddCovariates <- function(covariates)
+glmmGS.AddCovariates <- function(covariates, data)
 {
 	for (var in covariates) 
 	{
@@ -9,25 +28,28 @@ glmmGS.AddCovariates <- function(covariates)
 		}
 		else 
 		{
-			glmmGSAPI.AddCovariate(var$value, var$duplicate)
+			values <- get(var$name, data)
+			glmmGSAPI.AddCovariate(values, var$duplicate)
 		}
 	}
 }
 
 # Add covariance model to model
-glmmGS.AddCovarianceModel <- function(covariance.model)
+glmmGS.AddCovarianceModel <- function(covariance.model, covariance.models)
 {
-	if (class(covariance.model) == "glmmGS.IdentityCovarianceModel") 
+	cov.model <- get(covariance.model$name, covariance.models)
+	
+	if (class(cov.model) == "glmmGS.IdentityCovarianceModel") 
 	{
-		glmmGSAPI.AddIdentityCovarianceModel(covariance.model$S)
+		glmmGSAPI.AddIdentityCovarianceModel(cov.model$S)
 	}
-	else if (class(covariance.model) == "glmmGS.PrecisionModel")
+	else if (class(cov.model) == "glmmGS.PrecisionModel")
 	{
-		glmmGSAPI.AddPrecisionModel(covariance.model$R, covariance.model$S)
+		glmmGSAPI.AddPrecisionModel(cov.model$R, cov.model$S)
 	}
-	else if (class(covariance.model) == "glmmGS.SparsePrecisionModel") 
+	else if (class(cov.model) == "glmmGS.SparsePrecisionModel") 
 	{
-		glmmGSAPI.AddSparsePrecisionModel(covariance.model$R, covariance.model$S)
+		glmmGSAPI.AddSparsePrecisionModel(cov.model$R, cov.model$S)
 	}
 	else
 	{
@@ -104,25 +126,21 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	}
 	
 	# Get response and predictor blocks
-	response <- glmmGS.Response(formula, family, data)
+	response <- glmmGS.Response(formula, family)
 	predictors <- glmmGS.Predictors(formula, data, covariance.models)
 	
 	# Initialize API
 	glmmGSAPI.BeginModel()
 	
 	# Add response
-	glmmGSAPI.BeginResponse(family$family)
-	glmmGSAPI.AddResponse(response$value)
-	if (family$family == "binomial")
-	{
-		glmmGSAPI.AddCounts(response$size)
-	}
+	glmmGSAPI.BeginResponse(response$family)
+	glmmGS.AddResponse(response, data)
 	glmmGSAPI.EndResponse()
 
 	# Add offset
 	if (!is.null(predictors$offset))
 	{
-		glmmGSAPI.AddOffset(predictors$offset$value)
+		glmmGS.AddOffset(predictors$offset, data)
 	}
 	
 	# Fixed effects
@@ -139,14 +157,14 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 			{
 				# Dense block
 				glmmGSAPI.BeginGlobalBlock()
-				glmmGS.AddCovariates(block$covariates)
+				glmmGS.AddCovariates(block$covariates, data)
 				glmmGSAPI.EndGlobalBlock()			
 			}
 			else if (attr(block, "type") == "stratified")
 			{
 				# Stratified block
 				glmmGSAPI.BeginStratifiedBlock(block$factor$indices)
-				glmmGS.AddCovariates(block$covariates)
+				glmmGS.AddCovariates(block$covariates, data)
 				glmmGSAPI.EndStratifiedBlock()
 			}
 			else
@@ -161,7 +179,7 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	if (length(predictors$ranef) > 0L)
 	{
 		glmmGSAPI.BeginRandomEffects()
-		for (i in 1:length(predictors$ranef))
+		for (i in 1L:length(predictors$ranef))
 		{
 			# Set block
 			block <- predictors$ranef[[i]]$block
@@ -170,16 +188,16 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 			{
 				# Dense block
 				glmmGSAPI.BeginGlobalBlock()
-				glmmGS.AddCovariates(block$covariates)
-				glmmGS.AddCovarianceModel(block$covariance.model$value)
+				glmmGS.AddCovariates(block$covariates, data)
+				glmmGS.AddCovarianceModel(block$covariance.model, covariance.models)
 				glmmGSAPI.EndGlobalBlock()			
 			}
 			else if (attr(block, "type") == "stratified")
 			{
 				# Stratified block
 				glmmGSAPI.BeginStratifiedBlock(block$factor$indices)
-				glmmGS.AddCovariates(block$covariates)
-				glmmGS.AddCovarianceModel(block$covariance.model$value)
+				glmmGS.AddCovariates(block$covariates, data)
+				glmmGS.AddCovarianceModel(block$covariance.model, covariance.models)
 				glmmGSAPI.EndStratifiedBlock()
 			}
 			else
@@ -205,8 +223,8 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGS$fixef <- glmmGSAPI.GetFixef(predictors$fixef)
 	glmmGS$ranef <- glmmGSAPI.GetRanef(predictors$ranef)
 	iterations <- glmmGSAPI.GetIterations()
-	iterations <- list(outer = iterations[1], coef = iterations[2], vcomp = iterations[3])
+	iterations <- list(outer = iterations[1L], coef = iterations[2L], vcomp = iterations[3L])
 	glmmGS$iterations <- iterations;
-	glmmGS$proc.time <- time[3];
+	glmmGS$proc.time <- time[3L];
 	glmmGS
 }
