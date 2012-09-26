@@ -144,10 +144,11 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	}
 	
 	# Fixed effects
-	if (length(predictors$fixef) > 0L)
+	nfixef <- length(predictors$fixef) 
+	if (nfixef > 0L)
 	{
 		glmmGSAPI.BeginFixedEffects()
-		for (i in 1:length(predictors$fixef))
+		for (i in 1L:nfixef)
 		{
 			# Set block
 			block <- predictors$fixef[[i]]$block
@@ -176,10 +177,11 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	}
 	
 	# Random effects
-	if (length(predictors$ranef) > 0L)
+	nranef <- length(predictors$ranef) 
+	if (nranef > 0L)
 	{
 		glmmGSAPI.BeginRandomEffects()
-		for (i in 1L:length(predictors$ranef))
+		for (i in 1L:nranef)
 		{
 			# Set block
 			block <- predictors$ranef[[i]]$block
@@ -217,7 +219,6 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	time <- proc.time() - start.time; 
 	
 	# Set results
-	# Avoid deep copies
 	glmmGS <- list()
 	class(glmmGS) <- "glmmGS"
 	glmmGS$fixef <- glmmGSAPI.GetFixef(predictors$fixef)
@@ -226,5 +227,15 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	iterations <- list(outer = iterations[1L], coef = iterations[2L], vcomp = iterations[3L])
 	glmmGS$iterations <- iterations;
 	glmmGS$proc.time <- time[3L];
+	
+	# Tyde up
+	glmmGSAPI.Tidy()
+	if (nranef > 0L)
+	{
+		for (i in 1L:nranef)
+			predictors$ranef[[i]]$block$factor$indices <- NULL
+	}
+	
+	# Return
 	glmmGS
 }
