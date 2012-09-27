@@ -59,8 +59,7 @@ namespace GlmmGS
 				Vector<double> h = this->chol.Solve(jacobian);
 
 				// Check if update is significant
-				if (control.comparer.IsZero(h, this->beta))
-					return 0;
+				const int update = control.comparer.IsZero(h, this->beta) ? 0 : 1;
 
 				// Scale update
 				ScaleUpdate(h, control.max_updates.fixef);
@@ -72,7 +71,7 @@ namespace GlmmGS
 				if (control.verbose)
 					Print("Max update fixed effects: %g\n", MaxAbs(h));
 
-				return 1;
+				return update;
 			}
 		}
 	}

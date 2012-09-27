@@ -66,9 +66,8 @@ namespace GlmmGS
 					TriangularMatrix<double> minus_hessian(this->nvars);
 					for (int i = 0; i < this->nvars; ++i)
 					{
-						const double bsquare = Square(beta(i));
 						const double trace = Sum(covariance(i, i));
-						jac(i) = this->nlevels / this->theta(i) - bsquare - trace;
+						jac(i) = this->nlevels / this->theta(i) - Square(beta(i)) - trace;
 						minus_hessian(i, i) = this->nlevels / Square(this->theta(i)) - Square(covariance(i, i));
 						for (int j = 0; j < i; ++j)
 							minus_hessian(i, j) = -Square(covariance(i, j));

@@ -1,5 +1,5 @@
 #include "../../../Standard.h"
-#include "Functions.h"
+#include "../../CovarianceModelFunctions.h"
 #include "PrecisionModel.h"
 
 namespace GlmmGS
@@ -75,9 +75,7 @@ namespace GlmmGS
 					// Calculate jacobian and minus the hessian
 					Vector<double> jac(1);
 					TriangularMatrix<double> minus_hessian(1);
-					const double bsquare = Square(this->R, beta);
-					const double trace = Trace(a);
-					jac(0) = ncols / this->theta(0) - bsquare - trace;
+					jac(0) = ncols / this->theta(0) - Square(this->R, beta) - Trace(a);
 					minus_hessian(0, 0) = ncols / Math::Square(this->theta(0)) - SquareTrace(a);
 
 					// Update covariance components

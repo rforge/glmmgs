@@ -57,8 +57,7 @@ namespace GlmmGS
 				Vector<double> h = covariance_model->CoefficientsUpdate(design_jacobian, this->beta);
 
 				// Check if update is significant
-				if (control.comparer.IsZero(h, this->beta))
-					return 0;
+				const int update = control.comparer.IsZero(h, this->beta) ? 0 : 1;
 
 				// Scale update
 				ScaleUpdate(h, control.max_updates.ranef);
@@ -70,7 +69,7 @@ namespace GlmmGS
 				if (control.verbose)
 					Print("Max update random effects: %g\n", MaxAbs(h));
 
-				return 1;
+				return update;
 			}
 
 			int Block::UpdateCovarianceComponents(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control)

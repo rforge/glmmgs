@@ -49,8 +49,7 @@ namespace GlmmGS
 					ConstrainUpdate(h, this->theta, control.max_values.vcomp);
 
 					// Check if update is significant
-					if (control.comparer.IsZero(h, this->theta))
-						return 0;
+					const int update = control.comparer.IsZero(h, this->theta) ? 0 : 1;
 
 					// Scale update
 					ScaleUpdate(h, control.max_updates.vcomp);
@@ -65,7 +64,7 @@ namespace GlmmGS
 					if (control.verbose)
 						Print("Max update variance components: %g\n", MaxAbs(h));
 
-					return 1;
+					return update;
 				}
 			}
 		}

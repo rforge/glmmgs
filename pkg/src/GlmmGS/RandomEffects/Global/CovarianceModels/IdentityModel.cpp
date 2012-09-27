@@ -57,10 +57,8 @@ namespace GlmmGS
 					// Calculate jacobian and minus the hessian
 					Vector<double> jac(1);
 					TriangularMatrix<double> minus_hessian(1);
-					const double bsquare = LinearAlgebra::Square(beta);
-					const double trace = LinearAlgebra::Trace(covariance);
-					jac(0) = this->size / this->theta(0) - bsquare - trace;
-					minus_hessian(0, 0) = this->size / Math::Square(this->theta(0)) - LinearAlgebra::SquareTrace(covariance);
+					jac(0) = this->size / this->theta(0) - Square(beta) - Trace(covariance);
+					minus_hessian(0, 0) = this->size / Square(this->theta(0)) - SquareTrace(covariance);
 
 					// Update covariance components
 					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);

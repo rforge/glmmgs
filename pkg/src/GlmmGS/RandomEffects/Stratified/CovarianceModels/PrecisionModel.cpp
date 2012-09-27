@@ -1,8 +1,8 @@
 #include "../../../Standard.h"
 #include "../../../Boosters/Boosters.h"
 #include "../../../Variables/IVariable.h"
+#include "../../CovarianceModelFunctions.h"
 #include "PrecisionModel.h"
-#include "Functions.h"
 
 namespace GlmmGS
 {
@@ -115,8 +115,7 @@ namespace GlmmGS
 					TriangularMatrix<double> minus_hessian(this->nvars);
 					for (int i = 0; i < this->nvars; ++i)
 					{
-						const double bsquare = Square(this->R, beta(i));
-						jac(i) = nlevels / this->theta(i) - bsquare - BlockTrace(i, nlevels, a);
+						jac(i) = nlevels / this->theta(i) - Square(this->R, beta(i)) - BlockTrace(i, nlevels, a);
 						minus_hessian(i, i) = nlevels / Math::Square(this->theta(i)) - BlockSquareTrace(i, i, nlevels, a);
 						for (int j = 0; j < i; ++j)
 							minus_hessian(i, j) = -BlockSquareTrace(i, j, nlevels, a);
