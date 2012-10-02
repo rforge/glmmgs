@@ -382,7 +382,7 @@ print.glmmGS <- function(x, ...)
 			
 			# Print variance table
 			cat("\nBlock: \'", ranef$block$name, "\'\n", sep = "")
-			cat("Variance Components:\n")
+			cat("Variance:\n")
 			print(summary, digits = digits, right = TRUE)
 
 			if (!is.null(vcomp$cor))
