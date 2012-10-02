@@ -26,11 +26,11 @@
     	if the type is \code{precision}, the required additional argument must be 
     	a precision matrix of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
     	If the covariance model is applied to random effect covariates stratified by
-    	a grouping factor, then a within-cluster covariance model for the random effects
+    	a grouping factor, then a within-stratum covariance model for the random effects
     	can be further specified by the named argument \code{within}. In particular,
-    	\code{within = "diagonal"} fits a within-cluster diagonal precision matrix, 
-    	while \code{within = "multivariate"} fits a within-cluster complete precision matrix.
-    	By default a diagonal within-cluster precision matrix is assumed.
+    	\code{within = "diagonal"} fits a within-stratum diagonal precision matrix, 
+    	while \code{within = "multivariate"} fits a within-stratum complete precision matrix.
+    	By default a diagonal within-stratum precision matrix is assumed.
     	The covariance components can be fixed by passing the vector
     	of parameters used by the covariance model in the named argument \code{fix.components}.
     	For stratified random effects the vector of parameters depends on: 
