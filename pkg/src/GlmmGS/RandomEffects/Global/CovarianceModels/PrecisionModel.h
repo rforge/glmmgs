@@ -26,7 +26,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					PrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
+					PrecisionModel(const ImmutableMatrix<double> & precision, const ImmutableVector<double> & theta);
 					~PrecisionModel();
 
 					// Properties

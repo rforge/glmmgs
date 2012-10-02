@@ -28,7 +28,7 @@ namespace GlmmGS
 							const ImmutableVector<double> & jacobian, const Control & control);
 				public:
 					// Construction
-					ICovarianceModel(int npars, const ImmutableMatrix<double> & S);
+					ICovarianceModel(int npars, const ImmutableVector<double> & theta);
 					virtual ~ICovarianceModel();
 
 					// Properties

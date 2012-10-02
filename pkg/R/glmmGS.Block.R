@@ -41,7 +41,7 @@ GetNumberOfVarianceComponents <- function(block)
 		if (attr(block, "type") == "dense")
 		{
 			if (covariance.model$class %in% c(
-				"glmmGS.IdentityCovarianceModel",
+				"glmmGS.IdentityModel",
 				"glmmGS.PrecisionModel"))
 			{
 				size <- 1L
@@ -51,14 +51,23 @@ GetNumberOfVarianceComponents <- function(block)
 		else if (attr(block, "type") == "stratified")
 		{
 			if (covariance.model$class %in% c(
-					"glmmGS.IdentityCovarianceModel",
+					"glmmGS.MultivariateIdentityModel"))
+			{
+				size <- GetNumberOfVariables(block)
+				size <- as.integer((size * (size + 1)) / 2)
+			}
+			else if (covariance.model$class %in% c(
+					"glmmGS.IdentityModel",
 					"glmmGS.PrecisionModel",
-					"glmmGS.SparsePrecisionModel"))
+					"glmmGS.SparsePrecisionModel"
+							))
 			{
 				size <- GetNumberOfVariables(block)
 			}
 		}
 	}
+	
+	size
 }
 
 # glmmGS.Block - S3 class constructor 

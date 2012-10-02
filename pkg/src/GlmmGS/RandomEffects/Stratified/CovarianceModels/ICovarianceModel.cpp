@@ -1,5 +1,6 @@
-#include "ICovarianceModel.h"
+#include "../../../Standard.h"
 #include "../../../Control.h"
+#include "ICovarianceModel.h"
 
 namespace GlmmGS
 {
@@ -10,8 +11,8 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				ICovarianceModel::ICovarianceModel(int npars, const ImmutableMatrix<double> & S)
-					: theta(npars), constant(S.NumberOfRows() > 0)
+				ICovarianceModel::ICovarianceModel(int npars, const ImmutableVector<double> & theta)
+					: theta(npars), constant(theta.Size() > 0)
 				{
 				}
 

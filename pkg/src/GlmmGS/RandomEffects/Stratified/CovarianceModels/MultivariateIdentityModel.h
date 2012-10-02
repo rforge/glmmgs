@@ -1,5 +1,5 @@
-#ifndef GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCEMODELS_SPARSEPRECISIONMODEL_H
-#define GLMMGS_RANDOMEFFECTS_STRATIFIED_COVARIANCEMODELS_SPARSEPRECISIONMODEL_H
+#ifndef GLMMGS_RANDOMEFFECTS_STRATIFIED_MVCOVARIANCEMODELS_IDENTITYMODEL_H
+#define GLMMGS_RANDOMEFFECTS_STRATIFIED_MVCOVARIANCEMODELS_IDENTITYMODEL_H
 
 #include "../../../Standard.h"
 #include "../../../Boosters/Boosters.h"
@@ -14,15 +14,15 @@ namespace GlmmGS
 		{
 			namespace CovarianceModels
 			{
-				// SparsePrecisionModel
-				class SparsePrecisionModel : public ICovarianceModel
+				// MultivariateIdentityModel
+				class MultivariateIdentityModel : public ICovarianceModel
 				{
 				private:
 					// Fields
 					int nvars;
-					const LDL::SparseMatrix<double> R;
-					LDL::SparseCholeskyDecomposition beta_precision_chol;
-					Boosters::RemoveWeightedMean remove_weighted_mean;
+					int nlevels;
+					VectorialCholeskyDecomposition beta_precision_chol;
+					Boosters::RemoveMean remove_mean;
 
 					// Coefficients
 					void Decompose(const TriangularMatrix<Vector<double> > & precision);
@@ -35,8 +35,8 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					SparsePrecisionModel(int nvars, const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & theta);
-					~SparsePrecisionModel();
+					MultivariateIdentityModel(int nvars, int nlevels, const ImmutableVector<double> & theta);
+					~MultivariateIdentityModel();
 				};
 			}
 		}

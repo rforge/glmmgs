@@ -232,34 +232,43 @@ glmmGSAPI.AddCovariate <- function(values, duplicate)
 }
 
 # Add identity covariance model
-glmmGSAPI.AddIdentityCovarianceModel <- function(S)
+glmmGSAPI.AddIdentityModel <- function(theta)
 {
-	ValidateMatrixDouble(S)
-	dimS <- dim(S)
-	.C("GlmmGSRAPI_AddIdentityCovarianceModel", S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	ValidateDouble(theta)
+	len.theta <- length(theta)
+	.C("GlmmGSRAPI_AddIdentityModel", theta, len.theta, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	glmmGSAPI.GetLastError()
+}
+
+# Add multi-variate identity covariance model
+glmmGSAPI.AddMultivariateIdentityModel <- function(theta)
+{
+	ValidateDouble(theta)
+	len.theta <- length(theta)
+	.C("GlmmGSRAPI_AddMultivariateIdentityModel", theta, len.theta, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
 # Add precision model
-glmmGSAPI.AddPrecisionModel <- function(R, S)
+glmmGSAPI.AddPrecisionModel <- function(R, theta)
 {
 	ValidateMatrixDouble(R)
-	ValidateMatrixDouble(S)
-	dimR <- dim(R)
-	dimS <- dim(S)
-	.C("GlmmGSRAPI_AddPrecisionModel", R, dimR, S, dimS, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
+	ValidateDouble(theta)
+	dim.R <- dim(R)
+	len.theta <- length(theta)
+	.C("GlmmGSRAPI_AddPrecisionModel", R, dim.R, theta, len.theta, DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }
 
 # Add sparse-precision model
-glmmGSAPI.AddSparsePrecisionModel <- function(R, S)
+glmmGSAPI.AddSparsePrecisionModel <- function(sparse.R, theta)
 {
-	ValidateSparseMatrix(R)
-	ValidateMatrixDouble(S)
+	ValidateSparseMatrix(sparse.R)
+	ValidateDouble(theta)
 	
-	ncols = length(R$counts) - 1L
-	dimS <- dim(S)
-	.C("GlmmGSRAPI_AddSparsePrecisionModel", R$values, R$indices, R$counts, ncols, S, dimS, 
+	ncols = length(sparse.R$counts) - 1L
+	len.theta <- length(theta)
+	.C("GlmmGSRAPI_AddSparsePrecisionModel", sparse.R$values, sparse.R$indices, sparse.R$counts, ncols, theta, len.theta, 
 			DUP = FALSE, NAOK = FALSE, PACKAGE = "glmmGS")
 	glmmGSAPI.GetLastError()
 }

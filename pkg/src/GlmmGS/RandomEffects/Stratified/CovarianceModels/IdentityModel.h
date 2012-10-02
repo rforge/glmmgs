@@ -35,7 +35,7 @@ namespace GlmmGS
 
 				public:
 					// Construction
-					IdentityModel(int nvars, int nlevels, const ImmutableMatrix<double> & S);
+					IdentityModel(int nvars, int nlevels, const ImmutableVector<double> & theta);
 					~IdentityModel();
 				};
 			}

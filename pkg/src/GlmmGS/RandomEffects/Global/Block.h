@@ -3,9 +3,10 @@
 
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
-#include "CovarianceModels/ICovarianceModel.h"
 #include "../../Control.h"
+#include "../../FixedEffects/IBlock.h"
 #include "../IBlock.h"
+#include "CovarianceModels/ICovarianceModel.h"
 
 namespace GlmmGS
 {
@@ -23,6 +24,7 @@ namespace GlmmGS
 				Pointer<CovarianceModels::ICovarianceModel> covariance_model;
 
 				// Implementation
+				void EvaluateLinearDependencies(const Pointer<FixedEffects::IBlock> & fixef);
 				void UpdatePredictor(Vector<double> & eta) const;
 				int UpdateCoefficients(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control);
 				int UpdateCovarianceComponents(const ImmutableVector<double> & weights, const ImmutableVector<double> & values, const Control & control);

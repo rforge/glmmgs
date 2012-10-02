@@ -36,10 +36,10 @@ namespace GlmmGSAPI
 		static Pointer<Section> BeginModel();
 		void EndModel();
 		Pointer<Section> BeginResponse(WeakString<const char> family);
-		void AddOffset(const ImmutableVector<int> & values);
-		void AddOffset(const ImmutableVector<double> & values);
 		Pointer<Section> BeginFixedEffects();
+		virtual void EndFixedEffects();
 		Pointer<Section> BeginRandomEffects();
+		virtual void EndRandomEffects();
 
 		// Response section methods
 		virtual void AddResponse(const ImmutableVector<int> & values);
@@ -47,23 +47,26 @@ namespace GlmmGSAPI
 		virtual void AddCounts(const ImmutableVector<int> & values);
 		virtual void EndResponse();
 
-		// Fixed and random effect common methods
+		// Offset
+		void AddOffset(const ImmutableVector<int> & values);
+		void AddOffset(const ImmutableVector<double> & values);
+
+		// Blocks
 		virtual Pointer<Section> BeginBlock();
 		virtual void EndBlock();
 		virtual Pointer<Section> BeginStratifiedBlock(WeakFactor factor);
 		virtual void EndStratifiedBlock();
+
+		// Covariates
 		virtual void AddIntercept(int duplicate);
 		virtual void AddCovariate(const ImmutableVector<int> & values, int duplicate);
 		virtual void AddCovariate(const ImmutableVector<double> & values, int duplicate);
 
-		// Fixed effect methods
-		virtual void EndFixedEffects();
-
-		// Random effect methods
-		virtual void AddIdentityCovarianceModel(const ImmutableMatrix<double> & S);
-		virtual void AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
-		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableMatrix<double> & S);
-		virtual void EndRandomEffects();
+		// Covariance models
+		virtual void AddIdentityModel(const ImmutableVector<double> & theta);
+		virtual void AddMultivariateIdentityModel(const ImmutableVector<double> & theta);
+		virtual void AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableVector<double> & theta);
+		virtual void AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & theta);
 	};
 }
 

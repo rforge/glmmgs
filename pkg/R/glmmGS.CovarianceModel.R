@@ -4,13 +4,29 @@ glmmGS.CovarianceModel <- function(type, ...)
 	# Get variable list
 	ls <- list(...)
 	
+	# Get within parameter
+	within <- ls$within
+	if(is.null(within))
+		within <- "independent"
+	
 	# Instantiate covariance model
 	model <- list()
 	
 	# Build covariance model class
 	if (type == "identity")
 	{
-		class(model) <- "glmmGS.IdentityCovarianceModel"
+		if (within == "independent")
+		{
+			class(model) <- "glmmGS.IdentityModel"
+		}
+		else if (within == "multivariate")
+		{
+			class(model) <- "glmmGS.MultivariateIdentityModel"
+		}
+		else
+		{
+			stop("Invalid \'within\' argument")
+		}
 	}
 	else if (type == "precision")
 	{
@@ -36,7 +52,9 @@ glmmGS.CovarianceModel <- function(type, ...)
 	}
 	
 	# Set covariance components
-	ifelse(!is.null(ls$fix.components), model$S <- ls$fix.components, model$S <- matrix(0, ncol = 0L, nrow = 0L))
+	model$theta <- ls$fix.components
+	if (is.null(model$theta))
+		model$theta <- double(0L)
 
 	model
 }

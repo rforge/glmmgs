@@ -1,5 +1,5 @@
 #include "../../../Standard.h"
-#include "../../CovarianceModelFunctions.h"
+#include "../../CovarianceModelUtilities.h"
 #include "PrecisionModel.h"
 
 namespace GlmmGS
@@ -11,11 +11,17 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Construction
-				PrecisionModel::PrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S)
-					: ICovarianceModel(1, S), R(R)
+				PrecisionModel::PrecisionModel(const ImmutableMatrix<double> & precision, const ImmutableVector<double> & theta)
+					: ICovarianceModel(1, theta), R(precision)
 				{
-					_VALIDATE_ARGUMENT(!this->constant || S.NumberOfRows() == 1);
-					this->theta(0) = this->constant ? 1.0 / S(0, 0) : 1.0;
+					if (this->constant)
+					{
+						Copy(this->theta, theta);
+					}
+					else
+					{
+						this->theta(0) = 1.0;
+					}
 				}
 
 				PrecisionModel::~PrecisionModel()

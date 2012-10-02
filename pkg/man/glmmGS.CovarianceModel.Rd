@@ -26,7 +26,8 @@
     	if the type is \code{precision}, the required additional argument must be 
     	a precision matrix of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
     	In all covariance models the covariance components can be fixed by setting
-    	the named argument \code{fix.components} equal to a given covariance	component matrix.
+    	the named argument \code{fix.components} equal to a given covariance
+    	component matrix.
   	}
 }
 

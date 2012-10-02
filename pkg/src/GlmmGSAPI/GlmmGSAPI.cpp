@@ -176,19 +176,24 @@ namespace GlmmGSAPI
 	}
 
 	// Covariance models
-	void GlmmGSAPI::AddIdentityCovarianceModel(const ImmutableMatrix<double> & S)
+	void GlmmGSAPI::AddIdentityModel(const ImmutableVector<double> & theta)
 	{
-		this->sections.Top()->AddIdentityCovarianceModel(S);
+		this->sections.Top()->AddIdentityModel(theta);
 	}
 
-	void GlmmGSAPI::AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S)
+	void GlmmGSAPI::AddMultivariateIdentityModel(const ImmutableVector<double> & theta)
 	{
-		this->sections.Top()->AddPrecisionModel(R, S);
+		this->sections.Top()->AddMultivariateIdentityModel(theta);
 	}
 
-	void GlmmGSAPI::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableMatrix<double> & S)
+	void GlmmGSAPI::AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableVector<double> & theta)
 	{
-		this->sections.Top()->AddSparsePrecisionModel(R, S);
+		this->sections.Top()->AddPrecisionModel(R, theta);
+	}
+
+	void GlmmGSAPI::AddSparsePrecisionModel(const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & theta)
+	{
+		this->sections.Top()->AddSparsePrecisionModel(R, theta);
 	}
 
 	// Fit

@@ -39,17 +39,21 @@ glmmGS.AddCovarianceModel <- function(covariance.model, covariance.models)
 {
 	cov.model <- get(covariance.model$name, covariance.models)
 	
-	if (class(cov.model) == "glmmGS.IdentityCovarianceModel") 
+	if (class(cov.model) == "glmmGS.IdentityModel") 
 	{
-		glmmGSAPI.AddIdentityCovarianceModel(cov.model$S)
+		glmmGSAPI.AddIdentityModel(cov.model$theta)
+	}
+	else if (class(cov.model) == "glmmGS.MultivariateIdentityModel") 
+	{
+		glmmGSAPI.AddMultivariateIdentityModel(cov.model$theta)
 	}
 	else if (class(cov.model) == "glmmGS.PrecisionModel")
 	{
-		glmmGSAPI.AddPrecisionModel(cov.model$R, cov.model$S)
+		glmmGSAPI.AddPrecisionModel(cov.model$R, cov.model$theta)
 	}
 	else if (class(cov.model) == "glmmGS.SparsePrecisionModel") 
 	{
-		glmmGSAPI.AddSparsePrecisionModel(cov.model$R, cov.model$S)
+		glmmGSAPI.AddSparsePrecisionModel(cov.model$R, cov.model$theta)
 	}
 	else
 	{

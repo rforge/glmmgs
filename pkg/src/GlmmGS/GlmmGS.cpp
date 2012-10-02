@@ -32,6 +32,11 @@ namespace GlmmGS
 		this->EvaluateWorkingWeightsAndValues();
 
 
+		// Check linear dependencies
+		for (int i = 0; i < this->random_effects.Size(); ++i)
+			for (int j = 0; j < this->fixed_effects.Size(); ++j)
+				this->random_effects(i)->EvaluateLinearDependencies(this->fixed_effects(j));
+
 		// Initialize counters
 		Set(this->iterations, 0);
 

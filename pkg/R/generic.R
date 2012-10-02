@@ -62,19 +62,54 @@ vcov.glmmGS <- function(object, ...)
 	glmmGS <- object
 	
 	n <- length(glmmGS$fixef)
-	vcov <- list()
-	names <- character(n)
-	for (i in 1L:n)
+	if (n > 0L)
 	{
-		block <- glmmGS$fixef[[i]]
-		vcov[[i]] <- block$coef$vcov
-		names[i] <- block$block$name
+		vcov <- list()
+		names <- character(n)
+		for (i in 1L:n)
+		{
+			block <- glmmGS$fixef[[i]]
+			vcov[[i]] <- block$coef$vcov
+			names[i] <- block$block$name
+		}
+		names(vcov) <- names
+	}	
+	else
+	{
+		vcov <- NA
 	}
-	names(vcov) <- names
-	
 	vcov
 }
 
+# vcomp
+vcomp <- function(object, ...)
+{
+	UseMethod("vcomp")
+}
+
+vcomp.glmmGS <- function(object, ...)
+{
+	glmmGS <- object
+	
+	n <- length(glmmGS$ranef)
+	if (n > 0L)
+	{
+		vcomp <- list()
+		names <- character(n)
+		for (i in 1L:n)
+		{
+			block <- glmmGS$ranef[[i]]
+			vcomp[[i]] <- block$vcomp$estm
+			names[i] <- block$block$name
+		}
+		names(vcomp) <- names
+	}	
+	else
+	{
+		vcomp <- NA
+	}
+	vcomp
+}
 
 # Utilities functions for print.glmmGS
 GetFixefNames <- function(fixef)
@@ -243,46 +278,54 @@ GetVCompNames <- function(ranef)
 	varnames
 }
 
-GetVCompVariance <- function(ranef)
+GetVComp <- function(ranef)
 {
+	vcomp <- list(var = list());
 	covariance.model <- ranef$block$covariance.model
 	if (covariance.model$class %in% c(
-			"glmmGS.IdentityCovarianceModel",
+			"glmmGS.MultivariateIdentityModel"))
+	{
+		nvar <- GetNumberOfVariables(ranef$block)
+		
+		# Retrieve estimated precision matrix
+		prec <- matrix(0, nvar, nvar)
+		prec[lower.tri(prec, diag = TRUE)] <- ranef$vcomp$estm
+		d <- as.vector(diag(prec))
+		nd <- length(d)
+		prec <- prec + t(prec) - diag(d, nd, nd)
+		
+		# Evaluate estimated variance matrix
+		cov <- solve(prec)
+		
+		# TODO: evaluate se of covariance 
+		vcomp$var$estm <- diag(cov)
+		vcomp$var$upper <- NA
+		vcomp$var$lower <- NA
+		vcomp$cor <- cov2cor(cov)
+		
+	}
+	else if (covariance.model$class %in% c(
+			"glmmGS.IdentityModel",
 			"glmmGS.PrecisionModel",
 			"glmmGS.SparsePrecisionModel"))
 	{
-		vcomp <- ranef$vcomp
-		var <- 1 / vcomp$estm
+		prec <- ranef$vcomp$estm
+		se <- sqrt(diag(ranef$vcomp$vcov))
+		estm <- 1 / prec
+		lower <- 1 / (prec + 2 * se)
+		upper <- 1 / (prec - 2 * se)
+		upper <- ifelse(upper < 0, Inf, upper)
+		
+		vcomp$var$estm <- estm;
+		vcomp$var$lower <- lower;
+		vcomp$var$upper <- upper;
 	}
 	else
 	{
 		stop("Unsupported covariance model")
 	}
 	
-	var
-}
-
-GetVCompVarianceInterval <- function(ranef)
-{
-	interval <- list();
-	covariance.model <- ranef$block$covariance.model
-	if (covariance.model$class %in% c(
-			"glmmGS.IdentityCovarianceModel",
-			"glmmGS.PrecisionModel",
-			"glmmGS.SparsePrecisionModel"))
-	{
-		vcomp <- ranef$vcomp
-		lower <- 1 / (vcomp$estm + 2 * sqrt(diag(vcomp$vcov)))
-		upper <- 1 / (vcomp$estm - 2 * sqrt(diag(vcomp$vcov)))
-		upper <- ifelse(upper < 0, Inf, upper)
-	}
-	else
-	{
-		stop("Unsupported covariance model")
-	}
-	interval$lower <- lower;
-	interval$upper <- upper;
-	interval
+	vcomp
 }
 
 # print
@@ -331,17 +374,27 @@ print.glmmGS <- function(x, ...)
 		for (ranef in glmmGS$ranef)
 		{
 			names <- GetVCompNames(ranef)
-			var <- GetVCompVariance(ranef)
-			lu <- GetVCompVarianceInterval(ranef)
+			vcomp <- GetVComp(ranef)
 			
-			# Generate summary table
-			summary <- data.frame(var, lu$lower, lu$upper)
+			# Generate variance table
+			summary <- data.frame(vcomp$var$estm, vcomp$var$lower, vcomp$var$upper)
 			dimnames(summary) <- list(names, c("Variance", "2.5%", "97.5%"))
 			
-			# Print summary table
+			# Print variance table
 			cat("\nBlock: \'", ranef$block$name, "\'\n", sep = "")
 			cat("Variance Components:\n")
 			print(summary, digits = digits, right = TRUE)
+
+			if (!is.null(vcomp$cor))
+			{
+				# Generate correlation table
+				summary <- data.frame(vcomp$cor)
+				dimnames(summary) <- list(names, names)
+				
+				# Print correlation table
+				cat("Correlation:\n")
+				print(summary, digits = digits, right = TRUE)
+			}
 		}
 	}
 	

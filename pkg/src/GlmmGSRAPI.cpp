@@ -292,17 +292,13 @@ void GlmmGSRAPI_AddCovariatesDbl(const double * values, const int * dim, const i
 	GlmmGSRAPI_AddCovariatesImpl(values, dim, duplicate);
 }
 
-void GlmmGSRAPI_AddIdentityCovarianceModel(
-		const double * S, const int * dimS)
+void GlmmGSRAPI_AddIdentityModel(const double * theta, const int * size_theta)
 {
 	try
 	{
-		if (dimS[0] != dimS[1])
-			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
-
 		// TODO: check matrix is symmetric
-		External<double> ext(const_cast<double *>(S));
-		GlmmGSAPI::theApi.AddIdentityCovarianceModel(ImmutableMatrix<double>(ext, dimS[0], dimS[1]));
+		External<double> ext(const_cast<double *>(theta));
+		GlmmGSAPI::theApi.AddIdentityModel(ImmutableVector<double>(ext, *size_theta));
 	}
 	catch (Exception & e)
 	{
@@ -310,25 +306,34 @@ void GlmmGSRAPI_AddIdentityCovarianceModel(
 	}
 }
 
-void GlmmGSRAPI_AddPrecisionModel(
-		const double * R, const int * dimR,
-		const double * S, const int * dimS)
+void GlmmGSRAPI_AddMultivariateIdentityModel(const double * theta, const int * size_theta)
 {
 	try
 	{
-		if (dimR[0] != dimR[1])
-			throw Utilities::Exceptions::Exception("Precision matrix must be square");
+		// TODO: check matrix is symmetric
+		External<double> ext_theta(const_cast<double *>(theta));
+		GlmmGSAPI::theApi.AddMultivariateIdentityModel(ImmutableVector<double>(ext_theta, *size_theta));
+	}
+	catch (Exception & e)
+	{
+		GlmmGSAPI::theApi.SetLastError(e);
+	}
+}
 
-		if (dimS[0] != dimS[1])
-			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
+void GlmmGSRAPI_AddPrecisionModel(const double * R, const int * dim_R, const double * theta, const int * size_theta)
+{
+	try
+	{
+		if (dim_R[0] != dim_R[1])
+			throw Utilities::Exceptions::Exception("Precision matrix must be square");
 
 		// TODO: check matrices are symmetric
 
-		External<double> extR(const_cast<double *>(R));
-		External<double> extS(const_cast<double *>(S));
+		External<double> ext_R(const_cast<double *>(R));
+		External<double> ext_theta(const_cast<double *>(theta));
 		GlmmGSAPI::theApi.AddPrecisionModel(
-				ImmutableMatrix<double>(extR, dimR[0], dimR[1]),
-				ImmutableMatrix<double>(extS, dimS[0], dimS[1]));
+				ImmutableMatrix<double>(ext_R, dim_R[0], dim_R[1]),
+				ImmutableVector<double>(ext_theta, *size_theta));
 	}
 	catch (Exception & e)
 	{
@@ -336,15 +341,10 @@ void GlmmGSRAPI_AddPrecisionModel(
 	}
 }
 
-void GlmmGSRAPI_AddSparsePrecisionModel(
-		const double * values, const int * indices, const int * counts, const int * ncols,
-		const double * S, const int * dimS)
+void GlmmGSRAPI_AddSparsePrecisionModel(const double * values, const int * indices, const int * counts, const int * ncols, const double * theta, const int * size_theta)
 {
 	try
 	{
-		if (dimS[0] != dimS[1])
-			throw Utilities::Exceptions::Exception("Covariance components matrix must be square");
-
 		// TODO: check matrices are symmetric
 
 		// Counters
@@ -357,9 +357,8 @@ void GlmmGSRAPI_AddSparsePrecisionModel(
 				Vector<int>(External<int>(const_cast<int *>(indices)), nz),
 				Vector<int>(External<int>(const_cast<int *>(counts)), n + 1));
 
-		External<double> extS(const_cast<double *>(S));
-		GlmmGSAPI::theApi.AddSparsePrecisionModel(R,
-				ImmutableMatrix<double>(extS, dimS[0], dimS[1]));
+		External<double> ext_theta(const_cast<double *>(theta));
+		GlmmGSAPI::theApi.AddSparsePrecisionModel(R, ImmutableVector<double>(ext_theta, *size_theta));
 	}
 	catch (Exception & e)
 	{
@@ -540,6 +539,7 @@ void GlmmGSRAPI_GetVCompStratifiedBlock(
 		const T & block = dynamic_cast<const T &>(*ranef(*index));
 
 		// Get estimates
+		Utilities::IO::Print("%d", *size);
 		Copy(estm, (*size), block.CovarianceModel()->Components());
 		Copy(vcov, Math::Square(*size), block.CovarianceModel()->Covariance());
 	}

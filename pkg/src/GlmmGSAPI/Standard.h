@@ -36,6 +36,7 @@
 #include "../GlmmGS/RandomEffects/Global/CovarianceModels/PrecisionModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/ICovarianceModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/IdentityModel.h"
+#include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/MultivariateIdentityModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/PrecisionModel.h"
 #include "../GlmmGS/RandomEffects/Stratified/CovarianceModels/SparsePrecisionModel.h"
 
@@ -47,10 +48,7 @@
 // GlmmGS
 #include "../GlmmGS/GlmmGS.h"
 
-namespace GlmmGSAPI
-{
-	using namespace Utilities;
-	using namespace Utilities::Exceptions;
-}
+using namespace Utilities;
+using namespace Utilities::Exceptions;
 
 #endif

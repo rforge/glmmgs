@@ -1,6 +1,7 @@
 #include "../../Standard.h"
 #include "../../Variables/IVariable.h"
 #include "../../Control.h"
+#include "../../FixedEffects/IBlock.h"
 #include "Block.h"
 #include "CovarianceModels/ICovarianceModel.h"
 
@@ -33,6 +34,14 @@ namespace GlmmGS
 			}
 
 			// Implementation
+			void Block::EvaluateLinearDependencies(const Pointer<FixedEffects::IBlock> & fixef)
+			{
+				// Simple linear 1 to 1 linear dependencies
+				//for (int i = 0; i < this->variables.Size(); ++i)
+				//{
+				//}
+			}
+
 			void Block::UpdatePredictor(Vector<double> & eta) const
 			{
 				const int nvars = this->variables.Size();

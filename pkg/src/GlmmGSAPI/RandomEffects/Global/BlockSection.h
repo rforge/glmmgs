@@ -23,8 +23,8 @@ namespace GlmmGSAPI
 				void AddIntercept(int duplicate);
 				void AddCovariate(const ImmutableVector<int> & values, int duplicate);
 				void AddCovariate(const ImmutableVector<double> & values, int duplicate);
-				void AddIdentityCovarianceModel(const ImmutableMatrix<double> & S);
-				void AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableMatrix<double> & S);
+				void AddIdentityModel(const ImmutableVector<double> & theta);
+				void AddPrecisionModel(const ImmutableMatrix<double> & R, const ImmutableVector<double> & theta);
 				void EndBlock();
 
 			public:
