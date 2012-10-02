@@ -113,7 +113,6 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	}
 	else
 	{
-		print(family)
 		stop("Unsupported family")
 	}
 	

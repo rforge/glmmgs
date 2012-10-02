@@ -17,7 +17,7 @@ Extract fixed effect estimates
 		an object returned by the \code{\link{glmmGS}} function.
 	}
 	\item{...}{
-		optional additional arguments. Currently non are used.
+		optional additional arguments. Currently none are used.
 	}
 }
 \details{

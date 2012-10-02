@@ -165,9 +165,12 @@
 	result1 <- glmmGS((y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ I), 
 		family = binomial, control = control)
 	
-	# Refit model supplying covariance components
-	Ic <- glmmGS.CovarianceModel("identity", fix.components = cov(cbind(b0, b1)))
-	result2 <- glmmGS((y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ Ic), 
+	# Re-fit model supplying covariance components
+	within.cov <- matrix(cov(cbind(b0, b1)), nrow = 2L, ncol = 2L)
+	within.prec <- solve(within.cov)
+	true.theta <- as.vector(within.prec[lower.tri(within.prec, diag = TRUE)]) 
+	I.mv.fixed <- glmmGS.CovarianceModel("identity", within = "multivariate", fix.components = true.theta)
+	result2 <- glmmGS((y / size) ~ (1 + x) + (1 | dayOfWeek) + (1 + x | postCode ~ I.mv.fixed), 
 		family = binomial, control = control)
 	
 	# Print results

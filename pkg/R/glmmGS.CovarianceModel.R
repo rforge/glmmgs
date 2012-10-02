@@ -7,7 +7,7 @@ glmmGS.CovarianceModel <- function(type, ...)
 	# Get within parameter
 	within <- ls$within
 	if(is.null(within))
-		within <- "independent"
+		within <- "diagonal"
 	
 	# Instantiate covariance model
 	model <- list()
@@ -15,7 +15,7 @@ glmmGS.CovarianceModel <- function(type, ...)
 	# Build covariance model class
 	if (type == "identity")
 	{
-		if (within == "independent")
+		if (within == "diagonal")
 		{
 			class(model) <- "glmmGS.IdentityModel"
 		}

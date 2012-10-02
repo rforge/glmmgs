@@ -17,7 +17,7 @@
 \arguments{
   	\item{type}{
 		a string specifying the type of the covariance model. Current valid types are:
-		\code{identity}, \code{precision}. The covariance components of the identity
+		\code{identity} and \code{precision}. The covariance components of the identity
 		and precision models represent the global precision parameters.
   	}
   	\item{\dots}{
@@ -25,9 +25,17 @@
     	If the type is \code{identity}, no additional arguments are required;
     	if the type is \code{precision}, the required additional argument must be 
     	a precision matrix of either R \code{matrix} type or \code{\link{glmmGS.SparseMatrix}} type.
-    	In all covariance models the covariance components can be fixed by setting
-    	the named argument \code{fix.components} equal to a given covariance
-    	component matrix.
+    	If the covariance model is applied to random effect covariates stratified by
+    	a grouping factor, then a within-cluster covariance model for the random effects
+    	can be further specified by the named argument \code{within}. In particular,
+    	\code{within = "diagonal"} fits a within-cluster diagonal precision matrix, 
+    	while \code{within = "multivariate"} fits a within-cluster complete precision matrix.
+    	By default a diagonal within-cluster precision matrix is assumed.
+    	The covariance components can be fixed by passing the vector
+    	of parameters used by the covariance model in the named argument \code{fix.components}.
+    	For stratified random effects the vector of parameters depends on: 
+    	the covariance model type, the number of random effect covariates, 
+    	and the value of the \code{within} argument.
   	}
 }
 
@@ -97,13 +105,16 @@
  	# Define sparse-precision model
  	T.sparse <- glmmGS.CovarianceModel("precision", R.sparse)
 
-# Sparse-precision model with supplied covariance components
+# Identity model with supplied covariance components
 
-	# Define a covariance component matrix of dimensions equal to the number of random effect covariates 
-	S <- matrix(c(0.1, 0, 0, 0.2), nrow = nvars, ncol = nvars) 
-	
+	# Set a vector of precision parameters to be used with two correlated random effect variables
+	# associated with stratified covariates
+	within.cov <- matrix(c(1.0, 0.1, 0.1, 2.0), nrow = 2L, ncol = 2L)
+	within.prec <- solve(within.cov)
+	true.theta <- as.vector(within.prec[lower.tri(within.prec, diag = TRUE)])
+		
  	# Define sparse-precision model and supplies covariance components
- 	Tc.sparse <- glmmGS.CovarianceModel("precision", R.sparse, fix.components = S)
+ 	I.mv.fixed <- glmmGS.CovarianceModel("identity", within = "multivariate", fix.components = true.theta)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

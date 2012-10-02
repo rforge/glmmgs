@@ -539,7 +539,6 @@ void GlmmGSRAPI_GetVCompStratifiedBlock(
 		const T & block = dynamic_cast<const T &>(*ranef(*index));
 
 		// Get estimates
-		Utilities::IO::Print("%d", *size);
 		Copy(estm, (*size), block.CovarianceModel()->Components());
 		Copy(vcov, Math::Square(*size), block.CovarianceModel()->Covariance());
 	}
