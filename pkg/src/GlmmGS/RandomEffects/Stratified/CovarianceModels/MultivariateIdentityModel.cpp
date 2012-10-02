@@ -13,11 +13,15 @@ namespace GlmmGS
 			namespace CovarianceModels
 			{
 				// Helper - TODO: Use Ti instead
-				inline
-				static int Index(int i, int j)
+				inline static int Oti(int i, int j)
 				{
 					_ASSERT_ARGUMENT(j <= i);
 					return ((i * (i + 1)) >> 1) + j;
+				}
+
+				inline static int Ti(int i, int j)
+				{
+					return j <= i ? Oti(i, j) : Oti(j, i);
 				}
 
 				// Construction
@@ -33,8 +37,8 @@ namespace GlmmGS
 						for (int i = 0; i < this->nvars; ++i)
 						{
 							for (int j = 0; j < i; ++j)
-								this->theta(Index(i, j)) = 0.0;
-							this->theta(Index(i, i)) = 1.0;
+								this->theta(Oti(i, j)) = 0.0;
+							this->theta(Oti(i, i)) = 1.0;
 						}
 					}
 				}
@@ -51,7 +55,7 @@ namespace GlmmGS
 					for (int i = 0; i < this->nvars; ++i)
 						for (int j = 0; j <= i; ++j)
 							for (int k = 0; k < this->nlevels; ++k)
-								prec(i, j)(k) += this->theta(Index(i, j));
+								prec(i, j)(k) += this->theta(Oti(i, j));
 
 					// Decompose
 					this->beta_precision_chol.Decompose(prec);
@@ -66,12 +70,12 @@ namespace GlmmGS
 						// Lower triangular part
 						for (int j = 0; j <= i; ++j)
 							for (int k = 0; k < this->nlevels; ++k)
-								jac(i)(k) -= this->theta(Index(i, j)) * beta(j)(k);
+								jac(i)(k) -= this->theta(Oti(i, j)) * beta(j)(k);
 
 						// Strictly upper triangular part
 						for (int j = i + 1; j < this->nvars; ++j)
 							for (int k = 0; k < this->nlevels; ++k)
-								jac(i)(k) -= this->theta(Index(j, i)) * beta(j)(k);
+								jac(i)(k) -= this->theta(Oti(j, i)) * beta(j)(k);
 					}
 
 					// Decomposes
@@ -106,36 +110,27 @@ namespace GlmmGS
 					return y;
 				}
 
-				inline
-				void PlusEqual(double & x, double alpha, double v)
-				{
-					x += alpha * v;
-				}
-
-				template <class TYPE>
-				void PlusEqual(Vector<TYPE> & x, double alpha, const Vector<TYPE> & v)
-				{
-					_ASSERT_ARGUMENT(x.Size() == v.Size());
-					for (int i = 0; i < x.Size(); ++i)
-						PlusEqual(x(i), alpha, v(i));
-				}
-
-				void OrthogonalProjection(Vector<Vector<double> > & x, const Vector<Vector<double> > & v)
-				{
-					const double alpha = -LinearAlgebra::ScalarProduct(x, v) / LinearAlgebra::ScalarProduct(v, v);
-					PlusEqual(x, alpha, v);
-				}
-
 				void MultivariateIdentityModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
 						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
 				{
-					Boosters::Reparameterize(beta, variables, this->remove_mean);
-					//Vector<Vector<double> > u = Utilities::VectorVector<double>(beta.Size(), beta(0).Size());
-					//Utilities::Set<double>(u(0), 1.0);
-
-					//const ImmutableTriangularMatrix<double> tau = ThetaToPrecision(this->theta, this->nvars);
-					//const Vector<Vector<double> > v = tau * u;
-					//OrthogonalProjection(beta, v);
+					for (int i = 0; i < this->nvars; ++i)
+					{
+						if (variables(i)->duplicate)
+						{
+							double num = 0.0;
+							double den = 0.0;
+							Vector<double> weights(this->nvars);
+							for (int j = 0; j < this->nvars; ++j)
+							{
+								weights(j) = this->theta(Ti(i, j));
+								den += Math::Square(weights(j));
+								num += weights(j) * Mean(beta(j));
+							}
+							const double alpha = num / den;
+							for (int j = 0; j < this->nvars; ++j)
+								beta(j) -= alpha * weights(j);
+						}
+					}
 				}
 
 				// Components
