@@ -10,7 +10,7 @@ namespace Utilities
 		TYPE * ptr;
 
 	public:
-		External(TYPE * ptr) : ptr(ptr) {}
+		explicit External(TYPE * ptr) : ptr(ptr) {}
 		operator TYPE *() {return this->ptr;}
 	};
 }

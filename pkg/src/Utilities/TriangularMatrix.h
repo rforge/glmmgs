@@ -18,7 +18,7 @@ namespace Utilities
 		ReferenceCounter counter;
 		int nrows;
 
-		// Helper
+		// Helper function returning the number of elements associated with a row
 		static int Count(int row);
 
 	public:

@@ -131,7 +131,7 @@ namespace Utilities
 		{
 			if (this->counter.Detach() == 0)
 				delete this->ptr;
-			this->counter.Attach(src);
+			this->counter.Attach(src.counter);
 			this->ptr = src.ptr;
 		}
 		return *this;
