@@ -20,10 +20,4 @@
 #define _ASSERT_OPERATION(expression) _ASSERT(expression, Utilities::Exceptions::InvalidOperationException())
 #define _VALIDATE_OPERATION(expression) _VALIDATE(expression, Utilities::Exceptions::InvalidOperationException())
 
-// Debug expression
-#ifdef _DEBUG
-	#define _DEBUG_EXPR(expression) expression
-#else
-	#define _DEBUG_EXPR() (void(0));
-#endif
 #endif
