@@ -93,7 +93,7 @@ namespace Utilities
 	template <class TYPE> inline
 	const TYPE & ImmutableTriangularMatrix<TYPE>::operator ()(int i, int j) const
 	{
-		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
+		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
 		return this->ptr[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
 	}
 
@@ -142,14 +142,14 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & TriangularMatrix<TYPE>::operator ()(int i, int j)
 	{
-		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
+		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
 		return this->ptr[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
 	}
 
 	template <class TYPE> inline
 	const TYPE & TriangularMatrix<TYPE>::operator ()(int i, int j) const
 	{
-		_ASSERT_ARGUMENT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
+		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
 		return this->ptr[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
 	}
 }

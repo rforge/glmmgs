@@ -18,7 +18,7 @@ namespace Utilities
 
 		Vector<double> operator +(const ImmutableVector<double> & v, const ImmutableVector<double> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			_ASSERT(v.Size() == w.Size());
 			const int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
@@ -28,7 +28,7 @@ namespace Utilities
 
 		Vector<double> operator -(const ImmutableVector<double> & v, const ImmutableVector<double> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			_ASSERT(v.Size() == w.Size());
 			const int n = v.Size();
 			Vector<double> y(n);
 			for (int i = 0; i < n; ++i)
@@ -48,7 +48,7 @@ namespace Utilities
 
 		double ScalarProduct(const ImmutableVector<double> & v, const ImmutableVector<double> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size())
+			_ASSERT(v.Size() == w.Size());
 			const int n = v.Size();
 			double sum = 0.0;
 			for (int i = 0; i < n; ++i)
@@ -80,7 +80,7 @@ namespace Utilities
 		double MaxAbsImpl(const ImmutableVector<TYPE> & v)
 		{
 			const int n = v.Size();
-			_VALIDATE_ARGUMENT(n > 0);
+			_ASSERT(n > 0);
 			double max = MaxAbsImpl(v(0));
 			for (int i = 1; i < n; ++i)
 			{
@@ -95,7 +95,7 @@ namespace Utilities
 		double MinAbsImpl(const ImmutableVector<TYPE> & v)
 		{
 			const int n = v.Size();
-			_VALIDATE_ARGUMENT(n > 0);
+			_ASSERT(n > 0);
 			double min = MinAbsImpl(v(0));
 			for (int i = 1; i < n; ++i)
 			{
@@ -120,7 +120,7 @@ namespace Utilities
 		// Vectorial functions
 		double ScalarProduct(const Vector<Vector<double> > & x, const Vector<Vector<double> > & y)
 		{
-			_ASSERT_ARGUMENT(x.Size() == y.Size());
+			_ASSERT(x.Size() == y.Size());
 			const int n = x.Size();
 			double sum = 0;
 			for (int i = 0; i < n; ++i)

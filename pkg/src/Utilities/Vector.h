@@ -94,7 +94,7 @@ namespace Utilities
 	template <class TYPE> inline
 	const TYPE & ImmutableVector<TYPE>::operator ()(int i) const
 	{
-		_ASSERT_ARGUMENT(i >= 0 && i < this->size);
+		_ASSERT(i >= 0 && i < this->size);
 		return this->ptr[i];
 	}
 
@@ -139,14 +139,14 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & Vector<TYPE>::operator ()(int i)
 	{
-		_ASSERT_ARGUMENT(i >= 0 && i < this->size);
+		_ASSERT(i >= 0 && i < this->size);
 		return this->ptr[i];
 	}
 
 	template <class TYPE> inline
 	const TYPE & Vector<TYPE>::operator ()(int i) const
 	{
-		_ASSERT_ARGUMENT(i >= 0 && i < this->size);
+		_ASSERT(i >= 0 && i < this->size);
 		return this->ptr[i];
 	}
 }

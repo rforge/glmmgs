@@ -54,7 +54,7 @@ namespace Utilities
 		template <class TYPE>
 		Vector<TYPE> & operator +=(Vector<TYPE> & v, const ImmutableVector<TYPE> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			_ASSERT(v.Size() == w.Size());
 			const int n = v.Size();
 			for (int i = 0; i < n; ++i)
 				v(i) += w(i);
@@ -73,7 +73,7 @@ namespace Utilities
 		template <class TYPE>
 		Vector<TYPE> & operator -=(Vector<TYPE> & v, const ImmutableVector<TYPE> & w)
 		{
-			_ASSERT_ARGUMENT(v.Size() == w.Size());
+			_ASSERT(v.Size() == w.Size());
 			const int n = v.Size();
 			for (int i = 0; i < n; ++i)
 				v(i) -= w(i);

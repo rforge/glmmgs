@@ -50,7 +50,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(Vector<TYPE> & dst, const ImmutableVector<TYPE> & src)
 	{
-		_VALIDATE_ARGUMENT(dst.Size() == src.Size());
+		_ASSERT(dst.Size() == src.Size());
 		for (int i = 0; i < dst.Size(); ++i)
 			dst(i) = src(i);
 	}
@@ -60,7 +60,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(Matrix<TYPE> & dst, const ImmutableMatrix<TYPE> & src)
 	{
-		_VALIDATE_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows() &&
+		_ASSERT(dst.NumberOfRows() == src.NumberOfRows() &&
 				dst.NumberOfColumns() == src.NumberOfColumns());
 		for (int i = 0; i < dst.NumberOfRows(); ++i)
 			for (int j = 0; j < dst.NumberOfColumns(); ++j)
@@ -71,7 +71,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(TriangularMatrix<TYPE> & dst, const ImmutableTriangularMatrix<TYPE> & src)
 	{
-		_VALIDATE_ARGUMENT(dst.NumberOfRows() == src.NumberOfRows());
+		_ASSERT(dst.NumberOfRows() == src.NumberOfRows());
 		for (int i = 0; i < dst.NumberOfRows(); ++i)
 			for (int j = 0; j <= i; ++j)
 				dst(i, j) = src(i, j);
@@ -81,7 +81,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(TYPE * dst, int size, const ImmutableVector<TYPE> & src)
 	{
-		_VALIDATE_ARGUMENT(size == src.Size());
+		_ASSERT(size == src.Size());
 		for (int i = 0; i < size; ++i, ++dst)
 			*dst = src(i);
 	}
@@ -90,7 +90,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(TYPE * dst, int size, const ImmutableTriangularMatrix<TYPE> & src)
 	{
-		_VALIDATE_ARGUMENT(size == TotalSizeAsSquareMatrix(src));
+		_ASSERT(size == TotalSizeAsSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)
 		{
 			for (int j = 0; j < i; ++j, ++dst)
@@ -104,7 +104,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(TYPE * dst, int size, const Vector<Vector<TYPE> > & src)
 	{
-		_VALIDATE_ARGUMENT(size == TotalSize(src));
+		_ASSERT(size == TotalSize(src));
 		for (int i = 0; i < src.Size(); ++i)
 			for (int k = 0; k < src(i).Size(); ++k, ++dst)
 				*dst = src(i)(k);
@@ -114,7 +114,7 @@ namespace Utilities
 	template <class TYPE>
 	void Copy(TYPE * dst, int size, const TriangularMatrix<Vector<TYPE> > & src)
 	{
-		_VALIDATE_ARGUMENT(size == TotalSizeAsStratifiedSquareMatrix(src));
+		_ASSERT(size == TotalSizeAsStratifiedSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)
 		{
 			for (int j  = 0; j < i; ++j)

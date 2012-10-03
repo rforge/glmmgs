@@ -40,7 +40,7 @@ namespace Utilities
 		int Pow(int base, int n)
 		{
 			// Validate arguments
-			_VALIDATE_ARGUMENT(base >= 0 && n >= 0);
+			_ASSERT(base >= 0 && n >= 0);
 
 			// Special cases
 			if (base == 1 || n == 0) // by analytical continuation of the x^x function, 0^0 is set equal to 1

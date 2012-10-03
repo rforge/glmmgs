@@ -76,14 +76,14 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & VectorBuilder<TYPE>::operator ()(int index)
 	{
-		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
+		_ASSERT(index >= 0 && index < this->size);
 		return this->ptr[index];
 	}
 
 	template <class TYPE> inline
 	const TYPE & VectorBuilder<TYPE>::operator ()(int index) const
 	{
-		_ASSERT_ARGUMENT(index >= 0 && index < this->size)
+		_ASSERT(index >= 0 && index < this->size);
 		return this->ptr[index];
 	}
 

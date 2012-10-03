@@ -6,7 +6,7 @@ namespace Utilities
 	void ReferenceCounter::Initialize(void * ptr)
 	{
 		// This method should be called only after Decrement
-		_ASSERT_ARGUMENT(this->count == NULL);
+		_ASSERT(this->count == NULL);
 		if (ptr != NULL)
 			this->count = new(bl) int(1);
 	}
@@ -14,7 +14,7 @@ namespace Utilities
 	void ReferenceCounter::Attach(const ReferenceCounter & counter)
 	{
 		// This method should only be called after Decrement
-		_ASSERT_ARGUMENT(this->count == NULL);
+		_ASSERT(this->count == NULL);
 		if (counter.count != NULL)
 		{
 			this->count = counter.count;

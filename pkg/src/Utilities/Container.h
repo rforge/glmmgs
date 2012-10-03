@@ -50,7 +50,7 @@ namespace Utilities
 		: ptr(Allocator<TYPE>::Allocate(capacity)), capacity(capacity)
 	{
 		// Validate capacity
-		_VALIDATE_ARGUMENT(capacity >= 0);
+		_ASSERT(capacity >= 0);
 
 		// Construct
 		memset(this->ptr, 0, sizeof(TYPE) * this->capacity);
@@ -81,7 +81,7 @@ namespace Utilities
 	void Container<TYPE>::Allocate(int capacity)
 	{
 		// Validate argument
-		_VALIDATE_ARGUMENT(capacity >= 0)
+		_ASSERT(capacity >= 0);
 
 		// Delete and destroy
 		this->Free();
@@ -103,7 +103,7 @@ namespace Utilities
 			return;
 
 		// Validate argument
-		_VALIDATE_ARGUMENT(capacity >= 0)
+		_ASSERT(capacity >= 0);
 
 		// If current capacity is zero allocate
 		if (this->capacity == 0)

@@ -1,5 +1,4 @@
-#ifndef UTILITIES_EXCEPTIONS_EXCEPTION_H
-#define UTILITIES_EXCEPTIONS_EXCEPTION_H
+#pragma once
 
 namespace Utilities
 {
@@ -8,21 +7,23 @@ namespace Utilities
 		// Exception
 		class Exception
 		{
-		private:
-			const char * message;
-
 		public:
-			Exception(const char * message = "Exception");
-			const char * Message() const;
-		};
+			static const int capacity = 1024;
 
-		// Definition
-		inline
-		const char * Exception::Message() const
-		{
-			return this->message;
-		}
+		private:
+			// Buffer
+			char buffer[capacity];
+			int count;
+		
+		public:
+			// Construction
+			Exception(const char * message = "Exception");
+			
+			// Message
+			const char * Message() const; 
+			
+			// Inserter
+			Exception & operator << (const char * message);
+		};
 	}
 }
-
-#endif

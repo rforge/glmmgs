@@ -11,7 +11,7 @@ namespace Utilities
 	template <class TYPE>
 	TYPE Min(const ImmutableVector<TYPE> & v)
 	{
-		_VALIDATE_ARGUMENT(v.Size() > 0);
+		_ASSERT(v.Size() > 0);
 		const int n = v.Size();
 		TYPE min = v(0);
 		for (int i = 1; i < n; ++i)
@@ -24,7 +24,7 @@ namespace Utilities
 	template <class TYPE>
 	TYPE Max(const ImmutableVector<TYPE> & v)
 	{
-		_VALIDATE_ARGUMENT(v.Size() > 0);
+		_ASSERT(v.Size() > 0);
 		const int n = v.Size();
 		TYPE max = v(0);
 		for (int i = 1; i < n; ++i)
@@ -37,7 +37,7 @@ namespace Utilities
 	template <class TYPE>
 	TYPE Max(const Vector<Vector<TYPE> > & v)
 	{
-		_VALIDATE_ARGUMENT(v.Size() > 0);
+		_ASSERT(v.Size() > 0);
 		const int n = v.Size();
 		TYPE max = Max(v(0));
 		for (int i = 1; i < n; ++i)

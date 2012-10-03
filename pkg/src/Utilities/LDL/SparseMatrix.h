@@ -42,15 +42,9 @@ namespace Utilities
 		SparseMatrix<TYPE>::SparseMatrix(Vector<TYPE> values, Vector<int> indices, Vector<int> counts)
 			: values(values), indices(indices), counts(counts)
 		{
-#ifdef _DEBUG
-			const int ncols = counts.Size() - 1;
-			_ASSERT(values.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid values size"));
-			_ASSERT(indices.Size() == counts(ncols), Utilities::Exceptions::Exception("SparseMatrix: Invalid indices size"));
-			_ASSERT(Internal::LDL_valid_matrix(ncols,
-					Cast<ImmutableArray<int> >(counts),
-					Cast<ImmutableArray<int> >(indices)) == 1,
-					Utilities::Exceptions::Exception("SparseMatrix: invalid matrix"));
-#endif
+			_ASSERT(values.Size() == counts(counts.Size() - 1));
+			_ASSERT(indices.Size() == counts(counts.Size() - 1));
+			_ASSERT(Internal::LDL_valid_matrix(counts.Size() - 1, Cast<ImmutableArray<int> >(counts), Cast<ImmutableArray<int> >(indices)) == 1);
 		}
 
 		// Properties

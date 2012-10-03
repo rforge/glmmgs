@@ -86,7 +86,7 @@ namespace Utilities
 
 		Vector<double> SparseCholeskyDecomposition::Solve(const ImmutableVector<double> & b) const
 		{
-			_VALIDATE_ARGUMENT(b.Size() == this->lower.NumberOfColumns());
+			_ASSERT(b.Size() == this->lower.NumberOfColumns());
 
 			const int n = this->diagonal.Size();
 

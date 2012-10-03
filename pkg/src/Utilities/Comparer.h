@@ -31,7 +31,7 @@ namespace Utilities
 	template <class TYPE>
 	bool Comparer::AreEqual(const ImmutableVector<TYPE> & x, const ImmutableVector<TYPE> & y) const
 	{
-		_VALIDATE_ARGUMENT(x.Size() == y.Size());
+		_ASSERT(x.Size() == y.Size());
 		const int n = x.Size();
 		for (int i = 0; i < n; ++i)
 			if (!Comparer::AreEqual(x(i), y(i)))
@@ -42,7 +42,7 @@ namespace Utilities
 	template <class TYPE>
 	bool Comparer::IsZero(const ImmutableVector<TYPE> & eps, const ImmutableVector<TYPE> & x) const
 	{
-		_ASSERT_ARGUMENT(eps.Size() == x.Size())
+		_ASSERT(eps.Size() == x.Size());
 		const int n = x.Size();
 		for (int i = 0; i < n; ++i)
 			if (Comparer::IsZero(eps(i), x(i)) == false)

@@ -49,7 +49,7 @@ namespace Utilities
 		
 		Vector<double> CholeskyDecomposition::Solve(const ImmutableVector<double> & b) const
 		{
-			_ASSERT_ARGUMENT(b.Size() == this->lower.NumberOfRows())
+			_ASSERT(b.Size() == this->lower.NumberOfRows());
 			const int n = this->lower.NumberOfRows();
 			Vector<double> x(n);
 			

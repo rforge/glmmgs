@@ -19,7 +19,7 @@ namespace Utilities
 
 		Matrix<double> & operator +=(Matrix<double> & A, const ImmutableMatrix<double> & B)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows());
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			for (int i = 0; i < m; ++i)
@@ -30,7 +30,7 @@ namespace Utilities
 
 		Matrix<double> & operator -=(Matrix<double> & A, const ImmutableMatrix<double> & B)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows());
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			for (int i = 0; i < m; ++i)
@@ -52,7 +52,7 @@ namespace Utilities
 
 		Vector<double> operator *(const ImmutableMatrix<double> & A, const ImmutableVector<double> & v)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == v.Size())
+			_ASSERT(A.NumberOfColumns() == v.Size());
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			Vector<double> y(m);
@@ -66,7 +66,7 @@ namespace Utilities
 
 		Matrix<double> operator *(const ImmutableMatrix<double> & A, const ImmutableMatrix<double> & B)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == B.NumberOfRows());
 			int m = A.NumberOfRows();
 			int n = B.NumberOfColumns();
 			int l = A.NumberOfColumns();
@@ -82,7 +82,7 @@ namespace Utilities
 
 		Matrix<double> operator +(const ImmutableMatrix<double> & A, const ImmutableMatrix<double> & B)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows());
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			Matrix<double> C(m, n);
@@ -94,7 +94,7 @@ namespace Utilities
 
 		Matrix<double> operator -(const ImmutableMatrix<double> & A, const ImmutableMatrix<double> & B)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == B.NumberOfColumns() && A.NumberOfRows() == B.NumberOfRows());
 			int m = A.NumberOfRows();
 			int n = A.NumberOfColumns();
 			Matrix<double> C(m, n);
@@ -177,7 +177,7 @@ namespace Utilities
 		// Trace
 		double Trace(const ImmutableMatrix<double> & A)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfRows() == A.NumberOfColumns())
+			_ASSERT(A.NumberOfRows() == A.NumberOfColumns());
 			const int size = A.NumberOfRows();
 			double sum = 0.0;
 			for (int i = 0; i < size; ++i)
@@ -188,7 +188,7 @@ namespace Utilities
 		// Trace of square product
 		double SquareTrace(const ImmutableMatrix<double> & A)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfRows() == A.NumberOfColumns())
+			_ASSERT(A.NumberOfRows() == A.NumberOfColumns());
 			const int size = A.NumberOfRows();
 			double sum = 0.0;
 			for (int i = 0; i < size; ++i)
@@ -199,7 +199,7 @@ namespace Utilities
 
 		TriangularMatrix<double> Lower(const ImmutableMatrix<double> & A)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == A.NumberOfRows());
 			const int n = A.NumberOfRows();
 			TriangularMatrix<double> Y(n);
 			for (int i = 0; i < n; ++i)
@@ -210,7 +210,7 @@ namespace Utilities
 
 		TriangularMatrix<double> Upper(const ImmutableMatrix<double> & A)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == A.NumberOfRows());
 			const int n = A.NumberOfRows();
 			TriangularMatrix<double> Y(n);
 			for (int i = 0; i < n; ++i)
@@ -221,7 +221,7 @@ namespace Utilities
 
 		TriangularMatrix<double> Symmetric(const ImmutableMatrix<double> & A)
 		{
-			_ASSERT_ARGUMENT(A.NumberOfColumns() == A.NumberOfRows())
+			_ASSERT(A.NumberOfColumns() == A.NumberOfRows());
 			const int n = A.NumberOfRows();
 			TriangularMatrix<double> Y(n);
 			for (int i = 0; i < n; ++i)

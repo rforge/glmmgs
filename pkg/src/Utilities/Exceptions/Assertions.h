@@ -1,23 +1,15 @@
 #ifndef UTILITIES_EXCEPTIONS_ASSERTIONS_H
 #define UTILITIES_EXCEPTIONS_ASSERTIONS_H
 
-#include "InvalidArgumentException.h"
-#include "InvalidOperationException.h"
-#include <assert.h>
-#include <stdlib.h>
+#include "Exception.h"
 
-// Basic assertion
-#define _VALIDATE(expression, exception) {if (!(expression)) throw(exception);}
 #ifdef _DEBUG
-#define _ASSERT(expression, exception) _VALIDATE(expression, exception)
+	#define _STR(str) #str
+	#define _ASSERT(expression) \
+		if ((expression) == false) \
+			throw Utilities::Exceptions::Exception("\nAssertion failed: " _STR(expression) "\nFile: " __FILE__ "\n")
 #else
-#define _ASSERT(expression, exception) (void(0));
+	#define _ASSERT(expression) (void(0));
 #endif
-
-// Assertion macros
-#define _ASSERT_ARGUMENT(expression) _ASSERT(expression, Utilities::Exceptions::InvalidArgumentException())
-#define _VALIDATE_ARGUMENT(expression) _VALIDATE(expression, Utilities::Exceptions::InvalidArgumentException())
-#define _ASSERT_OPERATION(expression) _ASSERT(expression, Utilities::Exceptions::InvalidOperationException())
-#define _VALIDATE_OPERATION(expression) _VALIDATE(expression, Utilities::Exceptions::InvalidOperationException())
 
 #endif

@@ -70,14 +70,16 @@ namespace Utilities
 	template <class TYPE> inline
 	TYPE & Stack<TYPE>::Top()
 	{
-		_VALIDATE_OPERATION(this->head != NULL);
+		if (this->head == NULL)
+			throw Exceptions::InvalidOperationException();
 		return this->head->data;
 	}
 
 	template <class TYPE> inline
 	const TYPE & Stack<TYPE>::Top() const
 	{
-		_VALIDATE_OPERATION(this->head != NULL);
+		if (this->head == NULL)
+			throw Exceptions::InvalidOperationException();
 		return this->head->data;
 	}
 
@@ -96,7 +98,9 @@ namespace Utilities
 	void Stack<TYPE>::Pop()
 	{
 		if (this->head == NULL)
+		{
 			throw Exceptions::StackUnderflowException();
+		}
 		else
 		{
 			Node * node = this->head;
