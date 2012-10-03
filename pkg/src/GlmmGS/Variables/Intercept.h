@@ -57,7 +57,7 @@ namespace GlmmGS
 		template <class OTHER>
 		double Intercept::ScalarProductImpl(const ImmutableVector<double> & weights, const ImmutableVector<OTHER> & values) const
 		{
-			_ASSERT_ARGUMENT(weights.Size() == values.Size());
+			_ASSERT(weights.Size() == values.Size());
 			const int n = values.Size();
 			double sum = 0.0;
 			for (int i = 0; i < n; ++i)
@@ -88,7 +88,7 @@ namespace GlmmGS
 		template <class OTHER>
 		Vector<double> Intercept::ScalarProductImpl(const ImmutableVector<double> & weights, const ImmutableVector<OTHER> & values, WeakFactor factor) const
 		{
-			_ASSERT_ARGUMENT(weights.Size() == values.Size() && factor.Size() == values.Size());
+			_ASSERT(weights.Size() == values.Size() && factor.Size() == values.Size());
 			const int n = values.Size();
 			const int nlevels = factor.NumberOfLevels();
 			Vector<double> sum(nlevels);

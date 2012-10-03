@@ -1,6 +1,7 @@
 #include "../../../Standard.h"
 #include "../../../Boosters/Boosters.h"
 #include "../../../Variables/IVariable.h"
+#include "../../CovarianceModelUtilities.h"
 #include "IdentityModel.h"
 
 namespace GlmmGS
@@ -17,6 +18,7 @@ namespace GlmmGS
 				{
 					if (this->constant)
 					{
+						ValidateTheta(this->theta, theta);
 						Copy(this->theta, theta);
 					}
 					else
@@ -73,10 +75,10 @@ namespace GlmmGS
 					for (int i = 0; i < this->nvars; ++i)
 					{
 						const double trace = Sum(covariance(i, i));
-						jac(i) = this->nlevels / this->theta(i) - Square(beta(i)) - trace;
-						minus_hessian(i, i) = this->nlevels / Square(this->theta(i)) - Square(covariance(i, i));
+						jac(i) = this->nlevels / this->theta(i) - LinearAlgebra::Square(beta(i)) - trace;
+						minus_hessian(i, i) = this->nlevels / Math::Square(this->theta(i)) - LinearAlgebra::Square(covariance(i, i));
 						for (int j = 0; j < i; ++j)
-							minus_hessian(i, j) = -Square(covariance(i, j));
+							minus_hessian(i, j) = -LinearAlgebra::Square(covariance(i, j));
 					}
 
 					// Update covariance components

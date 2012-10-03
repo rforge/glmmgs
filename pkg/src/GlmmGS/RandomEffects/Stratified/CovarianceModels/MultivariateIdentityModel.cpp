@@ -1,6 +1,7 @@
 #include "../../../Standard.h"
 #include "../../../Boosters/Boosters.h"
 #include "../../../Variables/IVariable.h"
+#include "../../CovarianceModelUtilities.h"
 #include "../../MultivariateCovarianceModelUtilities.h"
 #include "MultivariateIdentityModel.h"
 
@@ -15,7 +16,7 @@ namespace GlmmGS
 				// Helper - TODO: Use Ti instead
 				inline static int Oti(int i, int j)
 				{
-					_ASSERT_ARGUMENT(j <= i);
+					_ASSERT(j <= i);
 					return ((i * (i + 1)) >> 1) + j;
 				}
 
@@ -30,6 +31,7 @@ namespace GlmmGS
 				{
 					if (this->constant)
 					{
+						ValidateTheta(this->theta, theta);
 						Copy(this->theta, theta);
 					}
 					else

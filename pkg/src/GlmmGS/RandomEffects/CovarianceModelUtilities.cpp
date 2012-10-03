@@ -4,10 +4,17 @@ namespace GlmmGS
 {
 	namespace RandomEffects
 	{
+
+		void ValidateTheta(const ImmutableVector<double> & theta, const ImmutableVector<double> & init_theta)
+		{
+			if (theta.Size() != init_theta.Size())
+				throw InvalidArgumentException("Wrong number of variance components in \'init_theta\'");
+		}
+
 		// Weighted squared norm of a vector - m assumed symmetric
 		double Square(const ImmutableMatrix<double> & m, const ImmutableVector<double> & x)
 		{
-			_ASSERT_ARGUMENT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
+			_ASSERT(m.NumberOfRows() == x.Size() && m.NumberOfColumns() == x.Size());
 			const int size = x.Size();
 			double sum = 0.0;
 			for (int i = 0; i < size; ++i)
@@ -27,7 +34,7 @@ namespace GlmmGS
 		// Weighted squared norm of a vector
 		double Square(const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & x)
 		{
-			_ASSERT_ARGUMENT(R.NumberOfColumns() == x.Size());
+			_ASSERT(R.NumberOfColumns() == x.Size());
 			const int ncols = R.NumberOfColumns();
 			double sum = 0.0;
 			for (int j = 0; j < ncols; ++j)

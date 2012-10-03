@@ -22,7 +22,7 @@ namespace GlmmGS
 
 		void BernoulliResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const
 		{
-			_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
+			_ASSERT(this->response.Size() == weights.Size() &&
 				this->response.Size() == values.Size() &&
 				this->response.Size() == eta.Size());
 

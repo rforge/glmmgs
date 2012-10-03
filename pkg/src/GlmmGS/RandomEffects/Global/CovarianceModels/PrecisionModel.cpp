@@ -16,6 +16,7 @@ namespace GlmmGS
 				{
 					if (this->constant)
 					{
+						ValidateTheta(this->theta, theta);
 						Copy(this->theta, theta);
 					}
 					else

@@ -7,6 +7,8 @@ namespace GlmmGS
 {
 	namespace RandomEffects
 	{
+		void ValidateTheta(const ImmutableVector<double> & theta, const ImmutableVector<double> & init_theta);
+
 		// Weighted squared norm of a vector
 		double Square(const ImmutableMatrix<double> & m, const ImmutableVector<double> & x);
 		double Square(const LDL::SparseMatrix<double> & R, const ImmutableVector<double> & x);

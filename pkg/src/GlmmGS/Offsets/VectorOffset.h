@@ -39,7 +39,7 @@ namespace GlmmGS
 		template <class TYPE>
 		void VectorOffset<TYPE>::InitializePredictor(Vector<double> & eta) const
 		{
-			_ASSERT_ARGUMENT(eta.Size() == this->values.Size());
+			_ASSERT(eta.Size() == this->values.Size());
 			for (int i = 0; i < this->values.Size(); ++i)
 				eta(i) = this->values(i);
 		}

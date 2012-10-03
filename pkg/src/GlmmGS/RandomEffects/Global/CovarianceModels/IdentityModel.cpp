@@ -1,4 +1,5 @@
 #include "../../../Standard.h"
+#include "../../CovarianceModelUtilities.h"
 #include "IdentityModel.h"
 
 namespace GlmmGS
@@ -15,6 +16,7 @@ namespace GlmmGS
 				{
 					if (this->constant)
 					{
+						ValidateTheta(this->theta, theta);
 						Copy(this->theta, theta);
 					}
 					else
@@ -63,8 +65,8 @@ namespace GlmmGS
 					// Calculate jacobian and minus the hessian
 					Vector<double> jac(1);
 					TriangularMatrix<double> minus_hessian(1);
-					jac(0) = this->size / this->theta(0) - Square(beta) - Trace(covariance);
-					minus_hessian(0, 0) = this->size / Square(this->theta(0)) - SquareTrace(covariance);
+					jac(0) = this->size / this->theta(0) - LinearAlgebra::Square(beta) - Trace(covariance);
+					minus_hessian(0, 0) = this->size / Math::Square(this->theta(0)) - LinearAlgebra::SquareTrace(covariance);
 
 					// Update covariance components
 					return ICovarianceModel::UpdateComponents(minus_hessian, jac, control);

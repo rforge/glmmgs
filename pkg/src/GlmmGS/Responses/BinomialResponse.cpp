@@ -9,7 +9,7 @@ namespace GlmmGS
 		BinomialResponse::BinomialResponse(const ImmutableVector<int> & response, const ImmutableVector<int> & counts)
 			: response(response), counts(counts)
 		{
-			_VALIDATE_ARGUMENT(this->response.Size() == this->counts.Size());
+			_ASSERT(this->response.Size() == this->counts.Size());
 		}
 
 		BinomialResponse::~BinomialResponse()
@@ -23,7 +23,7 @@ namespace GlmmGS
 
 		void BinomialResponse::EvaluateWorkingWeightsAndValues(Vector<double> & weights, Vector<double> & values, const ImmutableVector<double> & eta) const
 		{
-			_ASSERT_ARGUMENT(this->response.Size() == weights.Size() &&
+			_ASSERT(this->response.Size() == weights.Size() &&
 				this->response.Size() == values.Size() &&
 				this->response.Size() == eta.Size());
 
