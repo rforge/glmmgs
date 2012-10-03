@@ -17,7 +17,10 @@ glmmGSAPI.GetLastError <- function()
 	
 	# Check error
 	if (msg != "")
+	{
+		glmmGSAPI.Tidy()
 		stop(msg)
+	}
 }
 
 # Clean-up glmmGSAPI
