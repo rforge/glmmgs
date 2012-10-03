@@ -68,7 +68,7 @@ namespace Utilities
 #ifdef _DEBUG
 		: ptr(ptr), counter(counter), size(size)
 #else
-		: ptr(ptr), counter(NULL)
+		: ptr(ptr), counter(counter)
 #endif
 	{
 	}
