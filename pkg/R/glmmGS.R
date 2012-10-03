@@ -217,9 +217,9 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGSAPI.EndModel()
 	
 	# Fit model
-	start.time <- proc.time();
+	start.time <- proc.time()
 	glmmGSAPI.Fit(control)
-	time <- proc.time() - start.time; 
+	time <- proc.time() - start.time 
 	
 	# Set results
 	glmmGS <- list()
@@ -228,8 +228,8 @@ glmmGS <- function(formula, family, data, covariance.models, control = glmmGS.Co
 	glmmGS$ranef <- glmmGSAPI.GetRanef(predictors$ranef)
 	iterations <- glmmGSAPI.GetIterations()
 	iterations <- list(outer = iterations[1L], coef = iterations[2L], vcomp = iterations[3L])
-	glmmGS$iterations <- iterations;
-	glmmGS$proc.time <- time[3L];
+	glmmGS$iterations <- iterations
+	glmmGS$proc.time <- time[3L]
 	
 	# Tyde up
 	glmmGSAPI.Tidy()
