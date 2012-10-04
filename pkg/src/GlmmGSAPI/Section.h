@@ -35,7 +35,7 @@ namespace GlmmGSAPI
 		// Section methods
 		static Pointer<Section> BeginModel();
 		void EndModel();
-		Pointer<Section> BeginResponse(WeakString<const char> family);
+		Pointer<Section> BeginResponse(const ImmutableString & family);
 		Pointer<Section> BeginFixedEffects();
 		virtual void EndFixedEffects();
 		Pointer<Section> BeginRandomEffects();

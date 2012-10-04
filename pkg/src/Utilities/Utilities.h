@@ -2,7 +2,7 @@
 #define UTILITIES_UTILITIES_H
 
 // Weak types
-#include "WeakString.h"
+#include "String.h"
 #include "WeakFactor.h"
 
 // Swap, Min, Max
@@ -27,7 +27,7 @@
 #include "TriangularMatrix.h"
 
 // Cast
-#include "CastArray.h"
+#include "Cast.h"
 
 // Functions
 #include "VectorialAlgorithms.h"

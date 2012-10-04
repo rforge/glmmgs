@@ -48,7 +48,7 @@ void GlmmGSRAPI_BeginResponse(const char ** family, const int * length)
 {
 	try
 	{
-		GlmmGSAPI::theApi.BeginResponse(WeakString<const char>(*family, *length));
+		GlmmGSAPI::theApi.BeginResponse(ImmutableString(*family, *length));
 	}
 	catch (Exception & e)
 	{

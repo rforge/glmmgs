@@ -44,7 +44,7 @@ namespace Utilities
 		{
 			_ASSERT(values.Size() == counts(counts.Size() - 1));
 			_ASSERT(indices.Size() == counts(counts.Size() - 1));
-			_ASSERT(Internal::LDL_valid_matrix(counts.Size() - 1, Cast<ImmutableArray<int> >(counts), Cast<ImmutableArray<int> >(indices)) == 1);
+			_ASSERT(Internal::LDL_valid_matrix(counts.Size() - 1, Cast<ImmutableArray<int> >::Source(counts), Cast<ImmutableArray<int> >::Source(indices)) == 1);
 		}
 
 		// Properties

@@ -75,7 +75,7 @@ namespace GlmmGSAPI
 		this->sections.Pop();
 	}
 
-	void GlmmGSAPI::BeginResponse(WeakString<const char> family)
+	void GlmmGSAPI::BeginResponse(const ImmutableString & family)
 	{
 		Pointer<Section> section = this->sections.Top()->BeginResponse(family);
 		this->sections.Push(section);

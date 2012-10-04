@@ -34,8 +34,8 @@ namespace Utilities
 		ImmutableArray(External<TYPE> ext, int size);
 		~ImmutableArray();
 
-		// Cast
-		operator bool () const {return this->ptr != NULL;}
+		// Test for null pointer
+		operator bool () const;
 
 		// Element access
 		const TYPE & operator [](int i) const;
@@ -79,6 +79,13 @@ namespace Utilities
 	{
 		if (this->counter.Detach() == 0)
 			NewAllocator<TYPE>::Delete(this->ptr);
+	}
+
+	// Check for NULL pointer
+	template <class TYPE> inline
+	ImmutableArray<TYPE>::operator bool () const
+	{
+		return this->ptr != NULL;
 	}
 
 	// Element access

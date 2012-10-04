@@ -33,7 +33,7 @@ namespace GlmmGSAPI
 		void Tidy();
 		void BeginModel();
 		void EndModel();
-		void BeginResponse(WeakString<const char> family);
+		void BeginResponse(const ImmutableString & family);
 		void EndResponse();
 		void BeginFixedEffects();
 		void EndFixedEffects();

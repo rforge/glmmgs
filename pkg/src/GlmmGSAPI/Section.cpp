@@ -35,24 +35,24 @@ namespace GlmmGSAPI
 			this->data->offset.Reset(new(bl) GlmmGS::Offsets::ZeroOffset);
 	}
 
-	Pointer<Section> Section::BeginResponse(WeakString<const char> family)
+	Pointer<Section> Section::BeginResponse(const ImmutableString & family)
 	{
-		if (family == "gaussian")
+		if (family == Str("gaussian"))
 		{
 			typedef Responses::NormalResponseSection T;
 			return Pointer<T>(new(bl) T(*this));
 		}
-		if (family == "bernoulli")
+		if (family == Str("bernoulli"))
 		{
 			typedef Responses::BernoulliResponseSection T;
 			return Pointer<T>(new(bl) T(*this));
 		}
-		else if (family == "binomial")
+		else if (family == Str("binomial"))
 		{
 			typedef Responses::BinomialResponseSection T;
 			return Pointer<T>(new(bl) T(*this));
 		}
-		else if (family == "poisson")
+		else if (family == Str("poisson"))
 		{
 			typedef Responses::PoissonResponseSection T;
 			return Pointer<T>(new(bl) T(*this));

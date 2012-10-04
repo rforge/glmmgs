@@ -26,9 +26,9 @@ namespace Utilities
 
 			// Find permutation
 			int amd_retval = amd_order(ncols,
-					Cast<const int *>(upper.Counts()),
-					Cast<const int *>(upper.Indices()),
-					Cast<int *>(this->permutation),
+					Cast<const int *>::Source(upper.Counts()),
+					Cast<const int *>::Source(upper.Indices()),
+					Cast<int *>::Source(this->permutation),
 					NULL,
 					NULL);
 
@@ -43,14 +43,14 @@ namespace Utilities
 			Array<int> null;
 
 			Internal::LDL_symbolic(ncols,
-					Cast<ImmutableArray<int> >(upper.Counts()),
-					Cast<ImmutableArray<int> >(upper.Indices()),
-					Cast<Array<int> >(lp),
+					Cast<ImmutableArray<int> >::Source(upper.Counts()),
+					Cast<ImmutableArray<int> >::Source(upper.Indices()),
+					Cast<Array<int> >::Source(lp),
 					parent,
 					lnz,
 					flag,
-					Cast<ImmutableArray<int> >(this->permutation),
-					Cast<Array<int> >(this->permutation_inverse));
+					Cast<ImmutableArray<int> >::Source(this->permutation),
+					Cast<Array<int> >::Source(this->permutation_inverse));
 
 			// Numeric decomposition
 			const int lsize = lp(ncols);
@@ -61,20 +61,20 @@ namespace Utilities
 			Array<int> pattern(ncols);
 
 			const int ldl_retval = Internal::LDL_numeric(ncols,
-					Cast<ImmutableArray<int> >(upper.Counts()),
-					Cast<ImmutableArray<int> >(upper.Indices()),
-					Cast<ImmutableArray<double> >(upper.Values()),
-					Cast<ImmutableArray<int> >(lp),
+					Cast<ImmutableArray<int> >::Source(upper.Counts()),
+					Cast<ImmutableArray<int> >::Source(upper.Indices()),
+					Cast<ImmutableArray<double> >::Source(upper.Values()),
+					Cast<ImmutableArray<int> >::Source(lp),
 					parent,
 					lnz,
-					Cast<Array<int> >(li),
-					Cast<Array<double> >(lx),
-					Cast<Array<double> >(d),
+					Cast<Array<int> >::Source(li),
+					Cast<Array<double> >::Source(lx),
+					Cast<Array<double> >::Source(d),
 					y,
 					pattern,
 					flag,
-					Cast<ImmutableArray<int> >(this->permutation),
-					Cast<ImmutableArray<int> >(this->permutation_inverse));
+					Cast<ImmutableArray<int> >::Source(this->permutation),
+					Cast<ImmutableArray<int> >::Source(this->permutation_inverse));
 
 			if (ldl_retval != ncols)
 				throw Exceptions::Exception("LDL failed");
