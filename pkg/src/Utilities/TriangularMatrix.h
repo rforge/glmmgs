@@ -2,9 +2,8 @@
 #define UTILITIES_TRIANGULARMATRIX_H
 
 #include "Exceptions/Assertions.h"
-#include "New.h"
-#include "ReferenceCounter.h"
 #include "External.h"
+#include "Array.h"
 
 namespace Utilities
 {
@@ -14,8 +13,7 @@ namespace Utilities
 	{
 	protected:
 		// Fields
-		TYPE * ptr;
-		ReferenceCounter counter;
+		Array<TYPE> array;
 		int nrows;
 
 		// Helper function returning the number of elements associated with a row
@@ -23,16 +21,12 @@ namespace Utilities
 
 	public:
 		// Construction
-		ImmutableTriangularMatrix();	// Default
-		explicit ImmutableTriangularMatrix(int nrows);	// Size
-		ImmutableTriangularMatrix(External<TYPE> ptr, int nrows); // From an external pointer
-		~ImmutableTriangularMatrix();
+		ImmutableTriangularMatrix();
+		explicit ImmutableTriangularMatrix(int nrows);
+		ImmutableTriangularMatrix(External<TYPE> ptr, int nrows);
 
 		// Attributes
 		int NumberOfRows() const;
-
-		// Assignment
-		const ImmutableTriangularMatrix<TYPE> & operator =(const ImmutableTriangularMatrix<TYPE> & src);
 
 		// Element access
 		const TYPE & operator ()(int i, int j) const;
@@ -41,27 +35,20 @@ namespace Utilities
 	// Construction
 	template <class TYPE> inline
 	ImmutableTriangularMatrix<TYPE>::ImmutableTriangularMatrix()
-		: ptr(NULL), nrows(0)
+		: nrows(0)
 	{
 	}
 
 	template <class TYPE> inline
 	ImmutableTriangularMatrix<TYPE>::ImmutableTriangularMatrix(int nrows)
-		: ptr(NewAllocator<TYPE>::New(ImmutableTriangularMatrix<TYPE>::Count(nrows))), counter(ptr), nrows(nrows)
+		: array(Count(nrows)), nrows(nrows)
 	{
 	}
 
 	template <class TYPE> inline
-	ImmutableTriangularMatrix<TYPE>::ImmutableTriangularMatrix(External<TYPE> ptr, int nrows)
-		: ptr(ptr), counter(NULL), nrows(nrows)
+	ImmutableTriangularMatrix<TYPE>::ImmutableTriangularMatrix(External<TYPE> ext, int nrows)
+		: array(ext, Count(nrows)), nrows(nrows)
 	{
-	}
-
-	template <class TYPE> inline
-	ImmutableTriangularMatrix<TYPE>::~ImmutableTriangularMatrix()
-	{
-		if (this->counter.Detach() == 0)
-			NewAllocator<TYPE>::Delete(this->ptr);
 	}
 
 	// Properties
@@ -71,30 +58,12 @@ namespace Utilities
 		return this->nrows;
 	}
 
-	// Assignment
-	template <class TYPE>
-	const ImmutableTriangularMatrix<TYPE> & ImmutableTriangularMatrix<TYPE>::operator =(const ImmutableTriangularMatrix<TYPE> & src)
-	{
-		if (this->ptr != src.ptr)
-		{
-			// Copy reference counter
-			if (this->counter.Detach() == 0)
-				NewAllocator<TYPE>::Delete(this->ptr);
-			this->counter.Attach(src.counter);
-
-			// Copy members
-			this->ptr = src.ptr;
-			this->nrows = src.nrows;
-		}
-		return *this;
-	}
-
 	// Element access
 	template <class TYPE> inline
 	const TYPE & ImmutableTriangularMatrix<TYPE>::operator ()(int i, int j) const
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
-		return this->ptr[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
+		return this->array[Count(i) + j];
 	}
 
 	// Helper
@@ -111,9 +80,9 @@ namespace Utilities
 	{
 	public:
 		// Construction
-		TriangularMatrix();	// Default
-		explicit TriangularMatrix(int nrows);	// Size
-		TriangularMatrix(External<TYPE> ptr, int nrows); // From an external pointer
+		TriangularMatrix();
+		explicit TriangularMatrix(int nrows);
+		TriangularMatrix(External<TYPE> ext, int nrows);
 
 		// Element access
 		TYPE & operator ()(int i, int j);
@@ -133,8 +102,8 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	TriangularMatrix<TYPE>::TriangularMatrix(External<TYPE> ptr, int nrows)
-		: ImmutableTriangularMatrix<TYPE>(ptr, nrows)
+	TriangularMatrix<TYPE>::TriangularMatrix(External<TYPE> ext, int nrows)
+		: ImmutableTriangularMatrix<TYPE>(ext, nrows)
 	{
 	}
 
@@ -143,14 +112,14 @@ namespace Utilities
 	TYPE & TriangularMatrix<TYPE>::operator ()(int i, int j)
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
-		return this->ptr[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
+		return this->array[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
 	}
 
 	template <class TYPE> inline
 	const TYPE & TriangularMatrix<TYPE>::operator ()(int i, int j) const
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
-		return this->ptr[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
+		return this->array[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
 	}
 }
 

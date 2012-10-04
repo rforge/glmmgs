@@ -2,9 +2,8 @@
 #define UTILITIES_VECTOR_H
 
 #include "Exceptions/Assertions.h"
-#include "New.h"
-#include "ReferenceCounter.h"
 #include "External.h"
+#include "Array.h"
 
 namespace Utilities
 {
@@ -16,22 +15,17 @@ namespace Utilities
 
 	protected:
 		// Fields
-		TYPE * ptr;
-		ReferenceCounter counter;
+		Array<TYPE> array;
 		int size;
 
 	public:
 		// Construction
-		ImmutableVector();	// Default
-		explicit ImmutableVector(int size);	// Size
-		ImmutableVector(External<TYPE> ext, int size); // From an external pointer
-		~ImmutableVector();
+		ImmutableVector();
+		explicit ImmutableVector(int size);
+		ImmutableVector(External<TYPE> ext, int size);
 
 		// Properties
 		int Size() const;
-
-		// Assignment
-		const ImmutableVector<TYPE> & operator =(const ImmutableVector<TYPE> & src);
 
 		// Element access
 		const TYPE & operator ()(int i) const;
@@ -42,27 +36,20 @@ namespace Utilities
 	// Construction
 	template <class TYPE> inline
 	ImmutableVector<TYPE>::ImmutableVector()
-		: ptr(NULL), size(0)
+		: size(0)
 	{
 	}
 
 	template <class TYPE> inline
 	ImmutableVector<TYPE>::ImmutableVector(int size)
-		: ptr(NewAllocator<TYPE>::New(size)), counter(ptr), size(size)
+		: array(size), size(size)
 	{
 	}
 
 	template <class TYPE> inline
 	ImmutableVector<TYPE>::ImmutableVector(External<TYPE> ext, int size)
-		: ptr(ext), counter(NULL), size(size) // const_cast is safe since the object is immutable
+		: array(ext, size), size(size)
 	{
-	}
-
-	template <class TYPE> inline
-	ImmutableVector<TYPE>::~ImmutableVector()
-	{
-		if (this->counter.Detach() == 0)
-			NewAllocator<TYPE>::Delete(this->ptr);
 	}
 
 	// Properties
@@ -72,30 +59,12 @@ namespace Utilities
 		return this->size;
 	}
 
-	// Assignment
-	template <class TYPE>
-	const ImmutableVector<TYPE> & ImmutableVector<TYPE>::operator =(const ImmutableVector<TYPE> & src)
-	{
-		if (this->ptr != src.ptr)
-		{
-			// Copy references
-			if (this->counter.Detach() == 0)
-				NewAllocator<TYPE>::Delete(this->ptr);
-			this->counter.Attach(src.counter);
-
-			// Copy members
-			this->ptr = src.ptr;
-			this->size = src.size;
-		}
-		return *this;
-	}
-
 	// Element access
 	template <class TYPE> inline
 	const TYPE & ImmutableVector<TYPE>::operator ()(int i) const
 	{
 		_ASSERT(i >= 0 && i < this->size);
-		return this->ptr[i];
+		return this->array[i];
 	}
 
 	// Vector - Mutable class
@@ -106,9 +75,9 @@ namespace Utilities
 
 	public:
 		// Construction
-		Vector();	// Default
-		explicit Vector(int size);	// Size
-		Vector(External<TYPE> ext, int size); // From an external pointer
+		Vector();
+		explicit Vector(int size);
+		Vector(External<TYPE> ext, int size);
 
 		// Element access
 		TYPE & operator ()(int i);
@@ -140,14 +109,14 @@ namespace Utilities
 	TYPE & Vector<TYPE>::operator ()(int i)
 	{
 		_ASSERT(i >= 0 && i < this->size);
-		return this->ptr[i];
+		return this->array[i];
 	}
 
 	template <class TYPE> inline
 	const TYPE & Vector<TYPE>::operator ()(int i) const
 	{
 		_ASSERT(i >= 0 && i < this->size);
-		return this->ptr[i];
+		return this->array[i];
 	}
 }
 

@@ -12,26 +12,27 @@ namespace Utilities
 	template <class TYPE>
 	class ImmutableArray
 	{
+		// Cast class
 		template <class OTHER> friend class Cast;
+
+	private:
+		// Disable assignment
+		const ImmutableArray<TYPE> & operator =(const ImmutableArray<TYPE> & src);
 
 	protected:
 		// Fields
 		TYPE * ptr;
 		ReferenceCounter counter;
-
 #ifdef _DEBUG
 		int size;
 #endif
 
 	public:
 		// Construction
-		ImmutableArray();	// Default
-		explicit ImmutableArray(int size);	// Size
-		ImmutableArray(TYPE * ptr, ReferenceCounter counter, int size); // From a referenced counted pointer
+		ImmutableArray();
+		explicit ImmutableArray(int size);
+		ImmutableArray(External<TYPE> ext, int size);
 		~ImmutableArray();
-
-		// Assignment
-		const ImmutableArray<TYPE> & operator =(const ImmutableArray<TYPE> & src);
 
 		// Cast
 		operator bool () const {return this->ptr != NULL;}
@@ -64,11 +65,11 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	ImmutableArray<TYPE>::ImmutableArray(TYPE * ptr, ReferenceCounter counter, int size)
+	ImmutableArray<TYPE>::ImmutableArray(External<TYPE> ptr, int size)
 #ifdef _DEBUG
-		: ptr(ptr), counter(counter), size(size)
+		: ptr(ptr), counter(NULL), size(size)
 #else
-		: ptr(ptr), counter(counter)
+		: ptr(ptr), counter(NULL)
 #endif
 	{
 	}
@@ -78,26 +79,6 @@ namespace Utilities
 	{
 		if (this->counter.Detach() == 0)
 			NewAllocator<TYPE>::Delete(this->ptr);
-	}
-
-	// Assignment
-	template <class TYPE>
-	const ImmutableArray<TYPE> & ImmutableArray<TYPE>::operator =(const ImmutableArray<TYPE> & src)
-	{
-		if (this->ptr != src.ptr)
-		{
-			// Copy references
-			if (this->counter.Detach() == 0)
-				NewAllocator<TYPE>::Delete(this->ptr);
-			this->counter.Attach(src.counter);
-
-			// Copy members
-			this->ptr = src.ptr;
-#ifdef _DEBUG
-			this->size = src.size;
-#endif
-		}
-		return *this;
 	}
 
 	// Element access
@@ -115,10 +96,12 @@ namespace Utilities
 		template <class OTHER> friend class Cast;
 
 	public:
-		Array();	// Default
-		explicit Array(int size);	// Size
-		Array(TYPE * ptr, ReferenceCounter counter, int size); // From a referenced counted pointer
+		Array();
+		explicit Array(int size);
+		Array(External<TYPE> ext, int size);
 
+		// Assignment
+		const Array<TYPE> & operator =(const Array<TYPE> & src);
 
 		// Element access
 		TYPE & operator [](int i);
@@ -140,9 +123,29 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	Array<TYPE>::Array(TYPE * ptr, ReferenceCounter counter, int size)
-		: ImmutableArray<TYPE>(ptr, counter, size)
+	Array<TYPE>::Array(External<TYPE> ext, int size)
+		: ImmutableArray<TYPE>(ext, size)
 	{
+	}
+
+	// Assignment
+	template <class TYPE>
+	const Array<TYPE> & Array<TYPE>::operator =(const Array<TYPE> & src)
+	{
+		if (this->ptr != src.ptr)
+		{
+			// Copy references
+			if (this->counter.Detach() == 0)
+				NewAllocator<TYPE>::Delete(this->ptr);
+			this->counter.Attach(src.counter);
+
+			// Copy members
+			this->ptr = src.ptr;
+#ifdef _DEBUG
+			this->size = src.size;
+#endif
+		}
+		return *this;
 	}
 
 	// Element access

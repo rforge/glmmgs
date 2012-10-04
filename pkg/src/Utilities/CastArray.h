@@ -17,7 +17,7 @@ namespace Utilities
 	public:
 		// Cast vector
 		Cast(Vector<TYPE> & src)
-			: ptr(src.ptr)
+			: ptr(src.array.ptr)
 		{
 		}
 
@@ -34,7 +34,7 @@ namespace Utilities
 	public:
 		// Cast vector
 		Cast(const ImmutableVector<TYPE> & src)
-			: ptr(src.ptr)
+			: ptr(src.array.ptr)
 		{
 		}
 
@@ -50,7 +50,7 @@ namespace Utilities
 	public:
 		// Cast vector
 		Cast(Vector<TYPE> & src)
-			: To(src.ptr, src.counter, src.size)
+			: To(src.array)
 		{
 		}
 	};
@@ -64,7 +64,7 @@ namespace Utilities
 	public:
 		// Cast vector
 		Cast(const ImmutableVector<TYPE> & src)
-			: To(src.ptr, src.counter, src.size)
+			: To(src.array)
 		{
 		}
 	};
