@@ -12,16 +12,13 @@
 #include "Comparer.h"
 
 // Memory allocation
-#include "New.h"
+#include "Memory.h"
 
 // Types
 #include "External.h"
 #include "Pointer.h"
 #include "Array.h"
-#include "Buffer.h"
-#include "Stack.h"
 #include "Vector.h"
-#include "VectorBuilder.h"
 #include "VectorVector.h"
 #include "Matrix.h"
 #include "TriangularMatrix.h"

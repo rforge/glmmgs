@@ -37,7 +37,7 @@ namespace GlmmGS
 					for (int i = 0; i < this->size; ++i)
 					{
 						prec(i, i) = design_precision(i, i) + this->theta(0);
-						for (int j = 0; j <= i; ++j)
+						for (int j = 0; j < i; ++j)
 							prec(i, j) = design_precision(i, j);
 					}
 
@@ -45,12 +45,12 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				Vector<double> IdentityModel::CoefficientsUpdate(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const
+				Vector<double> IdentityModel::CoefficientsUpdate(const ImmutableVector<double> & design_jacobian, const ImmutableVector<double> & beta) const
 				{
 					// Add diagonal terms
 					Vector<double> jac(this->size);
 					for (int i = 0; i < this->size; ++i)
-						jac(i) = jacobian(i) - this->theta(0) * beta(i);
+						jac(i) = design_jacobian(i) - this->theta(0) * beta(i);
 
 					// Decomposes
 					return this->beta_precision_chol.Solve(jac);

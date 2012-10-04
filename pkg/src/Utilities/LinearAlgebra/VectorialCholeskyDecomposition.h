@@ -17,21 +17,21 @@ namespace Utilities
 		public:
 			// Construction
 			VectorialCholeskyDecomposition();
-			explicit VectorialCholeskyDecomposition(const TriangularMatrix<Vector<double> > & A);
+			explicit VectorialCholeskyDecomposition(const ImmutableTriangularMatrix<Vector<double> > & A);
 
 			// Properties
-			const TriangularMatrix<Vector<double> > & Lower() const;
+			const ImmutableTriangularMatrix<Vector<double> > & Lower() const;
 
 			// Methods
-			void Decompose(const TriangularMatrix<Vector<double> > & A);
-			Vector<Vector<double> > Solve(const Vector<Vector<double> > & b) const;
+			void Decompose(const ImmutableTriangularMatrix<Vector<double> > & A);
+			Vector<Vector<double> > Solve(const ImmutableVector<Vector<double> > & b) const;
 			TriangularMatrix<Vector<double> > Inverse() const;
 			double Determinant() const;
 		};
 
 		// Properties
 		inline
-		const TriangularMatrix<Vector<double> > & VectorialCholeskyDecomposition::Lower() const
+		const ImmutableTriangularMatrix<Vector<double> > & VectorialCholeskyDecomposition::Lower() const
 		{
 			return this->lower;
 		}

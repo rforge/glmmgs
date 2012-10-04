@@ -32,7 +32,7 @@ namespace GlmmGS
 				}
 
 				// Covariance components
-				int ICovarianceModel::UpdateComponents(const Vector<Vector<double> > & beta, const Control & control)
+				int ICovarianceModel::UpdateComponents(const ImmutableVector<Vector<double> > & beta, const Control & control)
 				{
 					return this->constant ? 0 : this->UpdateComponentsImpl(beta, control);
 				}

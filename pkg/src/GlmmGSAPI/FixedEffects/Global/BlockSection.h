@@ -15,7 +15,7 @@ namespace GlmmGSAPI
 			{
 			private:
 				// Fields
-				VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
+				Collections::VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
 
 				// Implementation
 				void AddIntercept(int duplicate);

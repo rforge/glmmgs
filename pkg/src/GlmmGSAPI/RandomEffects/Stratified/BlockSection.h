@@ -16,7 +16,7 @@ namespace GlmmGSAPI
 			private:
 				// Fields
 				WeakFactor factor;
-				VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
+				Collections::VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
 				Pointer<GlmmGS::RandomEffects::Stratified::CovarianceModels::ICovarianceModel> covariance_model;
 
 				// Implementation

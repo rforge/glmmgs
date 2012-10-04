@@ -137,7 +137,7 @@ namespace Utilities
 		}
 
 		// Vectorial functions
-		int TotalSize(const TriangularMatrix<Vector<double> > & x)
+		int TotalSize(const ImmutableTriangularMatrix<Vector<double> > & x)
 		{
 			const int n = x.NumberOfRows();
 			int size = 0;

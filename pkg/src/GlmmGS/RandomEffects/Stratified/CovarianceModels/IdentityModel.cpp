@@ -33,25 +33,36 @@ namespace GlmmGS
 				}
 
 				// Coefficients
-				void IdentityModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
+				void IdentityModel::Decompose(const ImmutableTriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Add diagonal to precision
-					TriangularMatrix<Vector<double> > prec = design_precision;
+					TriangularMatrix<Vector<double> > prec(this->nvars);
 					for (int i = 0; i < this->nvars; ++i)
+					{
+						// Strictly lower part
+						for (int j = 0; j < i; ++j)
+							prec(i, j) = Clone(design_precision(i, j));
+
+						// Diagonal part
+						prec(i, i) = Vector<double>(this->nlevels);
 						for (int k = 0; k < this->nlevels; ++k)
-							prec(i, i)(k) += this->theta(i);
+							prec(i, i)(k) = design_precision(i, i)(k) + this->theta(i);
+					}
 
 					// Decompose
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
+				Vector<Vector<double> > IdentityModel::CoefficientsUpdate(const ImmutableVector<Vector<double> > & design_jacobian,	const ImmutableVector<Vector<double> > & beta) const
 				{
 					// Add diagonal terms
-					Vector<Vector<double> > jac = jacobian;
+					Vector<Vector<double> > jac(this->nvars);
 					for (int i = 0; i < this->nvars; ++i)
+					{
+						jac(i) = Vector<double>(this->nlevels);
 						for (int k = 0; k < this->nlevels; ++k)
-							jac(i)(k) -= this->theta(i) * beta(i)(k);
+							jac(i)(k) = design_jacobian(i)(k) - this->theta(i) * beta(i)(k);
+					}
 
 					// Decomposes
 					return this->beta_precision_chol.Solve(jac);
@@ -64,10 +75,10 @@ namespace GlmmGS
 				}
 
 				// Components
-				int IdentityModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
+				int IdentityModel::UpdateComponentsImpl(const ImmutableVector<Vector<double> > & beta, const Control & control)
 				{
 					// Calculate variance
-					const TriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
+					const ImmutableTriangularMatrix<Vector<double> > covariance = this->beta_precision_chol.Inverse();
 
 					// Calculate jacobian and minus the hessian
 					Vector<double> jac(this->nvars);

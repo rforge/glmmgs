@@ -16,7 +16,7 @@ namespace GlmmGSAPI
 			{
 			private:
 				// Fields
-				VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
+				Collections::VectorBuilder<Pointer<GlmmGS::Variables::IVariable> > variables;
 				Pointer<GlmmGS::RandomEffects::Global::CovarianceModels::ICovarianceModel> covariance_model;
 
 				// Implementation

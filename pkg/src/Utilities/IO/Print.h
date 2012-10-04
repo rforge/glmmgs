@@ -23,7 +23,7 @@ namespace Utilities
 
 		template <class TYPE> void Print(const char * format, const Vector<TYPE> & values);
 		template <class TYPE> void Print(const char * format, const ImmutableVector<TYPE> & values);
-		template <class TYPE> void Print(const char * format, const Vector<Vector<TYPE> > & values);
+		template <class TYPE> void Print(const char * format, const ImmutableVector<Vector<TYPE> > & values);
 		template <class TYPE> void Print(const char * format, const Matrix<TYPE> & matrix);
 		template <class TYPE> void Print(const char * format, const ImmutableMatrix<TYPE> & matrix);
 		template <class TYPE> void Print(const char * format, const TriangularMatrix<TYPE> & matrix);
@@ -82,7 +82,7 @@ namespace Utilities
 
 		// Print vector of vectors
 		template <class TYPE>
-		void Print(const char * format, const Vector<Vector<TYPE> > & values)
+		void Print(const char * format, const ImmutableVector<Vector<TYPE> > & values)
 		{
 			for (int j = 0; j < values.Size(); ++j)
 				Print(format, values(j));

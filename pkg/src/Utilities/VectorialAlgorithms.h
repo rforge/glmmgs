@@ -35,7 +35,7 @@ namespace Utilities
 
 	// Vectorial max - TODO: test this
 	template <class TYPE>
-	TYPE Max(const Vector<Vector<TYPE> > & v)
+	TYPE Max(const ImmutableVector<Vector<TYPE> > & v)
 	{
 		_ASSERT(v.Size() > 0);
 		const int n = v.Size();

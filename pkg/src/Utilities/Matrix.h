@@ -28,7 +28,7 @@ namespace Utilities
 		int NumberOfColumns() const;
 
 		// Element access
-		const TYPE & operator ()(int i, int j) const;
+		const typename Immutable<TYPE>::Type & operator ()(int i, int j) const;
 	};
 
 
@@ -68,7 +68,7 @@ namespace Utilities
 
 	// Element access
 	template <class TYPE> inline
-	const TYPE & ImmutableMatrix<TYPE>::operator ()(int i, int j) const
+	const typename Immutable<TYPE>::Type & ImmutableMatrix<TYPE>::operator ()(int i, int j) const
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols);
 		return this->array[i * this->ncols + j];
@@ -86,7 +86,7 @@ namespace Utilities
 
 		// Element access
 		TYPE & operator ()(int i, int j);
-		const TYPE & operator ()(int i, int j) const;
+		const typename Immutable<TYPE>::Type & operator ()(int i, int j) const;
 	};
 
 
@@ -119,11 +119,18 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	const TYPE & Matrix<TYPE>::operator ()(int i, int j) const
+	const typename Immutable<TYPE>::Type & Matrix<TYPE>::operator ()(int i, int j) const
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j < this->ncols);
 		return this->array[i * this->ncols + j];
 	}
+
+	// Specialize Immutable class
+	template <class TYPE>
+	struct Immutable<Matrix<TYPE> >
+	{
+		typedef ImmutableMatrix<TYPE> Type;
+	};
 }
 
 #endif

@@ -32,7 +32,7 @@ namespace GlmmGS
 				}
 
 				// Coefficients
-				void SparsePrecisionModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
+				void SparsePrecisionModel::Decompose(const ImmutableTriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Build an upper diagonal sparse-matrix equal to the design-precision plus the random-effects-precision
 
@@ -114,7 +114,7 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(upper);
 				}
 
-				Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
+				Vector<Vector<double> > SparsePrecisionModel::CoefficientsUpdate(const ImmutableVector<Vector<double> > & design_jacobian, const ImmutableVector<Vector<double> > & beta) const
 				{
 					// Add diagonal terms
 					const int nlevels = this->R.NumberOfColumns();
@@ -149,7 +149,7 @@ namespace GlmmGS
 				}
 
 				// Components
-				int SparsePrecisionModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
+				int SparsePrecisionModel::UpdateComponentsImpl(const ImmutableVector<Vector<double> > & beta, const Control & control)
 				{
 					// Calulate T^{-1} R
 					const int nlevels = this->R.NumberOfColumns();

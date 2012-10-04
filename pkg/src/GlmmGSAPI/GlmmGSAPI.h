@@ -11,11 +11,11 @@ namespace GlmmGSAPI
 	{
 	private:
 		// State machine
-		Stack<Pointer<Section> > sections;
+		Collections::Stack<Pointer<Section> > sections;
 
 		// Error variables
 		static const int error_buffer_size = 1024;
-		Buffer last_error;
+		Collections::Buffer last_error;
 
 		// Simulation variables
 		Pointer<GlmmGS::GlmmGS> glmmGS;

@@ -20,9 +20,9 @@ namespace GlmmGS
 					ImmutableMatrix<double> R;
 
 					// Implementation
-					void Decompose(const ImmutableTriangularMatrix<double> & precision);
+					void Decompose(const ImmutableTriangularMatrix<double> & design_precision);
+					Vector<double> CoefficientsUpdate(const ImmutableVector<double> & design_jacobian, const ImmutableVector<double> & beta) const;
 					int UpdateComponentsImpl(const ImmutableVector<double> & beta, const Control & control);
-					Vector<double> CoefficientsUpdate(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const;
 
 				public:
 					// Construction

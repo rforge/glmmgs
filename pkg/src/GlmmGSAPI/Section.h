@@ -18,8 +18,8 @@ namespace GlmmGSAPI
 			// Fields
 			Pointer<GlmmGS::Responses::IResponse> response;
 			Pointer<GlmmGS::Offsets::IOffset> offset;
-			VectorBuilder<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
-			VectorBuilder<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
+			Collections::VectorBuilder<Pointer<GlmmGS::FixedEffects::IBlock> > fixed_effects;
+			Collections::VectorBuilder<Pointer<GlmmGS::RandomEffects::IBlock> > random_effects;
 		};
 
 	public:

@@ -25,9 +25,9 @@ namespace Utilities
 		double MinAbs(const ImmutableVector<double> & v);
 
 		// Vectorial functions
-		double ScalarProduct(const Vector<Vector<double> > & v, const Vector<Vector<double> > & w);
-		double MaxAbs(const Vector<Vector<double> > & v);
-		double MinAbs(const Vector<Vector<double> > & v);
+		double ScalarProduct(const ImmutableVector<Vector<double> > & v, const ImmutableVector<Vector<double> > & w);
+		double MaxAbs(const ImmutableVector<Vector<double> > & v);
+		double MinAbs(const ImmutableVector<Vector<double> > & v);
 
 
 		// Definition

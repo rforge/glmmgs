@@ -32,7 +32,7 @@ namespace GlmmGS
 				}
 
 				// Coefficients
-				void PrecisionModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
+				void PrecisionModel::Decompose(const ImmutableTriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Add diagonal to precision
 					const int nlevels = this->R.NumberOfRows();
@@ -62,7 +62,7 @@ namespace GlmmGS
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				Vector<Vector<double> > PrecisionModel::CoefficientsUpdate(const Vector<Vector<double> > & design_jacobian, const Vector<Vector<double> > & beta) const
+				Vector<Vector<double> > PrecisionModel::CoefficientsUpdate(const ImmutableVector<Vector<double> > & design_jacobian, const ImmutableVector<Vector<double> > & beta) const
 				{
 					// Add diagonal terms
 					const int nlevels = this->R.NumberOfRows();
@@ -90,7 +90,7 @@ namespace GlmmGS
 				}
 
 				// Components
-				int PrecisionModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
+				int PrecisionModel::UpdateComponentsImpl(const ImmutableVector<Vector<double> > & beta, const Control & control)
 				{
 					// Calulate T^{-1} R
 					const int nlevels = this->R.NumberOfColumns();

@@ -32,7 +32,7 @@ namespace GlmmGS
 				~Block();
 
 				// Properties
-				const Vector<Vector<double> > & Coefficients() const;
+				const ImmutableVector<Vector<double> > & Coefficients() const;
 				TriangularMatrix<Vector<double> > Covariance() const;
 			};
 		}

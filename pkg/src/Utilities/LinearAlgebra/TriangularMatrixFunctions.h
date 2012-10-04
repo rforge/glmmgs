@@ -26,7 +26,7 @@ namespace Utilities
 		Matrix<double> ToSymmetric(const ImmutableTriangularMatrix<double> & A);
 
 		// Vectorial functions
-		int TotalSize(const TriangularMatrix<Vector<double> > & x);
+		int TotalSize(const ImmutableTriangularMatrix<Vector<double> > & x);
 	}
 }
 

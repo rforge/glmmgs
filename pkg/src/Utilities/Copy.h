@@ -21,7 +21,7 @@ namespace Utilities
 
 	// Size of a stratified triangular matrix
 	template <class TYPE>
-	int TotalSizeAsStratifiedSquareMatrix(const TriangularMatrix<Vector<TYPE> > & mat)
+	int TotalSizeAsStratifiedSquareMatrix(const ImmutableTriangularMatrix<Vector<TYPE> > & mat)
 	{
 		// Return size as it were a square matrix
 		const int nvars = mat.NumberOfRows();
@@ -53,6 +53,16 @@ namespace Utilities
 		_ASSERT(dst.Size() == src.Size());
 		for (int i = 0; i < dst.Size(); ++i)
 			dst(i) = src(i);
+	}
+
+	// Clone vector
+	template <class TYPE>
+	Vector<TYPE> Clone(const ImmutableVector<TYPE> & src)
+	{
+		Vector<TYPE> dst(src.Size());
+		for (int i = 0; i < dst.Size(); ++i)
+			dst(i) = src(i);
+		return dst;
 	}
 
 
@@ -102,7 +112,7 @@ namespace Utilities
 
 	// Copy stratified vector to raw vector
 	template <class TYPE>
-	void Copy(TYPE * dst, int size, const Vector<Vector<TYPE> > & src)
+	void Copy(TYPE * dst, int size, const ImmutableVector<Vector<TYPE> > & src)
 	{
 		_ASSERT(size == TotalSize(src));
 		for (int i = 0; i < src.Size(); ++i)
@@ -112,7 +122,7 @@ namespace Utilities
 
 	// Copy stratified matrix to raw vector
 	template <class TYPE>
-	void Copy(TYPE * dst, int size, const TriangularMatrix<Vector<TYPE> > & src)
+	void Copy(TYPE * dst, int size, const ImmutableTriangularMatrix<Vector<TYPE> > & src)
 	{
 		_ASSERT(size == TotalSizeAsStratifiedSquareMatrix(src));
 		for (int i = 0; i < src.NumberOfRows(); ++i)

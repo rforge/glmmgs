@@ -1,7 +1,7 @@
 #ifndef UTILITIES_REFERENCECOUNTER_H
 #define UTILITIES_REFERENCECOUNTER_H
 
-#include "New.h"
+#include "Memory.h"
 #include <stdlib.h>
 
 namespace Utilities

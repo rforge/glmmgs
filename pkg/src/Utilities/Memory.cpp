@@ -1,6 +1,6 @@
-#include "New.h"
-#include "Exceptions/OutOfMemoryException.h"
 #include <new>
+#include "Exceptions/OutOfMemoryException.h"
+#include "Memory.h"
 
 // Global operator new and delete
 void * operator new(size_t size, const Utilities::BLTag &)

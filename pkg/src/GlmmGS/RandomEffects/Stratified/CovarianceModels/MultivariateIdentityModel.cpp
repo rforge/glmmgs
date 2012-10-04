@@ -50,25 +50,31 @@ namespace GlmmGS
 				}
 
 				// Coefficients
-				void MultivariateIdentityModel::Decompose(const TriangularMatrix<Vector<double> > & design_precision)
+				void MultivariateIdentityModel::Decompose(const ImmutableTriangularMatrix<Vector<double> > & design_precision)
 				{
 					// Update precision matrix
-					TriangularMatrix<Vector<double> > prec = design_precision;
+					TriangularMatrix<Vector<double> > prec(this->nvars);
 					for (int i = 0; i < this->nvars; ++i)
 						for (int j = 0; j <= i; ++j)
+						{
+							prec(i, j) = Vector<double>(this->nlevels);
 							for (int k = 0; k < this->nlevels; ++k)
-								prec(i, j)(k) += this->theta(Oti(i, j));
+								prec(i, j)(k) = design_precision(i, j)(k) + this->theta(Oti(i, j));
+						}
 
 					// Decompose
 					this->beta_precision_chol.Decompose(prec);
 				}
 
-				Vector<Vector<double> > MultivariateIdentityModel::CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const
+				Vector<Vector<double> > MultivariateIdentityModel::CoefficientsUpdate(const ImmutableVector<Vector<double> > & design_jacobian, const ImmutableVector<Vector<double> > & beta) const
 				{
 					// Add diagonal terms
-					Vector<Vector<double> > jac = jacobian;
+					Vector<Vector<double> > jac(this->nvars);
+
 					for (int i = 0; i < this->nvars; ++i)
 					{
+						jac(i) = Clone(design_jacobian(i));
+
 						// Lower triangular part
 						for (int j = 0; j <= i; ++j)
 							for (int k = 0; k < this->nlevels; ++k)
@@ -94,7 +100,7 @@ namespace GlmmGS
 					return tau;
 				}
 
-				Vector<Vector<double> > operator * (const ImmutableTriangularMatrix<double> & tau, const Vector<Vector<double> > & u)
+				Vector<Vector<double> > operator * (const ImmutableTriangularMatrix<double> & tau, const ImmutableVector<Vector<double> > & u)
 				{
 					const int nvars = u.Size();
 					const int nlevels = u(0).Size();
@@ -112,8 +118,7 @@ namespace GlmmGS
 					return y;
 				}
 
-				void MultivariateIdentityModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta,
-						const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
+				void MultivariateIdentityModel::ReparameterizeCoefficients(Vector<Vector<double> > & beta, const ImmutableVector<Pointer<Variables::IVariable> > & variables) const
 				{
 					for (int i = 0; i < this->nvars; ++i)
 					{
@@ -136,7 +141,7 @@ namespace GlmmGS
 				}
 
 				// Components
-				int MultivariateIdentityModel::UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control)
+				int MultivariateIdentityModel::UpdateComponentsImpl(const ImmutableVector<Vector<double> > & beta, const Control & control)
 				{
 					// Calculate variances
 					const ImmutableTriangularMatrix<Vector<double> > variance = this->beta_precision_chol.Inverse();

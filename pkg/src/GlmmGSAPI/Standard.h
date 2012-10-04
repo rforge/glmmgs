@@ -4,6 +4,7 @@
 // Utilities
 #include "../Utilities/Utilities.h"
 #include "../Utilities/Exceptions/Exceptions.h"
+#include "../Utilities/Collections/Collections.h"
 
 // Types
 #include "../GlmmGS/Control.h"

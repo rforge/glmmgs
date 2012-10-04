@@ -1,5 +1,5 @@
-#ifndef UTILITIES_NEW_H
-#define UTILITIES_NEW_H
+#ifndef UTILITIES_MEMORY_H
+#define UTILITIES_MEMORY_H
 
 #include <stdlib.h>
 #include <memory.h>
@@ -20,7 +20,7 @@ namespace Utilities
 {
 	// Plain old data allocator
 	template <class TYPE>
-	class PODAllocator
+	class PodAllocator
 	{
 	public:
 		static TYPE * New(int size)
@@ -31,18 +31,21 @@ namespace Utilities
 				memset(ptr, 0, size * sizeof(TYPE));
 				return ptr;
 			}
-			return NULL;
+			else
+			{
+				return NULL;
+			}
 		}
 
 		static void Delete(TYPE * ptr)
 		{
-			return delete [] ptr;
+			delete [] ptr;
 		}
 	};
 
 	// NewAllocator
 	template <class TYPE>
-	class NewAllocator
+	class Allocator
 	{
 	public:
 		static TYPE * New(int size)
@@ -52,17 +55,24 @@ namespace Utilities
 
 		static void Delete(TYPE * ptr)
 		{
-			return delete [] ptr;
+			delete [] ptr;
 		}
 	};
 
 	// Specialization for POD
-	template <> class NewAllocator<char> : public PODAllocator<char> {};
-	template <> class NewAllocator<unsigned char> : public PODAllocator<unsigned char> {};
-	template <> class NewAllocator<int> : public PODAllocator<int> {};
-	template <> class NewAllocator<unsigned int> : public PODAllocator<unsigned int> {};
-	template <> class NewAllocator<float> : public PODAllocator<float> {};
-	template <> class NewAllocator<double> : public PODAllocator<double> {};
+	template <> class Allocator<char> : public PodAllocator<char> {};
+	template <> class Allocator<unsigned char> : public PodAllocator<unsigned char> {};
+	template <> class Allocator<int> : public PodAllocator<int> {};
+	template <> class Allocator<unsigned int> : public PodAllocator<unsigned int> {};
+	template <> class Allocator<float> : public PodAllocator<float> {};
+	template <> class Allocator<double> : public PodAllocator<double> {};
+
+	// Reset function
+	template <class TYPE> inline
+	void Reset(TYPE & obj)
+	{
+		obj = TYPE();
+	}
 }
 
 #endif

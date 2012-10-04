@@ -24,8 +24,7 @@ namespace GlmmGS
 
 					// Components
 					virtual int UpdateComponentsImpl(const ImmutableVector<double> & beta, const Control & control) = 0;
-					int UpdateComponents(const ImmutableTriangularMatrix<double> & minus_hessian,
-							const ImmutableVector<double> & jacobian, const Control & control);
+					int UpdateComponents(const ImmutableTriangularMatrix<double> & minus_hessian, const ImmutableVector<double> & jacobian, const Control & control);
 				public:
 					// Construction
 					ICovarianceModel(int npars, const ImmutableVector<double> & theta);
@@ -37,8 +36,8 @@ namespace GlmmGS
 					TriangularMatrix<double> CoefficientCovariance() const;
 
 					// Coefficients
-					virtual void Decompose(const ImmutableTriangularMatrix<double> & precision) = 0;
-					virtual Vector<double> CoefficientsUpdate(const ImmutableVector<double> & jacobian, const ImmutableVector<double> & beta) const = 0;
+					virtual void Decompose(const ImmutableTriangularMatrix<double> & design_precision) = 0;
+					virtual Vector<double> CoefficientsUpdate(const ImmutableVector<double> & design_jacobian, const ImmutableVector<double> & beta) const = 0;
 
 					// Components
 					virtual int UpdateComponents(const ImmutableVector<double> & beta, const Control & control);

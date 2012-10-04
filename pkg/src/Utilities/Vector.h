@@ -28,7 +28,7 @@ namespace Utilities
 		int Size() const;
 
 		// Element access
-		const TYPE & operator ()(int i) const;
+		const typename Immutable<TYPE>::Type & operator ()(int i) const;
 	};
 
 	// Definition
@@ -61,7 +61,7 @@ namespace Utilities
 
 	// Element access
 	template <class TYPE> inline
-	const TYPE & ImmutableVector<TYPE>::operator ()(int i) const
+	const typename Immutable<TYPE>::Type & ImmutableVector<TYPE>::operator ()(int i) const
 	{
 		_ASSERT(i >= 0 && i < this->size);
 		return this->array[i];
@@ -81,7 +81,7 @@ namespace Utilities
 
 		// Element access
 		TYPE & operator ()(int i);
-		const TYPE & operator ()(int i) const;
+		const typename Immutable<TYPE>::Type & operator ()(int i) const;
 	};
 
 	// Definition
@@ -113,11 +113,18 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	const TYPE & Vector<TYPE>::operator ()(int i) const
+	const typename Immutable<TYPE>::Type & Vector<TYPE>::operator ()(int i) const
 	{
 		_ASSERT(i >= 0 && i < this->size);
 		return this->array[i];
 	}
+
+	// Specialize Immutable class
+	template <class TYPE>
+	struct Immutable<Vector<TYPE> >
+	{
+		typedef ImmutableVector<TYPE> Type;
+	};
 }
 
 #endif

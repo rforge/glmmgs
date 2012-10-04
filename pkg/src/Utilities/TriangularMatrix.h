@@ -29,7 +29,7 @@ namespace Utilities
 		int NumberOfRows() const;
 
 		// Element access
-		const TYPE & operator ()(int i, int j) const;
+		const typename Immutable<TYPE>::Type & operator ()(int i, int j) const;
 	};
 
 	// Construction
@@ -60,7 +60,7 @@ namespace Utilities
 
 	// Element access
 	template <class TYPE> inline
-	const TYPE & ImmutableTriangularMatrix<TYPE>::operator ()(int i, int j) const
+	const typename Immutable<TYPE>::Type & ImmutableTriangularMatrix<TYPE>::operator ()(int i, int j) const
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
 		return this->array[Count(i) + j];
@@ -86,7 +86,7 @@ namespace Utilities
 
 		// Element access
 		TYPE & operator ()(int i, int j);
-		const TYPE & operator ()(int i, int j) const;
+		const typename Immutable<TYPE>::Type & operator ()(int i, int j) const;
 	};
 
 	// Construction
@@ -116,11 +116,18 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	const TYPE & TriangularMatrix<TYPE>::operator ()(int i, int j) const
+	const typename Immutable<TYPE>::Type & TriangularMatrix<TYPE>::operator ()(int i, int j) const
 	{
 		_ASSERT(i >= 0 && i < this->nrows && j >= 0 && j <= i);
 		return this->array[ImmutableTriangularMatrix<TYPE>::Count(i) + j];
 	}
+
+	// Specialize Immutable class
+	template <class TYPE>
+	struct Immutable<TriangularMatrix<TYPE> >
+	{
+		typedef ImmutableTriangularMatrix<TYPE> Type;
+	};
 }
 
 #endif

@@ -36,7 +36,7 @@ namespace GlmmGS
 						const Pointer<CovarianceModels::ICovarianceModel> & covariance_model);
 
 				// Properties
-				const Vector<Vector<double> > & Coefficients() const;
+				const ImmutableVector<Vector<double> > & Coefficients() const;
 				Pointer<CovarianceModels::ICovarianceModel> CovarianceModel() const;
 			};
 		}

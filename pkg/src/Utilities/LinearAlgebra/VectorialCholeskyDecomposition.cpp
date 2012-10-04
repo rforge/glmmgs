@@ -10,24 +10,24 @@ namespace Utilities
 		{
 		}
 
-		VectorialCholeskyDecomposition::VectorialCholeskyDecomposition(const TriangularMatrix<Vector<double> > & A)
+		VectorialCholeskyDecomposition::VectorialCholeskyDecomposition(const ImmutableTriangularMatrix<Vector<double> > & A)
 		{
 			this->Decompose(A);
 		}
 		
-		void VectorialCholeskyDecomposition::Decompose(const TriangularMatrix<Vector<double> > & A)
+		void VectorialCholeskyDecomposition::Decompose(const ImmutableTriangularMatrix<Vector<double> > & A)
 		{
-			this->lower = A;
-			const int n = this->lower.NumberOfRows();
+			const int n = A.NumberOfRows();
+			this->lower = TriangularMatrix<Vector<double> >(n);
 			
 			// Computes lower triangular Matrix such that L * Transpose(L) = A
 			for (int i = 0; i < n; ++i)
 			{
-				Vector<double> & diag = this->lower(i, i);
 				// j == i
 				{
-					Vector<double> sum = diag;
+					Vector<double> sum = Clone(A(i, i));
 					const int L = sum.Size();
+					this->lower(i, i) = Vector<double>(L);
 					for (int k = i - 1; k >= 0; --k) 
 						for (int l = 0; l < L; ++ l)
 							sum(l) -= Math::Square(this->lower(i, k)(l));
@@ -36,25 +36,26 @@ namespace Utilities
 					{
 						if (sum(l) <= 0.0)
 							throw Exceptions::NumericException("Non positive matrix in vectorial Cholesky decomposition");
-						diag(l) = sqrt(sum(l));
+						this->lower(i, i)(l) = sqrt(sum(l));
 					}
 				}
 				// j > i
 				for (int j = i + 1; j < n; ++j)
 				{
-					Vector<double> sum = this->lower(j, i);
+					Vector<double> sum = Clone(A(j, i));
 					const int L = sum.Size();
+					this->lower(j, i) = Vector<double>(L);
 					for (int k = i - 1; k >= 0; --k) 
 						for (int l = 0; l < L; ++ l)
 							sum(l) -= this->lower(i, k)(l) * this->lower(j, k)(l);
 					// Update off diagonal elements
 					for (int l = 0; l < L; ++ l)
-						this->lower(j, i)(l) = sum(l) / diag(l);
+						this->lower(j, i)(l) = sum(l) / this->lower(i, i)(l);
 				}
 			}
 		}
 		
-		Vector<Vector<double> > VectorialCholeskyDecomposition::Solve(const Vector<Vector<double> > & b) const
+		Vector<Vector<double> > VectorialCholeskyDecomposition::Solve(const ImmutableVector<Vector<double> > & b) const
 		{
 			_ASSERT(b.Size() == this->lower.NumberOfRows());
 			const int n = this->lower.NumberOfRows();
@@ -64,7 +65,7 @@ namespace Utilities
 			for (int i = 0; i < n; ++i)
 			{
 				const ImmutableVector<double> & diag = this->lower(i, i);
-				Vector<double> sum = b(i);
+				Vector<double> sum = Clone(b(i));
 				const int L = sum.Size();
 				for (int k = i - 1; k >= 0; --k)
 					for (int l = 0; l < L; ++l)

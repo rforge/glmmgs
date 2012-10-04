@@ -17,7 +17,7 @@ namespace Utilities
 
 	// Size of a stratified vector
 	template <class TYPE>
-	int TotalSize(const Vector<Vector<TYPE> > & v)
+	int TotalSize(const ImmutableVector<Vector<TYPE> > & v)
 	{
 		const int n = v.Size();
 		int size = 0;

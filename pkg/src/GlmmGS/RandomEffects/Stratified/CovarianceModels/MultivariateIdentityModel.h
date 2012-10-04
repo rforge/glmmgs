@@ -25,13 +25,13 @@ namespace GlmmGS
 					Boosters::RemoveMean remove_mean;
 
 					// Coefficients
-					void Decompose(const TriangularMatrix<Vector<double> > & precision);
-					Vector<Vector<double> > CoefficientsUpdate(const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const;
+					void Decompose(const ImmutableTriangularMatrix<Vector<double> > & design_precision);
+					Vector<Vector<double> > CoefficientsUpdate(const ImmutableVector<Vector<double> > & design_jacobian, const ImmutableVector<Vector<double> > & beta) const;
 					void ReparameterizeCoefficients(Vector<Vector<double> > & beta,
 							const ImmutableVector<Pointer<Variables::IVariable> > & variables) const;
 
 					// Components
-					int UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control);
+					int UpdateComponentsImpl(const ImmutableVector<Vector<double> > & beta, const Control & control);
 
 				public:
 					// Construction

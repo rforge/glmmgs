@@ -23,7 +23,7 @@ namespace GlmmGS
 					CholeskyDecomposition chol;
 
 					// Implementation
-					virtual int UpdateComponentsImpl(const Vector<Vector<double> > & beta, const Control & control) = 0;
+					virtual int UpdateComponentsImpl(const ImmutableVector<Vector<double> > & beta, const Control & control) = 0;
 					int UpdateComponents(const ImmutableTriangularMatrix<double> & minus_hessian,
 							const ImmutableVector<double> & jacobian, const Control & control);
 				public:
@@ -36,12 +36,12 @@ namespace GlmmGS
 					TriangularMatrix<double> Covariance() const;
 
 					// Coefficients
-					virtual void Decompose(const TriangularMatrix<Vector<double> > & precision) = 0;
-					virtual Vector<Vector<double> > CoefficientsUpdate(	const Vector<Vector<double> > & jacobian, const Vector<Vector<double> > & beta) const = 0;
+					virtual void Decompose(const ImmutableTriangularMatrix<Vector<double> > & design_precision) = 0;
+					virtual Vector<Vector<double> > CoefficientsUpdate(	const ImmutableVector<Vector<double> > & design_jacobian, const ImmutableVector<Vector<double> > & beta) const = 0;
 					virtual void ReparameterizeCoefficients(Vector<Vector<double> > & beta, const ImmutableVector<Pointer<Variables::IVariable> > & variables) const = 0;
 
 					// Covariance components
-					int UpdateComponents(const Vector<Vector<double> > & beta, const Control & control);
+					int UpdateComponents(const ImmutableVector<Vector<double> > & beta, const Control & control);
 				};
 			}
 		}

@@ -25,15 +25,13 @@ namespace Utilities
 			for (int i = 0; i < n; ++i)
 			{
 				// j == i
-				double diag = 0.0;
 				{
 					double sum = A(i, i);
 					for (int k = 0; k < i; ++k)
 						sum -= Math::Square(this->lower(i, k));
 					if (sum <= 0.0)
 						throw Exceptions::NumericException("Non positive matrix in Cholesky decomposition");
-					diag = sqrt(sum);
-					this->lower(i, i) = diag;
+					this->lower(i, i) = sqrt(sum);
 				}
 
 				// j > i
@@ -42,7 +40,7 @@ namespace Utilities
 					double sum = A(j, i);
 					for (int k = 0; k < i; ++k)
 						sum -= this->lower(i, k) * this->lower(j, k);
-					this->lower(j, i) = sum / diag;
+					this->lower(j, i) = sum / this->lower(i, i);
 				}
 			}
 		}

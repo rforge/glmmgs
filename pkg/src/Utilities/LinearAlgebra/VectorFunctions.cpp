@@ -118,7 +118,7 @@ namespace Utilities
 		}
 
 		// Vectorial functions
-		double ScalarProduct(const Vector<Vector<double> > & x, const Vector<Vector<double> > & y)
+		double ScalarProduct(const ImmutableVector<Vector<double> > & x, const ImmutableVector<Vector<double> > & y)
 		{
 			_ASSERT(x.Size() == y.Size());
 			const int n = x.Size();
@@ -129,12 +129,12 @@ namespace Utilities
 		}
 
 		// Min-Max Abs
-		double MaxAbs(const Vector<Vector<double> > & v)
+		double MaxAbs(const ImmutableVector<Vector<double> > & v)
 		{
 			return MaxAbsImpl(v);
 		}
 
-		double MinAbs(const Vector<Vector<double> > & v)
+		double MinAbs(const ImmutableVector<Vector<double> > & v)
 		{
 			return MinAbsImpl(v);
 		}

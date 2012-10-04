@@ -23,7 +23,7 @@ namespace GlmmGS
 			}
 
 			// Properties
-			const Vector<Vector<double> > & Block::Coefficients() const
+			const ImmutableVector<Vector<double> > & Block::Coefficients() const
 			{
 				return this->beta;
 			}

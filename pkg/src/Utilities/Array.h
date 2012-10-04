@@ -2,9 +2,10 @@
 #define UTILITIES_ARRAY_H
 
 #include "Exceptions/Assertions.h"
-#include "New.h"
+#include "Memory.h"
 #include "ReferenceCounter.h"
 #include "External.h"
+#include "Immutable.h"
 
 namespace Utilities
 {
@@ -38,7 +39,7 @@ namespace Utilities
 		operator bool () const;
 
 		// Element access
-		const TYPE & operator [](int i) const;
+		const typename Immutable<TYPE>::Type & operator [](int i) const;
 	};
 
 	// Definition
@@ -57,9 +58,9 @@ namespace Utilities
 	template <class TYPE> inline
 	ImmutableArray<TYPE>::ImmutableArray(int size)
 #ifdef _DEBUG
-		: ptr(NewAllocator<TYPE>::New(size)), counter(ptr), size(size)
+		: ptr(Allocator<TYPE>::New(size)), counter(ptr), size(size)
 #else
-		: ptr(NewAllocator<TYPE>::New(size)), counter(ptr)
+		: ptr(Allocator<TYPE>::New(size)), counter(ptr)
 #endif
 	{
 	}
@@ -78,7 +79,7 @@ namespace Utilities
 	ImmutableArray<TYPE>::~ImmutableArray()
 	{
 		if (this->counter.Detach() == 0)
-			NewAllocator<TYPE>::Delete(this->ptr);
+			Allocator<TYPE>::Delete(this->ptr);
 	}
 
 	// Check for NULL pointer
@@ -90,7 +91,7 @@ namespace Utilities
 
 	// Element access
 	template <class TYPE> inline
-	const TYPE & ImmutableArray<TYPE>::operator [](int i) const
+	const typename Immutable<TYPE>::Type & ImmutableArray<TYPE>::operator [](int i) const
 	{
 		_ASSERT(i >= 0 && i < this->size);
 		return this->ptr[i];
@@ -112,7 +113,7 @@ namespace Utilities
 
 		// Element access
 		TYPE & operator [](int i);
-		const TYPE & operator [](int i) const;
+		const typename Immutable<TYPE>::Type & operator [](int i) const;
 	};
 
 	// Definition
@@ -143,7 +144,7 @@ namespace Utilities
 		{
 			// Copy references
 			if (this->counter.Detach() == 0)
-				NewAllocator<TYPE>::Delete(this->ptr);
+				Allocator<TYPE>::Delete(this->ptr);
 			this->counter.Attach(src.counter);
 
 			// Copy members
@@ -164,11 +165,18 @@ namespace Utilities
 	}
 
 	template <class TYPE> inline
-	const TYPE & Array<TYPE>::operator [](int i) const
+	const typename Immutable<TYPE>::Type & Array<TYPE>::operator [](int i) const
 	{
 		_ASSERT(i >= 0 && i < this->size);
 		return this->ptr[i];
 	}
+
+	// Specialize Immutable class
+	template <class TYPE>
+	struct Immutable<Array<TYPE> >
+	{
+		typedef ImmutableArray<TYPE> Type;
+	};
 }
 
 #endif
