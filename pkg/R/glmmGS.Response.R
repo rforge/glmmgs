@@ -12,6 +12,8 @@ glmmGS.Response <- function(formula, family)
 	string <- as.character(formula)[2L]
 	
 	# Removed blanks
+	string <- gsub("\\t", "", string)
+	string <- gsub("\\n", "", string)
 	string <- gsub(" ", "", string)
 	
 	# Split response string into tokens  

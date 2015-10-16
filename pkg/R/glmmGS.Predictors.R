@@ -14,6 +14,8 @@ glmmGS.Predictors <- function(formula, data, covariance.models)
 	string <- as.character(formula)[3L]
 	
 	# Removed blanks
+	string <- gsub("\\t", "", string)
+	string <- gsub("\\n", "", string)
 	string <- gsub(" ", "", string)
 	
 	# Put parentheses around offset
